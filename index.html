@@ -51,7 +51,7 @@
 <body>
     <div class="container">
         <h1 style="text-align:center;font-size: 40px;"> 什麼時候可以回家 </h1>
-        <h2 style="text-align:center;font-size: 25px;"> HURC下班時間計算機 </h2>
+        <h2 style="text-align:center;font-size: 25px;"> HURC 下班時間計算機 </h2>
         
         <label for="start">上班時間 (hhmm):</label>
         <input type="text" id="start" placeholder="HHMM">
@@ -76,6 +76,12 @@
             const workDuration = 9.5 * 60 * 60 * 1000; // 9.5小時的工作時間（毫秒）
             let leaveDurationMinutes = 0;
 
+            // 新增的邏輯，檢查是否在下午1330之後
+            if (startTime.getHours() >= 13 && startTime.getMinutes() >= 30) {
+                document.getElementById("result").innerText = "建議您直接請假 ^^";
+                return;
+            }
+
             if (startTime > lateThreshold) {
                 const lateDuration = (startTime - lateThreshold) / (1000 * 60);
                 leaveDurationMinutes = Math.ceil(lateDuration / 30) * 30; // 向上取整到最近的30分鐘
@@ -85,7 +91,7 @@
 
                 let message = "";
                 if (startTime.getHours() >= 11) {
-                    message = "⚠️ 太晚了吧！要不要乾脆直接回家<br>";
+                    message = "⚠️ 太晚了吧！要不要直接回家<br>";
                 } else {
                     message = "⚠️ 您已經遲到了！<br>";
                 }
@@ -100,7 +106,7 @@
                 const actualOffTime = new Date(leaveStartTime.getTime() + workDuration);
                 document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             } else {
-                document.getElementById("result").innerHTML = "🎉 早起的鳥兒有蟲吃！請繼續保持！<br>";
+                document.getElementById("result").innerHTML = "🎉 今天也努力起床上班了！繼續保持！<br>";
                 const actualOffTime = new Date(startTime.getTime() + workDuration);
                 document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             }
