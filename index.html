@@ -17,9 +17,9 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            text-align: center; /* 置中對齊所有內容 */
         }
         h1 {
-            text-align: center;
             color: #333;
         }
         label {
@@ -28,7 +28,7 @@
             margin-right: 10px; /* 右邊距 */
         }
         input[type="text"] {
-            width: 50%; /* 縮短輸入框的寬度 */
+            width: 20%; /* 縮短輸入框的寬度 */
             padding: 10px;
             margin: 5px 0 15px; /* 上下邊距 */
             border: 1px solid #ccc;
@@ -51,11 +51,13 @@
 </head>
 <body>
     <div class="container">
-        <h1 style="text-align:center;font-size: 40px;"> 什麼時候可以回家 </h1>
-        <h2 style="text-align:center;font-size: 25px;"> HURC下班時間計算機 </h2>
+        <h1 style="font-size: 40px;">什麼時候可以回家</h1>
+        <h2 style="font-size: 25px;">HURC下班時間計算機</h2>
         
-        <label for="start">上班時間 (hhmm):</label>
-        <input type="text" id="start" placeholder="HHMM">
+        <div>
+            <label for="start">上班時間 (hhmm):</label>
+            <input type="text" id="start" placeholder="HHMM">
+        </div>
         
         <br>
         <button onclick="calculateOffTime()">計算你的下班時間</button>
@@ -75,16 +77,16 @@
             
             // 檢查上班時間是否在 0000 到 0730 之間
             if (startInput >= "0000" && startInput <= "0730") {
-                document.getElementById("result").innerText = "上班時間最早從07:30打卡唷！";
+                document.getElementById("result").innerText = "上班時間最早從 07:30 打卡唷！";
                 return;
             }
 
             const startTime = new Date(`1970-01-01T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
             const workDuration = 9.5 * 60 * 60 * 1000; // 9.5小時的工作時間（毫秒）
 
-            // 檢查輸入時間是否在 1330 到 1830 之間
+            // 檢查輸入時間是否在 1200 到 2400 之間
             if (startInput >= "1330" && startInput <= "1830") {
-                document.getElementById("result").innerText = "建議您直接請假 ^^";
+                document.getElementById("result").innerText = "建議您直接請假在家 ^^";
                 return;
             }
 
