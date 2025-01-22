@@ -106,6 +106,30 @@
                 document.getElementById("result").innerText += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             }
         }
+function calculateOffTime() {
+    const startInput = document.getElementById("start").value; // 獲取上班時間輸入
+    if (!startInput) {
+        document.getElementById("result").innerText = "請輸入有效的上班時間。";
+        return;
+    }
+
+    const startTime = new Date(`1970-01-01T${startInput}:00`);
+    const lateThreshold = new Date(`1970-01-01T09:00:00`);
+    let messages = []; // 建立一個陣列來儲存訊息
+
+    if (startTime > lateThreshold) {
+        messages.push("⚠️ 您已經遲到了！");
+        // 假設您已經有 leaveStartTime 和 leaveEndTime 的計算
+        messages.push(`建議您這樣請假：${leaveStartTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${leaveEndTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}。`);
+    }
+
+    // 假設這裡有計算請假時長的邏輯
+    messages.push(`⏰ 您的請假時長為：${leaveDuration}分鐘。`);
+    messages.push(`🕔 您的下班時間是：${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}。`);
+
+    // 將訊息顯示在結果區域，使用 <br> 來分段
+    document.getElementById("result").innerHTML = messages.join("<br>");
+}
     </script>
 </body>
 </html>
