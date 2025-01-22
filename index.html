@@ -67,6 +67,22 @@
     <script>
         function calculateOffTime() {
             const startInput = document.getElementById("start").value;
+
+            // 檢查輸入格式
+            if (!startInput || startInput.length !== 4 || isNaN(startInput)) {
+                document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
+                return;
+            }
+            
+            const hours = parseInt(startInput.substring(0, 2));
+            const minutes = parseInt(startInput.substring(2, 4));
+
+            // 檢查時間是否符合24小時制
+            if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+                document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
+                return;
+            }
+            
             if (!startInput || startInput.length !== 4) {
                 document.getElementById("result").innerText = "請輸入有效的上班時間，格式為 HHMM。";
                 return;
