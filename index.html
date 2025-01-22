@@ -24,16 +24,16 @@
         }
         label {
             font-size: 16px;
-            margin: 10px 0;
-            display: block;
+            display: inline-block; /* 置於同一行 */
+            margin-right: 10px; /* 右邊距 */
         }
         input[type="text"] {
             width: 50%; /* 縮短輸入框的寬度 */
             padding: 10px;
-            margin: 5px auto 15px; /* 上下邊距，左右自動居中 */
+            margin: 5px 0 15px; /* 上下邊距 */
             border: 1px solid #ccc;
             border-radius: 4px;
-            display: block; /* 使輸入框為區塊元素以便置中 */
+            display: inline-block; /* 置於同一行 */
         }
         button {
             background-color: #4CAF50;
@@ -72,10 +72,17 @@
             
             const hours = parseInt(startInput.substring(0, 2));
             const minutes = parseInt(startInput.substring(2, 4));
+            
+            // 檢查上班時間是否在 0000 到 0730 之間
+            if (startInput >= "0000" && startInput <= "0730") {
+                document.getElementById("result").innerText = "上班時間最早從07:30打卡唷！";
+                return;
+            }
+
             const startTime = new Date(`1970-01-01T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
             const workDuration = 9.5 * 60 * 60 * 1000; // 9.5小時的工作時間（毫秒）
 
-            // 檢查輸入時間是否在 1330 到 2400 之間
+            // 檢查輸入時間是否在 1330 到 1830 之間
             if (startInput >= "1330" && startInput <= "1830") {
                 document.getElementById("result").innerText = "建議您直接請假 ^^";
                 return;
