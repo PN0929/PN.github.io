@@ -47,12 +47,16 @@
         button:hover {
             background-color: #45a049;
         }
+        #result {
+            text-align: center; /* 使結果在中間 */
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 style="text-align:center;font-size: 40px;"> 什麼時候可以回家 </h1>
-        <h2 style="text-align:center;font-size: 25px;"> HURC下班時間計算機 </h2>
+        <h1>什麼時候可以回家</h1>
+        <h2>HURC下班時間計算機</h2>
         
         <label for="start">上班時間 (hhmm):</label>
         <input type="text" id="start" placeholder="HHMM">
@@ -65,43 +69,34 @@
     <script>
         function calculateOffTime() {
             const startInput = document.getElementById("start").value;
-            if (!startInput || startInput.length !== 4) {
-                document.getElementById("result").innerText = "請輸入有效的上班時間，格式為 HHMM。";
-                return;
-            }
-            
-            const hours = parseInt(startInput.substring(0, 2));
-            const minutes = parseInt(startInput.substring(2, 4));
-            const startTime = new Date(`1970-01-01T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
-            const workDuration = 9.5 * 60 * 60 * 1000; // 9.5小時的工作時間（毫秒）
-
-            // 檢查輸入格式
             if (!startInput || startInput.length !== 4 || isNaN(startInput)) {
                 document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
                 return;
             }
             
-            const hours = parseInt(startInput.substring(0, 2));
-            const minutes = parseInt(startInput.substring(2, 4));
+            const hours = parseInt(startInput.substring(0, 2), 10);
+            const minutes = parseInt(startInput.substring(2, 4), 10);
 
             // 檢查時間是否符合24小時制
             if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
                 document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
                 return;
             }
-            
+
             // 檢查上班時間是否在 0000 到 0730 之間
-            if (startInput >= "0000" && startInput <= "0730") {
+            if (startInput >= "0000" && startInput < "0730") {
                 document.getElementById("result").innerText = "上班時間最早從 07:30 打卡唷！";
                 return;
             }
             
-            // 檢查輸入時間是否在 1200 到 2400 之間
-            if (startInput >= "1200" && startInput <= "2400") {
+            // 檢查輸入時間是否在 1330 到 1830 之間
+            if (startInput >= "1330" && startInput <= "1830") {
                 document.getElementById("result").innerText = "建議您直接請假 ^^";
                 return;
             }
-
+            
+            const startTime = new Date(`1970-01-01T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
+            const workDuration = 9.5 * 60 * 60 * 1000; // 9.5小時的工作時間（毫秒）
             const lateThreshold = new Date(`1970-01-01T09:00:00`);
             let leaveDurationMinutes = 0;
 
@@ -125,7 +120,6 @@
                 const leaveHours = Math.floor(leaveDurationMinutes / 60);
                 const leaveMinutes = leaveDurationMinutes % 60;
                 document.getElementById("result").innerHTML += `⏰ 您的請假時長為：${leaveHours}小時${leaveMinutes}分鐘。<br>`;
-
                 const actualOffTime = new Date(leaveStartTime.getTime() + workDuration);
                 document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             } else {
