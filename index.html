@@ -51,7 +51,7 @@
 <body>
     <div class="container">
         <h1 style="text-align:center;font-size: 40px;"> 什麼時候可以回家 </h1>
-        <h2 style="text-align:center;font-size: 25px;"> HURC 下班時間計算機 </h2>
+        <h2 style="text-align:center;font-size: 25px;"> HURC下班時間計算機 </h2>
         
         <label for="start">上班時間 (hhmm):</label>
         <input type="text" id="start" placeholder="HHMM">
@@ -72,15 +72,16 @@
             const hours = parseInt(startInput.substring(0, 2));
             const minutes = parseInt(startInput.substring(2, 4));
             const startTime = new Date(`1970-01-01T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
-            const lateThreshold = new Date(`1970-01-01T09:00:00`);
             const workDuration = 9.5 * 60 * 60 * 1000; // 9.5小時的工作時間（毫秒）
-            let leaveDurationMinutes = 0;
 
-            // 新增的邏輯，檢查是否在下午1330之後
-            if (startTime.getHours() >= 13 && startTime.getMinutes() >= 30) {
+            // 檢查輸入時間是否在 1330 到 1830 之間
+            if (startInput >= "1330" && startInput <= "1830") {
                 document.getElementById("result").innerText = "建議您直接請假 ^^";
                 return;
             }
+
+            const lateThreshold = new Date(`1970-01-01T09:00:00`);
+            let leaveDurationMinutes = 0;
 
             if (startTime > lateThreshold) {
                 const lateDuration = (startTime - lateThreshold) / (1000 * 60);
@@ -106,7 +107,7 @@
                 const actualOffTime = new Date(leaveStartTime.getTime() + workDuration);
                 document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             } else {
-                document.getElementById("result").innerHTML = "🎉 今天也努力起床上班了！繼續保持！<br>";
+                document.getElementById("result").innerHTML = "🎉 今天也努力起床上班了耶！繼續保持！<br>";
                 const actualOffTime = new Date(startTime.getTime() + workDuration);
                 document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             }
