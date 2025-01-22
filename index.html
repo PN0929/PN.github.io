@@ -3,8 +3,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>什麼時候可以回家
-            下班時間計算機</title>
+    <title>什麼時候可以回家 下班時間計算機</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,13 +50,26 @@
     </style>
 </head>
 <body>
-    <h1 style="font-size: 16px;">什麼時候可以回家</h1>
-    <h2 style="font-size: 12px;">HURC下班時間計算機</h2>
-    <label for="start">上班時間 (hh:mm):</label>
-    <input type="time" id="start">
-    <br><br>
-    <button onclick="calculateOffTime()">計算下班時間</button>
-    <h3 id="result"></h3>
+    <div class="container">
+        <h1 style="font-size: 40px;">什麼時候可以回家</h1>
+        <h2 style="font-size: 30px;">HURC下班時間計算機</h2>
+        
+        <label for="start">上班時間 (hh:mm):</label>
+        <input type="time" id="start">
+
+        <label for="break-start">休息開始時間 (hh:mm):</label>
+        <input type="time" id="break-start">
+
+        <label for="break-end">休息結束時間 (hh:mm):</label>
+        <input type="time" id="break-end">
+
+        <label for="end">下班時間 (hh:mm):</label>
+        <input type="time" id="end">
+        
+        <br>
+        <button onclick="calculateOffTime()">計算下班時間</button>
+        <h3 id="result"></h3>
+    </div>
 
     <script>
         function calculateOffTime() {
