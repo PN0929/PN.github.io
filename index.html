@@ -123,9 +123,9 @@
         </div>
 
         <div class="side-images">
-            <img src="https://i.imgur.com/your_image1.jpg" alt="圖片1">
+            <img src="https://i.imgur.com/RLkdPsd.png" alt="圖片1">
             <a href="https://indiepublisher.tw/zh-hant/book/2099" target="_blank">
-                <img src="https://i.imgur.com/your_image2.jpg" alt="圖片2">
+                <img src="https://i.imgur.com/KBnqmVs.jpeg" alt="圖片2">
             </a>
         </div>
     </div>
@@ -175,3 +175,20 @@
                     message = "⚠️ 您已經遲到了！<br>";
                 }
                 message += `建議您這樣請假：${leaveStartTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${leaveEndTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}。<br>`;
+
+                document.getElementById("result").innerHTML = message;
+
+                const leaveHours = Math.floor(leaveDurationMinutes / 60);
+                const leaveMinutes = leaveDurationMinutes % 60;
+                document.getElementById("result").innerHTML += `⏰ 您的請假時長為：${leaveHours}小時${leaveMinutes}分鐘。<br>`;
+                const actualOffTime = new Date(leaveStartTime.getTime() + workDuration);
+                document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            } else {
+                document.getElementById("result").innerHTML = "🎉 今天也努力起床上班了耶！繼續保持！<br>";
+                const actualOffTime = new Date(startTime.getTime() + workDuration);
+                document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            }
+        }
+    </script>
+</body>
+</html>
