@@ -1,199 +1,273 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <title>什麼時候可以回家 下班時間計算機</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 10px;
-        }
+  <meta charset="UTF-8">
+  <title>什麼時候可以回家 下班時間計算機</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 10px;
+    }
 
-        .main-wrapper {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            align-items: flex-start;
-            flex-wrap: wrap;
-        }
+    .main-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
 
-        .container {
-            max-width: 600px;
-            width: 100%;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            box-sizing: border-box;
-        }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-        .side-images {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%;
-            max-width: 250px;
-        }
+    .side-events, .side-images {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 250px;
+    }
 
-        .side-images img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s ease;
-        }
+    .side-images img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+    }
 
-        .side-images img:hover {
-            transform: scale(1.05);
-        }
+    .side-images img:hover {
+      transform: scale(1.05);
+    }
 
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+    .side-events {
+      font-size: 16px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
 
-        h2 {
-            text-align: center;
-            color: #555;
-        }
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
 
-        label {
-            font-size: 16px;
-            display: block;
-            margin-top: 10px;
-        }
+    label {
+      font-size: 16px;
+      display: block;
+      margin-top: 10px;
+    }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
 
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 14px;
-            font-size: 18px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 14px;
+      font-size: 18px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
 
-        button:hover {
-            background-color: #45a049;
-        }
+    button:hover {
+      background-color: #45a049;
+    }
 
-        #result {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 18px;
-        }
+    #result {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+    }
 
-        @media (max-width: 800px) {
-            .main-wrapper {
-                flex-direction: column;
-                align-items: center;
-            }
+    @media (max-width: 800px) {
+      .main-wrapper {
+        flex-direction: column;
+        align-items: center;
+      }
 
-            .side-images {
-                max-width: 100%;
-                width: 100%;
-            }
+      .side-images, .side-events {
+        max-width: 100%;
+        width: 100%;
+      }
 
-            .side-images img {
-                max-width: 100%;
-            }
-        }
-    </style>
+      .side-images img {
+        max-width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="main-wrapper">
-        <div class="container">
-            <h1>什麼時候可以回家</h1>
-            <h2>HURC下班時間計算機</h2>
+  <div class="main-wrapper">
+    <!-- 左側特殊日 & 連假 -->
+    <div class="side-events" id="holiday-box"></div>
 
-            <label for="start">上班時間 (hhmm):</label>
-            <input type="text" id="start" placeholder="HHMM">
+    <!-- 中間 -->
+    <div class="container">
+      <h1>什麼時候可以回家</h1>
+      <h2>HURC下班時間計算機</h2>
 
-            <button onclick="calculateOffTime()">計算你的下班時間</button>
-            <h3 id="result"></h3>
-        </div>
+      <label for="start">上班時間 (hhmm):</label>
+      <input type="text" id="start" placeholder="HHMM" inputmode="numeric" pattern="[0-9]*">
 
-        <div class="side-images">
-            <img src="./image/pic1.png" alt="圖片1">
-            <a href="https://indiepublisher.tw/zh-hant/book/2099" target="_blank">
-                <img src="./image/pic2.jpg" alt="圖片2">
-            </a>
-        </div>
+      <button onclick="calculateOffTime()">計算你的下班時間</button>
+      <h3 id="result"></h3>
     </div>
 
-    <script>
-        function calculateOffTime() {
-            const startInput = document.getElementById("start").value;
-            if (!startInput || startInput.length !== 4 || isNaN(startInput)) {
-                document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
-                return;
-            }
+    <!-- 右側圖片 -->
+    <div class="side-images">
+      <img src="./image/pic1.png" alt="圖片1">
+      <a href="https://indiepublisher.tw/zh-hant/book/2099" target="_blank">
+        <img src="./image/pic2.jpg" alt="圖片2">
+      </a>
+    </div>
+  </div>
 
-            const hours = parseInt(startInput.substring(0, 2), 10);
-            const minutes = parseInt(startInput.substring(2, 4), 10);
+  <script>
+    function calculateOffTime() {
+      const startInput = document.getElementById("start").value;
+      if (!startInput || startInput.length !== 4 || isNaN(startInput)) {
+        document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
+        return;
+      }
 
-            if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-                document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
-                return;
-            }
+      const hours = parseInt(startInput.substring(0, 2), 10);
+      const minutes = parseInt(startInput.substring(2, 4), 10);
 
-            if (startInput >= "0000" && startInput < "0730") {
-                document.getElementById("result").innerText = "上班時間最早從 07:30 打卡唷！";
-                return;
-            }
+      if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+        document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
+        return;
+      }
 
-            if (startInput >= "1200" && startInput <= "2359") {
-                document.getElementById("result").innerText = "建議您直接請假 ^^";
-                return;
-            }
+      if (startInput >= "0000" && startInput < "0730") {
+        document.getElementById("result").innerText = "上班時間最早從 07:30 打卡唷！";
+        return;
+      }
 
-            const startTime = new Date(`1970-01-01T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
-            const workDuration = 9.5 * 60 * 60 * 1000;
-            const lateThreshold = new Date(`1970-01-01T09:00:00`);
-            let leaveDurationMinutes = 0;
+      if (startInput >= "1200" && startInput <= "2359") {
+        document.getElementById("result").innerText = "建議您直接請假 ^^";
+        return;
+      }
 
-            if (startTime > lateThreshold) {
-                const lateDuration = (startTime - lateThreshold) / (1000 * 60);
-                leaveDurationMinutes = Math.ceil(lateDuration / 30) * 30;
+      const startTime = new Date(`1970-01-01T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
+      const workDuration = 9.5 * 60 * 60 * 1000;
+      const lateThreshold = new Date(`1970-01-01T09:00:00`);
+      let leaveDurationMinutes = 0;
 
-                const leaveEndTime = startTime;
-                const leaveStartTime = new Date(leaveEndTime.getTime() - leaveDurationMinutes * 60 * 1000);
+      if (startTime > lateThreshold) {
+        const lateDuration = (startTime - lateThreshold) / (1000 * 60);
+        leaveDurationMinutes = Math.ceil(lateDuration / 30) * 30;
 
-                let message = "";
-                if (startTime.getHours() >= 11) {
-                    message = "⚠️ 太晚了吧！要不要直接回家<br>";
-                } else {
-                    message = "⚠️ 您已經遲到了！<br>";
-                }
-                message += `建議您這樣請假：${leaveStartTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${leaveEndTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}。<br>`;
+        const leaveEndTime = startTime;
+        const leaveStartTime = new Date(leaveEndTime.getTime() - leaveDurationMinutes * 60 * 1000);
 
-                document.getElementById("result").innerHTML = message;
-
-                const leaveHours = Math.floor(leaveDurationMinutes / 60);
-                const leaveMinutes = leaveDurationMinutes % 60;
-                document.getElementById("result").innerHTML += `⏰ 您的請假時長為：${leaveHours}小時${leaveMinutes}分鐘。<br>`;
-                const actualOffTime = new Date(leaveStartTime.getTime() + workDuration);
-                document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-            } else {
-                document.getElementById("result").innerHTML = "🎉 今天也努力起床上班了耶！繼續保持！<br>";
-                const actualOffTime = new Date(startTime.getTime() + workDuration);
-                document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-            }
+        let message = "";
+        if (startTime.getHours() >= 11) {
+          message = "⚠️ 太晚了吧！要不要直接回家<br>";
+        } else {
+          message = "⚠️ 您已經遲到了！<br>";
         }
-    </script>
+        message += `建議您這樣請假：${leaveStartTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${leaveEndTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}。<br>`;
+
+        document.getElementById("result").innerHTML = message;
+
+        const leaveHours = Math.floor(leaveDurationMinutes / 60);
+        const leaveMinutes = leaveDurationMinutes % 60;
+        document.getElementById("result").innerHTML += `⏰ 您的請假時長為：${leaveHours}小時${leaveMinutes}分鐘。<br>`;
+        const actualOffTime = new Date(leaveStartTime.getTime() + workDuration);
+        document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      } else {
+        document.getElementById("result").innerHTML = "🎉 今天也努力起床上班了耶！繼續保持！<br>";
+        const actualOffTime = new Date(startTime.getTime() + workDuration);
+        document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      }
+    }
+
+    // 顯示連假與今日特殊節日
+    const holidays = [
+      { name: "勞動節", date: "05/01" },
+      { name: "端午節", date: "05/31" },
+      { name: "中秋節", date: "09/06" },
+      { name: "國慶日", date: "10/10" },
+      { name: "元旦", date: "01/01" }
+    ];
+
+    const specialDays = {
+      "01-01": "北極熊跳水日", "01-08": "地球自轉日", "01-13": "辦公桌整理日",
+      "01-15": "草莓冰淇淋日", "01-16": "無所事事日", "01-17": "放棄新年新希望日",
+      "01-21": "感謝松鼠日", "01-27": "巧克力蛋糕日", "02-02": "可麗餅日",
+      "02-05": "巧克力火鍋日", "02-14": "圖書館愛好者日", "02-15": "單身人士關懷日",
+      "02-17": "日行一善日", "02-24": "討厭香菜日", "02-26": "開心果日",
+      "02-28": "公共場合睡覺日", "03-05": "圖書館愛好者日", "03-10": "睡午覺日",
+      "03-14": "圓周率日", "03-18": "尷尬時刻日", "03-20": "世界說故事日",
+      "03-21": "公共禮貌日", "03-22": "國際偷懶日", "03-30": "公園散步日",
+      "04-03": "世界派對日", "04-04": "步行上班日", "04-16": "穿睡衣上班日",
+      "04-26": "擁抱朋友日", "04-27": "摩斯密碼日", "05-04": "星際大戰日",
+      "05-05": "平方根日", "05-10": "打掃房間日", "05-16": "披薩派對日",
+      "05-30": "國際抱貓日", "05-31": "馬卡龍日", "06-01": "說一些好話日",
+      "06-02": "早點離開辦公室日", "06-04": "擁抱你的貓日", "06-06": "全國甜甜圈日",
+      "06-08": "好朋友日", "06-18": "國際野餐日", "06-20": "帶你的狗去上班日",
+      "07-03": "國際無塑膠袋日", "07-04": "人行道煎蛋日", "07-05": "工作狂日",
+      "07-07": "說實話日", "07-11": "為孤獨的日子打起精神日", "07-14": "隨心所欲日",
+      "07-17": "世界表情符號日", "07-21": "垃圾食物日", "07-24": "講個冷笑話日",
+      "07-30": "分享擁抱日", "08-01": "國際啤酒日", "08-05": "像狗一樣工作日",
+      "08-09": "愛書人日", "08-13": "國際左撇子日", "09-05": "有事遲到日",
+      "09-06": "對抗拖延日", "09-13": "正向思考日", "09-19": "模仿海盜說話日",
+      "09-28": "好鄰居日", "10-01": "國際咖啡日", "10-03": "世界微笑日",
+      "10-20": "國際樹懶日", "11-11": "國際雙胞胎日", "11-15": "清理你的冰箱日",
+      "11-21": "世界哈囉日", "11-30": "為了健康待在家日", "12-05": "藍色牛仔褲日",
+      "12-12": "保持口氣清新日", "12-19": "醜毛衣日", "12-31": "下定決心日"
+    };
+
+    const today = new Date();
+    const todayStr = today.toISOString().slice(5, 10);
+    const todayEvent = specialDays[todayStr];
+
+    let nearest = null;
+    let minDiff = Infinity;
+
+    holidays.forEach(h => {
+      const holiday = new Date(`${today.getFullYear()}-${h.date}`);
+      if (holiday < today) holiday.setFullYear(today.getFullYear() + 1);
+      const diff = Math.floor((holiday - today) / (1000 * 60 * 60 * 24));
+      if (diff < minDiff) {
+        minDiff = diff;
+        nearest = { ...h, days: diff };
+      }
+    });
+
+    const holidayBox = document.getElementById("holiday-box");
+    holidayBox.innerHTML = `
+      <h3>下個連假倒數</h3>
+      <p>${nearest.name}（${nearest.date}）<br>還有 ${nearest.days} 天！</p>
+    `;
+
+    if (todayEvent) {
+      holidayBox.innerHTML += `
+        <h3>今天的節日</h3>
+        <p>今天是「${todayEvent}」唷！</p>
+      `;
+    }
+  </script>
 </body>
 </html>
