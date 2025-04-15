@@ -3,38 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>什麼時候可以回家 下班時間計算機</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
         }
 
         .main-wrapper {
             display: flex;
             justify-content: center;
-            gap: 40px; /* 主內容與圖片之間的距離 */
+            gap: 40px;
             align-items: flex-start;
             flex-wrap: wrap;
         }
 
         .container {
             max-width: 600px;
+            width: 100%;
             background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            box-sizing: border-box;
         }
 
         .side-images {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            width: 100%;
+            max-width: 250px;
         }
 
         .side-images img {
-            width: 250px;
+            width: 100%;
+            height: auto;
             border-radius: 8px;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
         }
@@ -51,23 +57,25 @@
 
         label {
             font-size: 16px;
-            display: inline-block;
-            margin-right: 10px;
+            display: block;
+            margin-top: 10px;
         }
 
         input[type="text"] {
-            width: 50%;
+            width: 100%;
             padding: 10px;
             margin: 5px 0 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            display: inline-block;
+            box-sizing: border-box;
+            font-size: 16px;
         }
 
         button {
             background-color: #4CAF50;
             color: white;
-            padding: 10px;
+            padding: 14px;
+            font-size: 18px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -81,6 +89,7 @@
         #result {
             text-align: center;
             margin-top: 20px;
+            font-size: 18px;
         }
 
         @media (max-width: 800px) {
@@ -89,9 +98,13 @@
                 align-items: center;
             }
 
-            .side-images img {
+            .side-images {
+                max-width: 100%;
                 width: 100%;
-                max-width: 300px;
+            }
+
+            .side-images img {
+                max-width: 100%;
             }
         }
     </style>
@@ -105,15 +118,14 @@
             <label for="start">上班時間 (hhmm):</label>
             <input type="text" id="start" placeholder="HHMM">
 
-            <br>
             <button onclick="calculateOffTime()">計算你的下班時間</button>
             <h3 id="result"></h3>
         </div>
 
         <div class="side-images">
-            <img src="https://ppt.cc/fmNhkx" alt="圖片1">
+            <img src="https://i.imgur.com/your_image1.jpg" alt="圖片1">
             <a href="https://indiepublisher.tw/zh-hant/book/2099" target="_blank">
-                <img src="https://ppt.cc/flzymx" alt="圖片2">
+                <img src="https://i.imgur.com/your_image2.jpg" alt="圖片2">
             </a>
         </div>
     </div>
@@ -163,20 +175,3 @@
                     message = "⚠️ 您已經遲到了！<br>";
                 }
                 message += `建議您這樣請假：${leaveStartTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${leaveEndTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}。<br>`;
-
-                document.getElementById("result").innerHTML = message;
-
-                const leaveHours = Math.floor(leaveDurationMinutes / 60);
-                const leaveMinutes = leaveDurationMinutes % 60;
-                document.getElementById("result").innerHTML += `⏰ 您的請假時長為：${leaveHours}小時${leaveMinutes}分鐘。<br>`;
-                const actualOffTime = new Date(leaveStartTime.getTime() + workDuration);
-                document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-            } else {
-                document.getElementById("result").innerHTML = "🎉 今天也努力起床上班了耶！繼續保持！<br>";
-                const actualOffTime = new Date(startTime.getTime() + workDuration);
-                document.getElementById("result").innerHTML += `🕔 您的下班時間是：${actualOffTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-            }
-        }
-    </script>
-</body>
-</html>
