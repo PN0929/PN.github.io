@@ -10,48 +10,60 @@
             margin: 0;
             padding: 20px;
         }
+
+        .main-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 40px; /* 主內容與圖片之間的距離 */
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
         .container {
             max-width: 600px;
-            margin: auto;
             background: white;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            display: flex; /* 使用 flexbox */
         }
-        .content {
-            flex: 1; /* 讓內容區域佔據剩餘空間 */
+
+        .side-images {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-        .image-container {
-            width: 150px; /* 調整圖片容器的寬度，可以根據需求調整 */
-            margin-left: 20px; /* 左邊距 */
+
+        .side-images img {
+            width: 250px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
         }
-        img {
-            width: 100%; /* 圖片寬度自動填滿容器 */
-            margin-bottom: 10px; /* 圖片之間的底部間距 */
-            border-radius: 4px; /* 圖片圓角 */
-        }
+
         h1 {
             text-align: center;
             color: #333;
         }
+
         h2 {
-            text-align: center; /* 置中 */
+            text-align: center;
             color: #555;
         }
+
         label {
             font-size: 16px;
-            display: inline-block; /* 置於同一行 */
-            margin-right: 10px; /* 右邊距 */
+            display: inline-block;
+            margin-right: 10px;
         }
+
         input[type="text"] {
-            width: 50%; /* 縮短輸入框的寬度 */
+            width: 50%;
             padding: 10px;
-            margin: 5px 0 15px; /* 上下邊距 */
+            margin: 5px 0 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            display: inline-block; /* 置於同一行 */
+            display: inline-block;
         }
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -61,33 +73,48 @@
             cursor: pointer;
             width: 100%;
         }
+
         button:hover {
             background-color: #45a049;
         }
+
         #result {
-            text-align: center; /* 使結果在中間 */
+            text-align: center;
             margin-top: 20px;
+        }
+
+        @media (max-width: 800px) {
+            .main-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .side-images img {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
+    <div class="main-wrapper">
+        <div class="container">
             <h1>什麼時候可以回家</h1>
             <h2>HURC下班時間計算機</h2>
-            
+
             <label for="start">上班時間 (hhmm):</label>
             <input type="text" id="start" placeholder="HHMM">
-            
+
             <br>
             <button onclick="calculateOffTime()">計算你的下班時間</button>
             <h3 id="result"></h3>
         </div>
-        <div class="image-container">
+
+        <div class="side-images">
+            <img src="https://ppt.cc/fmNhkx" alt="圖片1">
             <a href="https://indiepublisher.tw/zh-hant/book/2099" target="_blank">
-                <img src="https://ppt.cc/fmNhkx" alt="Image 1">
+                <img src="https://ppt.cc/flzymx" alt="圖片2">
             </a>
-            <img src="https://ppt.cc/flzymx" alt="Image 2">
         </div>
     </div>
 
@@ -98,36 +125,33 @@
                 document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
                 return;
             }
-            
+
             const hours = parseInt(startInput.substring(0, 2), 10);
             const minutes = parseInt(startInput.substring(2, 4), 10);
 
-            // 檢查時間是否符合24小時制
             if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
                 document.getElementById("result").innerText = "請您再仔細確認上班時間，不要玩系統 ^^";
                 return;
             }
 
-            // 檢查上班時間是否在 0000 到 0730 之間
             if (startInput >= "0000" && startInput < "0730") {
                 document.getElementById("result").innerText = "上班時間最早從 07:30 打卡唷！";
                 return;
             }
-            
-            // 檢查輸入時間是否在 1200 到 2359 之間
+
             if (startInput >= "1200" && startInput <= "2359") {
                 document.getElementById("result").innerText = "建議您直接請假 ^^";
                 return;
             }
-            
+
             const startTime = new Date(`1970-01-01T${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`);
-            const workDuration = 9.5 * 60 * 60 * 1000; // 9.5小時的工作時間（毫秒）
+            const workDuration = 9.5 * 60 * 60 * 1000;
             const lateThreshold = new Date(`1970-01-01T09:00:00`);
             let leaveDurationMinutes = 0;
 
             if (startTime > lateThreshold) {
                 const lateDuration = (startTime - lateThreshold) / (1000 * 60);
-                leaveDurationMinutes = Math.ceil(lateDuration / 30) * 30; // 向上取整到最近的30分鐘
+                leaveDurationMinutes = Math.ceil(lateDuration / 30) * 30;
 
                 const leaveEndTime = startTime;
                 const leaveStartTime = new Date(leaveEndTime.getTime() - leaveDurationMinutes * 60 * 1000);
@@ -139,7 +163,7 @@
                     message = "⚠️ 您已經遲到了！<br>";
                 }
                 message += `建議您這樣請假：${leaveStartTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${leaveEndTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}。<br>`;
-                
+
                 document.getElementById("result").innerHTML = message;
 
                 const leaveHours = Math.floor(leaveDurationMinutes / 60);
