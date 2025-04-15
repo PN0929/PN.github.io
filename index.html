@@ -17,6 +17,19 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            display: flex; /* 使用 flexbox */
+        }
+        .content {
+            flex: 1; /* 讓內容區域佔據剩餘空間 */
+        }
+        .image-container {
+            width: 150px; /* 調整圖片容器的寬度，可以根據需求調整 */
+            margin-left: 20px; /* 左邊距 */
+        }
+        img {
+            width: 100%; /* 圖片寬度自動填滿容器 */
+            margin-bottom: 10px; /* 圖片之間的底部間距 */
+            border-radius: 4px; /* 圖片圓角 */
         }
         h1 {
             text-align: center;
@@ -59,15 +72,23 @@
 </head>
 <body>
     <div class="container">
-        <h1>什麼時候可以回家</h1>
-        <h2>HURC下班時間計算機</h2>
-        
-        <label for="start">上班時間 (hhmm):</label>
-        <input type="text" id="start" placeholder="HHMM">
-        
-        <br>
-        <button onclick="calculateOffTime()">計算你的下班時間</button>
-        <h3 id="result"></h3>
+        <div class="content">
+            <h1>什麼時候可以回家</h1>
+            <h2>HURC下班時間計算機</h2>
+            
+            <label for="start">上班時間 (hhmm):</label>
+            <input type="text" id="start" placeholder="HHMM">
+            
+            <br>
+            <button onclick="calculateOffTime()">計算你的下班時間</button>
+            <h3 id="result"></h3>
+        </div>
+        <div class="image-container">
+            <a href="https://indiepublisher.tw/zh-hant/book/2099" target="_blank">
+                <img src="https://ppt.cc/fmNhkx" alt="Image 1">
+            </a>
+            <img src="https://ppt.cc/flzymx" alt="Image 2">
+        </div>
     </div>
 
     <script>
