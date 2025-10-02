@@ -7,10 +7,12 @@
   <style>
     * { box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #2d1b4e 0%, #1a1a2e 100%); margin: 0; padding: 20px; min-height: 100vh; }
-    .main-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; position: relative; z-index: 10; align-items: flex-start; }
+    .main-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; position: relative; z-index: 10; align-items: stretch; }
+    .panel-tall { display: flex; flex-direction: column; }
+    #holiday-box { justify-content: center; }
     .panel { background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(255, 107, 0, 0.3); padding: 20px; width: 100%; max-width: 360px; border: 2px solid #ff6b00; position: relative; transition: box-shadow 0.3s; }
     .panel:hover { box-shadow: 0 8px 40px rgba(255, 107, 0, 0.6), 0 0 30px rgba(255, 149, 0, 0.4); }
-    .holiday-title { font-size: 22px; font-weight: bold; text-align: center; color: #ff6b00; margin-bottom: 10px; }
+    .holiday-title { font-size: 22px; font-weight: bold; text-align: center; color: #ff6b00; margin-bottom: 10px; margin-top: 0; }
     .holiday-date { font-size: 16px; text-align: center; margin-bottom: 12px; color: #444; }
     .holiday-countdown { text-align: center; font-size: 16px; color: #555; }
     .horoscope { margin-top: 15px; padding: 12px; background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 100%); border-radius: 8px; color: #ffb347; font-size: 14px; line-height: 1.6; box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3); border: 1px solid #ff6b00; }
@@ -53,8 +55,8 @@
 <body>
   <div id="friday"><div class="friday-content"><div class="friday-emoji">🎉</div><div class="friday-text">終於週五啦！</div><div style="color: white; font-size: 18px;">週末就在眼前，加油！💪</div><button class="friday-close" onclick="document.getElementById('friday').style.display='none'">太好了！👍</button></div></div>
   <div class="main-wrapper">
-    <div class="panel" id="holiday-box"></div>
-    <div class="panel">
+    <div class="panel panel-tall" id="holiday-box"></div>
+    <div class="panel panel-tall">
       <h1>什麼時候可以回家</h1>
       <h2>HURC下班時間計算機</h2>
       <label for="start">上班時間 (hhmm):</label>
@@ -64,7 +66,7 @@
       <h3 id="result"></h3>
       <div id="countdown"><div style="font-size:18px;font-weight:bold;margin-bottom:15px">距離可以離開辦公室還有</div><div id="countdown-display"><div class="countdown-unit"><span class="countdown-number" id="h">00</span><div class="countdown-label">小時</div></div><div class="countdown-unit"><span class="countdown-number" id="m">00</span><div class="countdown-label">分鐘</div></div><div class="countdown-unit"><span class="countdown-number" id="s">00</span><div class="countdown-label">秒</div></div></div><div class="countdown-reminder">💡 不要加班太久喔！</div></div>
     </div>
-    <div class="panel side-images"><img src="./image/pic1.png" alt="圖片1" /></div>
+    <div class="panel side-images panel-tall"><img src="./image/pic1.png" alt="圖片1" /></div>
   </div>
   <div style="text-align: center; margin-top: 20px; padding: 15px;">
     <div style="font-size: 14px; color: #666;">👩‍💻 沛恩 更新於 2025 年 10 月 2 日</div>
