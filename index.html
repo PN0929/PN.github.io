@@ -183,6 +183,7 @@
     const gravity = 0.5;
     const bounce = 0.2;
     const friction = 0.98;
+    let lastPumpkinTime = Date.now();
     
     class Pumpkin {
       constructor() {
@@ -286,13 +287,19 @@
     }
     
     function animate() {
+      // 檢查是否該生成新南瓜
+      const now = Date.now();
+      if (now - lastPumpkinTime >= 2000 && pumpkins.length < maxPumpkins) {
+        createPumpkin();
+        lastPumpkinTime = now;
+      }
+      
       for (let pumpkin of pumpkins) {
         pumpkin.update();
       }
       requestAnimationFrame(animate);
     }
     
-    setInterval(createPumpkin, 2000);
     animate();
   </script>
 </body>
