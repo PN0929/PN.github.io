@@ -53,11 +53,9 @@
     </div>
     <div class="panel side-images"><img src="./image/pic1.png" alt="圖片1" /></div>
   </div>
-  <div class="main-wrapper" style="margin-top: 20px;">
-    <div class="panel" style="text-align: center;">
-      <div style="font-size: 14px; color: #666;">👩‍💻 沛恩 更新於 2025 年 10 月 2 日</div>
-      <div style="font-size: 13px; color: #999; margin-top: 5px;">📍 目前正在泰國（不是 KK 園區）</div>
-    </div>
+  <div style="text-align: center; margin-top: 20px; padding: 15px;">
+    <div style="font-size: 14px; color: #666;">👩‍💻 沛恩 更新於 2025 年 10 月 2 日</div>
+    <div style="font-size: 13px; color: #999; margin-top: 5px;">📍 目前正在泰國（不是 KK 園區）</div>
   </div>
   <script>
     let timer, offTime;
@@ -67,7 +65,10 @@
       if (diff <= 0) {
         clearInterval(timer);
         document.getElementById('countdown').style.display = 'none';
-        document.getElementById('result').innerHTML += '<br><br>🎉 <strong>下班時間到了！快回家吧！</strong>';
+        const result = document.getElementById('result');
+        if (!result.innerHTML.includes('下班時間到了')) {
+          result.innerHTML += '<br><br>🎉 <strong>下班時間到了！快回家吧！</strong>';
+        }
         return;
       }
       document.getElementById('h').textContent = String(Math.floor(diff / 3600000)).padStart(2, '0');
