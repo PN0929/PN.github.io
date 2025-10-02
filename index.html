@@ -6,20 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; background-color: #f2f2f2; margin: 0; padding: 20px; }
+    body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #2d1b4e 0%, #1a1a2e 100%); margin: 0; padding: 20px; min-height: 100vh; }
     .main-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-    .panel { background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 20px; width: 100%; max-width: 360px; }
-    .holiday-title { font-size: 22px; font-weight: bold; text-align: center; color: #333; margin-bottom: 10px; }
+    .panel { background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(255, 107, 0, 0.3); padding: 20px; width: 100%; max-width: 360px; border: 2px solid #ff6b00; }
+    .holiday-title { font-size: 22px; font-weight: bold; text-align: center; color: #ff6b00; margin-bottom: 10px; }
     .holiday-date { font-size: 16px; text-align: center; margin-bottom: 12px; color: #444; }
     .holiday-countdown { text-align: center; font-size: 16px; color: #555; }
-    .flip-number { display: inline-block; font-family: 'Courier New', monospace; background: #222; color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 26px; margin: 0 6px; box-shadow: inset 0 -4px 8px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.2); border: 1px solid #444; letter-spacing: 1px; }
-    h1, h2 { text-align: center; color: #333; }
+    .flip-number { display: inline-block; font-family: 'Courier New', monospace; background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%); color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 26px; margin: 0 6px; box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4); border: none; letter-spacing: 1px; }
+    h1, h2 { text-align: center; color: #ff6b00; }
     label { font-size: 16px; display: block; margin-top: 10px; }
-    input[type="text"] { width: 100%; padding: 10px; margin: 5px 0 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
-    button { background-color: #4CAF50; color: white; padding: 14px; font-size: 18px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
-    button:hover { background-color: #45a049; }
+    input[type="text"] { width: 100%; padding: 10px; margin: 5px 0 15px; border: 2px solid #ffb347; border-radius: 4px; font-size: 16px; transition: border 0.3s; }
+    input[type="text"]:focus { outline: none; border-color: #ff6b00; }
+    button { background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%); color: white; padding: 14px; font-size: 18px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+    button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 107, 0, 0.6); transition: all 0.3s; }
     #result { text-align: center; margin-top: 20px; font-size: 18px; }
-    #countdown { margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; text-align: center; display: none; color: white; }
+    #countdown { margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%); border-radius: 10px; text-align: center; display: none; color: white; box-shadow: 0 4px 12px rgba(106, 27, 154, 0.4); border: 2px solid #9c27b0; }
     #countdown-display { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
     .countdown-unit { background: rgba(255,255,255,0.2); border-radius: 8px; padding: 15px 20px; min-width: 80px; }
     .countdown-number { font-size: 32px; font-weight: bold; display: block; }
@@ -33,6 +34,7 @@
     .friday-text { color: white; font-size: 32px; font-weight: bold; margin: 20px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
     .friday-close { background: white; color: #f5576c; border: none; padding: 12px 30px; font-size: 16px; border-radius: 25px; cursor: pointer; font-weight: bold; margin-top: 20px; }
     .friday-close:hover { transform: scale(1.05); }
+    .horoscope { margin-top: 15px; padding: 12px; background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 100%); border-radius: 8px; color: #ffb347; font-size: 14px; line-height: 1.6; box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3); border: 1px solid #ff6b00; }
     .side-images img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 0 8px rgba(0, 0, 0, 0.15); transition: transform 0.3s ease; }
     .side-images img:hover { transform: scale(1.05); }
     @media (max-width: 1024px) { .main-wrapper { flex-direction: column; align-items: center; } }
@@ -122,15 +124,32 @@
       "09-28": "好鄰居日", "10-01": "國際咖啡日", "10-03": "世界微笑日", "10-20": "國際樹懶日", "11-11": "國際雙胞胎日", "11-15": "清理你的冰箱日",
       "11-21": "世界哈囉日", "11-30": "為了健康待在家日", "12-05": "藍色牛仔褲日", "12-12": "保持口氣清新日", "12-19": "醜毛衣日", "12-31": "下定決心日"
     };
+    const horoscopes = [
+      { sign: "♈ 牡羊座", msg: "今天適合大膽行動，下班後去吃大餐吧！" },
+      { sign: "♉ 金牛座", msg: "財運不錯，但別衝動購物喔～" },
+      { sign: "♊ 雙子座", msg: "溝通運超強，適合跟主管提早下班！" },
+      { sign: "♋ 巨蟹座", msg: "宅在家就是最好的運勢，早點回家吧！" },
+      { sign: "♌ 獅子座", msg: "今天是發光發熱的一天，記得準時下班！" },
+      { sign: "♍ 處女座", msg: "注意細節，別忘了打卡下班～" },
+      { sign: "♎ 天秤座", msg: "平衡工作與生活，今天適合約會！" },
+      { sign: "♏ 天蠍座", msg: "神秘能量爆棚，適合低調下班偷偷爽！" },
+      { sign: "♐ 射手座", msg: "自由的靈魂渴望冒險，下班去探索吧！" },
+      { sign: "♑ 摩羯座", msg: "努力會有回報，但也要記得休息喔！" },
+      { sign: "♒ 水瓶座", msg: "創意滿滿，下班後來點不一樣的吧！" },
+      { sign: "♓ 雙魚座", msg: "夢想與現實交織，今天適合放空耍廢！" }
+    ];
+    const randomHoroscope = horoscopes[Math.floor(Math.random() * horoscopes.length)];
     const today = new Date(), todayStr = today.toISOString().slice(5, 10);
-    let nearest = null, minDiff = Infinity;
+    let nearest = null, minDiff = Infinity, maxDiff = 0;
     holidays.forEach(h => {
       const holiday = new Date(today.getFullYear(), h.month - 1, h.day);
       if (holiday < today) holiday.setFullYear(today.getFullYear() + 1);
       const diff = Math.floor((holiday - today) / 86400000);
       if (diff < minDiff) { minDiff = diff; nearest = { ...h, days: diff }; }
+      if (diff > maxDiff) maxDiff = diff;
     });
-    document.getElementById("holiday-box").innerHTML = `<div class="holiday-title">下一個國定假期倒數！</div><div class="holiday-date">${nearest.month}月${nearest.day}日，${nearest.name}</div><div class="holiday-countdown">倒數 <span class="flip-number">${nearest.days}</span> 日</div>` + (specialDays[todayStr] ? `<hr><div class="holiday-countdown">今天是「${specialDays[todayStr]}」唷！</div>` : '');
+    const progress = Math.max(0, Math.min(100, ((maxDiff - nearest.days) / maxDiff) * 100));
+    document.getElementById("holiday-box").innerHTML = `<div class="holiday-title">下一個國定假期倒數！</div><div class="holiday-date">${nearest.month}月${nearest.day}日，${nearest.name}</div><div class="holiday-countdown">倒數 <span class="flip-number">${nearest.days}</span> 日</div>` + (specialDays[todayStr] ? `<hr><div class="holiday-countdown">今天是「${specialDays[todayStr]}」唷！</div>` : '') + `<div class="horoscope"><strong>${randomHoroscope.sign}</strong><br>${randomHoroscope.msg}</div>`;
     if (today.getDay() === 5) document.getElementById('friday').style.display = 'flex';
   </script>
 </body>
