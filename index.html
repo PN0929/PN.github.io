@@ -213,4 +213,40 @@ if (today.getMonth() === 11 && (today.getDate() === 24 || today.getDate() === 25
       btn.id = "newyearBtn";
       btn.textContent = "✨ 迎接 2026 ✨";
       btn.onclick = () => {
-        overlay.innerHTML = `<div class='newyear'><h1>💖 一起迎接更
+        overlay.innerHTML = `<div class='newyear'><h1>💖 一起迎接更閃亮的明年！</h1></div>`;
+      };
+      overlay.appendChild(btn);
+    }, 15000);
+  }
+}
+
+/* ❄️ 雪花 */
+const snowflakes = [];
+const maxSnowflakes = (today.getDate() === 24 || today.getDate() === 25) ? 150 : 80;
+class Snowflake {
+  constructor() {
+    this.size = Math.random() * 8 + 4;
+    this.x = Math.random() * window.innerWidth;
+    this.y = -this.size;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = Math.random() * 0.5 + 0.2;
+    this.el = document.createElement("div");
+    this.el.className = "snowflake";
+    this.el.textContent = "❄️";
+    this.el.style.fontSize = this.size + "px";
+    document.body.appendChild(this.el);
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.y >= window.innerHeight - this.size) {
+      this.y = window.innerHeight - this.size; this.vy = 0; this.vx = 0;
+    }
+    this.el.style.left = `${this.x}px`; this.el.style.top = `${this.y}px`;
+  }
+}
+function createSnowflake() { if (snowflakes.length < maxSnowflakes) snowflakes.push(new Snowflake()); }
+function animateSnow() { createSnowflake(); for (const f of snowflakes) f.update(); requestAnimationFrame(animateSnow); }
+animateSnow();
+</script>
+</body>
+</html>
