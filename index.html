@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>什麼時候可以回家 下班時間計算機</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <style>
     * { box-sizing: border-box; }
     body {
@@ -103,10 +103,18 @@
 
     .mariah-wrap {
       position: relative; border-radius: 8px; overflow: hidden;
-      min-height: 200px; /* 避免內容未載入時高度為 0 */
       background: radial-gradient(closest-side, rgba(255,255,255,0.15), transparent);
     }
-    .mariah-video { width: 100%; border-radius: 8px; display: block; }
+    /* 關鍵：確保行動裝置上也有可見高度與版面 */
+    .mariah-video, .mariah-fallback {
+      width: 100%; display: block; border-radius: 8px;
+      aspect-ratio: 16 / 9; object-fit: cover; height: auto;
+      background: #000;
+    }
+    /* iOS Safari poster 不顯示時，先保留一塊高度 */
+    @supports not (aspect-ratio: 1 / 1) {
+      .mariah-video, .mariah-fallback { height: 202px; } /* 約 16:9 in mobile */
+    }
 
     @media (max-width: 1024px) {
       .main-wrapper { flex-direction: column; align-items: center; }
@@ -152,16 +160,29 @@
 
     <div class="panel panel-tall">
       <div class="holiday-title" style="margin-bottom:12px;">❄️ 正在解凍 Mariah Carey...</div>
+
+      <!-- 圖片優先：先放 fallback 圖，待影片可用再替換 -->
+      <img
+        id="mariahFallback"
+        class="mariah-fallback"
+        src="./mariah-poster.jpg"
+        alt="Mariah Carey"
+        loading="eager"
+      />
+
       <div class="mariah-wrap" id="mariahWrap">
         <video
           id="mariahVideo"
           class="mariah-video"
-          src="./mariah-defrosting-slow.mp4"
           poster="./mariah-poster.jpg"
-          muted playsinline preload="auto"
-        ></video>
-        <!-- 影像載入失敗時的備援圖片 -->
-        <img id="mariahFallback" alt="Mariah Carey" style="display:none;width:100%;border-radius:8px;" />
+          preload="metadata"
+          muted
+          playsinline
+          webkit-playsinline
+          disablepictureinpicture
+        >
+          <source src="./mariah-defrosting-slow.mp4" type="video/mp4" />
+        </video>
       </div>
     </div>
   </div>
@@ -263,47 +284,54 @@
          <div class="horoscope"><strong>${randomGift.sign}</strong><br>${randomGift.msg}</div>`;
     })();
 
-    // Mariah Carey 播放點位依日期 + 備援顯示
+    // 影片可用則顯示影片、否則保持圖片
     const mariahVideo = document.getElementById("mariahVideo");
     const mariahFallback = document.getElementById("mariahFallback");
+    let metaLoaded = false;
 
-    function showFallbackImage() {
-      // 以 SVG data URI 當通用備援（避免路徑錯誤時整塊消失）
-      const svg = `
-        <svg xmlns='http://www.w3.org/2000/svg' width='1200' height='675'>
-          <defs>
-            <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
-              <stop offset='0%' stop-color='#2d1b4e'/>
-              <stop offset='100%' stop-color='#1a1a2e'/>
-            </linearGradient>
-          </defs>
-          <rect width='100%' height='100%' fill='url(#g)'/>
-          <text x='50%' y='48%' fill='#ffb347' font-size='42' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif'>Mariah Carey</text>
-          <text x='50%' y='58%' fill='#ff6b00' font-size='28' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif'>解凍預覽（影像載入失敗時顯示）</text>
-        </svg>`;
-      const dataUri = "data:image/svg+xml;utf8," + encodeURIComponent(svg.trim());
-      mariahVideo.style.display = "none";
-      mariahFallback.src = dataUri;
-      mariahFallback.style.display = "block";
+    function switchToVideoIfReady() {
+      // iOS 需有寬高才能顯示 poster，已在 CSS 設定 aspect-ratio
+      if (isFinite(mariahVideo.duration) && mariahVideo.duration > 0) {
+        // 依 12/24 進度設定起始時間
+        const today = new Date();
+        const yearStart = new Date(today.getFullYear(), 0, 1);
+        const dayOfYear = Math.floor((today - yearStart) / 86400000);
+        const christmasEveDay = Math.floor((new Date(today.getFullYear(), 11, 24) - yearStart) / 86400000);
+        const progress = Math.min(dayOfYear / christmasEveDay, 1);
+        mariahVideo.currentTime = mariahVideo.duration * progress;
+        // 顯示影片、隱藏圖片
+        mariahFallback.style.display = "none";
+        mariahVideo.style.visibility = "visible";
+      }
     }
 
-    let metaLoaded = false;
+    mariahVideo.style.visibility = "hidden"; // 先隱藏，避免黑塊閃爍
     mariahVideo.addEventListener("loadedmetadata", () => {
       metaLoaded = true;
-      const today = new Date();
-      const yearStart = new Date(today.getFullYear(), 0, 1);
-      const dayOfYear = Math.floor((today - yearStart) / 86400000);
-      const christmasEveDay = Math.floor((new Date(today.getFullYear(), 11, 24) - yearStart) / 86400000);
-      const progress = Math.min(dayOfYear / christmasEveDay, 1);
-      if (isFinite(mariahVideo.duration) && mariahVideo.duration > 0) {
-        mariahVideo.currentTime = mariahVideo.duration * progress;
-      }
-    });
-    mariahVideo.addEventListener("error", showFallbackImage);
-    // 若 3 秒內仍未讀到 metadata，也換用備援圖
-    setTimeout(() => { if (!metaLoaded) showFallbackImage(); }, 3000);
+      switchToVideoIfReady();
+    }, { once: true });
 
-    // 吹氣互動
+    mariahVideo.addEventListener("loadeddata", () => {
+      // 某些行動瀏覽器只觸發 loadeddata
+      if (!metaLoaded) metaLoaded = true;
+      switchToVideoIfReady();
+    }, { once: true });
+
+    mariahVideo.addEventListener("error", () => {
+      // 保持圖片，不做事
+      mariahVideo.style.visibility = "hidden";
+      mariahFallback.style.display = "block";
+    });
+
+    // 若 2.5 秒後仍未取得 metadata，就維持圖片
+    setTimeout(() => {
+      if (!metaLoaded) {
+        mariahVideo.style.visibility = "hidden";
+        mariahFallback.style.display = "block";
+      }
+    }, 2500);
+
+    // 吹氣互動：3 次後詢問是否播放
     const mariahWrap = document.getElementById("mariahWrap");
     const fog = document.createElement("div");
     fog.style.position = "absolute";
@@ -372,9 +400,7 @@
                     style="width:100%;height:100%;border:none;"></iframe>
           `;
         };
-        document.getElementById("cancelBtn").onclick = () => {
-          overlay.style.display = "none";
-        };
+        document.getElementById("cancelBtn").onclick = () => { overlay.style.display = "none"; };
       }
     }
 
@@ -382,12 +408,8 @@
     document.addEventListener("mouseup", stopBlow);
     mariahWrap.addEventListener("touchstart", (e) => { e.preventDefault(); startBlow(); }, { passive: false });
     document.addEventListener("touchend", stopBlow);
-    document.addEventListener("keydown", (e) => {
-      if (e.code === "Space") { e.preventDefault(); startBlow(); }
-    });
-    document.addEventListener("keyup", (e) => {
-      if (e.code === "Space") { stopBlow(); }
-    });
+    document.addEventListener("keydown", (e) => { if (e.code === "Space") { e.preventDefault(); startBlow(); }});
+    document.addEventListener("keyup", (e) => { if (e.code === "Space") { stopBlow(); }});
 
     // 雪花
     const snowflakes = [];
