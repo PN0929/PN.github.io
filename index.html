@@ -11,7 +11,6 @@ body {
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   margin: 0; padding: 20px; min-height: 100vh;
   color: #fff; overflow-x: hidden;
-  transition: background 1s ease;
 }
 .main-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; position: relative; z-index: 5; }
 .panel {
@@ -62,6 +61,19 @@ input[type="text"] {
 #newyearBtn:hover { transform: scale(1.08); box-shadow: 0 0 30px rgba(255,230,100,0.9); }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* 👩‍💻 作者資訊 */
+.footer-note {
+  text-align: center;
+  font-size: 14px;
+  color: #f8e8b0;
+  margin-top: 30px;
+  animation: glowText 2s infinite alternate;
+}
+@keyframes glowText {
+  from { text-shadow: 0 0 5px #f8c25c; }
+  to { text-shadow: 0 0 15px #fff6b7; }
+}
 </style>
 </head>
 
@@ -95,11 +107,13 @@ input[type="text"] {
   <div class="panel panel-tall">
     <div class="holiday-title" style="font-size:22px;font-weight:bold;text-align:center;color:#f8c25c;">🎅 正在解凍 Mariah Carey...</div>
     <video id="mariahVideo" src="./mariah-defrosting-slow.mp4" muted playsinline preload="auto" style="width:100%;border-radius:12px;"></video>
-    <div class="horoscope" id="horoscope"></div>
   </div>
 </div>
 
+<div class="footer-note">👩‍💻 沛恩 更新於 2025 年 11 月 2 日（回來上班了ＱＱ）</div>
+
 <script>
+/* === 下班時間計算 === */
 let timer, offTime;
 function update() {
   if (!offTime) return;
@@ -160,14 +174,14 @@ function calc() {
   }, 800);
 }
 
-/* === 聖誕節倒數 & 星座禮物 === */
+/* === 聖誕節倒數 + 星座建議 === */
 const today = new Date();
 const christmas = new Date(today.getFullYear(), 11, 25);
 if (today > christmas) christmas.setFullYear(today.getFullYear() + 1);
 const daysLeft = Math.ceil((christmas - today) / 86400000);
-document.getElementById("holiday-box").innerHTML = `<div class="holiday-title" style="font-size:22px;text-align:center;color:#f8c25c;">🎁 聖誕節倒數</div><div class="holiday-date" style="text-align:center;">距離聖誕節還有 <span class="flip-number">${daysLeft}</span> 天</div>`;
+const holidayBox = document.getElementById("holiday-box");
+holidayBox.innerHTML = `<div class="holiday-title" style="font-size:22px;text-align:center;color:#f8c25c;">🎁 聖誕節倒數</div><div class="holiday-date" style="text-align:center;">距離聖誕節還有 <span class="flip-number">${daysLeft}</span> 天</div>`;
 
-/* === 星座聖誕禮物建議 === */
 const horoscopes = [
   { sign: "♈ 牡羊座", msg: "行動派的你最適合收到一台咖啡機，提神又提速 ☕" },
   { sign: "♉ 金牛座", msg: "一條高級圍巾最能溫暖你——還有你的理財心 💰" },
@@ -183,7 +197,7 @@ const horoscopes = [
   { sign: "♓ 雙魚座", msg: "音樂盒或星空燈，讓夢想在夜裡閃閃發光 🌙" }
 ];
 const randomHoroscope = horoscopes[Math.floor(Math.random() * horoscopes.length)];
-document.getElementById("horoscope").innerHTML = `<strong>${randomHoroscope.sign}</strong><br>${randomHoroscope.msg}`;
+holidayBox.innerHTML += `<div class="horoscope"><strong>${randomHoroscope.sign}</strong><br>${randomHoroscope.msg}</div>`;
 
 /* === Mariah Carey 解凍影片 === */
 const mariahVideo = document.getElementById("mariahVideo");
@@ -205,22 +219,9 @@ if (today.getMonth() === 11 && (today.getDate() === 24 || today.getDate() === 25
             allow="autoplay; fullscreen" allowfullscreen></iframe>
     <div id="xmasText">${today.getDate() === 24 ? "🎅 Mariah Carey 解凍完成！" : "🎉 Merry Christmas Everyone! 💖"}</div>`;
   setTimeout(() => document.getElementById("xmasText").classList.add("show"), 10000);
-  
-  // 🎆 新年彩蛋按鈕
-  if (today.getDate() === 25) {
-    setTimeout(() => {
-      const btn = document.createElement("button");
-      btn.id = "newyearBtn";
-      btn.textContent = "✨ 迎接 2026 ✨";
-      btn.onclick = () => {
-        overlay.innerHTML = `<div class='newyear'><h1>💖 一起迎接更閃亮的明年！</h1></div>`;
-      };
-      overlay.appendChild(btn);
-    }, 15000);
-  }
 }
 
-/* ❄️ 雪花 */
+/* ❄️ 雪花飄落 */
 const snowflakes = [];
 const maxSnowflakes = (today.getDate() === 24 || today.getDate() === 25) ? 150 : 80;
 class Snowflake {
@@ -228,25 +229,4 @@ class Snowflake {
     this.size = Math.random() * 8 + 4;
     this.x = Math.random() * window.innerWidth;
     this.y = -this.size;
-    this.vx = (Math.random() - 0.5) * 0.3;
-    this.vy = Math.random() * 0.5 + 0.2;
-    this.el = document.createElement("div");
-    this.el.className = "snowflake";
-    this.el.textContent = "❄️";
-    this.el.style.fontSize = this.size + "px";
-    document.body.appendChild(this.el);
-  }
-  update() {
-    this.x += this.vx; this.y += this.vy;
-    if (this.y >= window.innerHeight - this.size) {
-      this.y = window.innerHeight - this.size; this.vy = 0; this.vx = 0;
-    }
-    this.el.style.left = `${this.x}px`; this.el.style.top = `${this.y}px`;
-  }
-}
-function createSnowflake() { if (snowflakes.length < maxSnowflakes) snowflakes.push(new Snowflake()); }
-function animateSnow() { createSnowflake(); for (const f of snowflakes) f.update(); requestAnimationFrame(animateSnow); }
-animateSnow();
-</script>
-</body>
-</html>
+    this.vx =
