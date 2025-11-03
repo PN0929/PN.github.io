@@ -85,11 +85,10 @@
     .ghost-loader { display: inline-block; font-size: 50px; animation: ghostSpin 1.5s linear infinite; }
     @keyframes ghostSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* overlay for Maria */
     #xmasOverlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.9);
       display: none; justify-content: center; align-items: center; flex-direction: column;
-      z-index: 9999;
+      z-index: 9999; padding: 20px;
     }
     #xmasOverlay button {
       background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
@@ -97,7 +96,6 @@
       margin: 6px; cursor: pointer;
     }
 
-    /* snowflakes */
     .snowflake {
       position: fixed; color: white; pointer-events: none; z-index: 0;
       text-shadow: 0 0 8px rgba(255,255,255,0.6);
@@ -108,30 +106,24 @@
     }
     .mariah-video { width: 100%; border-radius: 8px; display: block; }
 
+    .friday-close {
+      background: white; color: #f5576c; border: none;
+      padding: 12px 30px; font-size: 16px; border-radius: 25px;
+      cursor: pointer; font-weight: bold; margin-top: 20px;
+    }
+    .friday-close:hover { transform: scale(1.05); }
+
     @media (max-width: 1024px) {
       .main-wrapper { flex-direction: column; align-items: center; }
     }
   </style>
 </head>
 <body>
-  <!-- 原本的週五彈窗保留 -->
-  <div id="friday">
-    <div class="friday-content" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 40px; border-radius: 20px; text-align: center; max-width: 90%; display:none;">
-      <div class="friday-emoji" style="font-size:80px;">🎉</div>
-      <div class="friday-text" style="color:white;font-size:32px;font-weight:bold;margin:20px 0;">終於週五啦！</div>
-      <div style="color: white; font-size: 18px;">週末就在眼前，加油！💪</div>
-      <button class="friday-close" onclick="document.getElementById('friday').style.display='none'">太好了！👍</button>
-    </div>
-  </div>
-
-  <!-- 聖誕/Mariah 播放 overlay -->
   <div id="xmasOverlay"></div>
 
   <div class="main-wrapper">
-    <!-- 左：倒數＋星座 -->
     <div class="panel panel-tall" id="holiday-box"></div>
 
-    <!-- 中：下班時間計算 -->
     <div class="panel panel-tall">
       <h1>什麼時候可以回家</h1>
       <h2>HURC下班時間計算機</h2>
@@ -163,7 +155,6 @@
       </div>
     </div>
 
-    <!-- 右：Mariah Carey 解凍 -->
     <div class="panel panel-tall">
       <div class="holiday-title" style="margin-bottom:12px;">❄️ 正在解凍 Mariah Carey...</div>
       <div class="mariah-wrap" id="mariahWrap">
@@ -242,12 +233,13 @@
       }, 800);
     }
 
-    // ===== 聖誕倒數 + 星座建議（放在左側 panel） =====
-    const today = new Date();
-    const christmas = new Date(today.getFullYear(), 11, 25);
-    if (christmas < today) christmas.setFullYear(today.getFullYear() + 1);
-    const daysLeft = Math.ceil((christmas - today) / 86400000);
-    const giftHoroscopes = [
+    // 聖誕倒數 + 星座建議
+    (function(){
+      const today = new Date();
+      const christmas = new Date(today.getFullYear(), 11, 25);
+      if (christmas < today) christmas.setFullYear(today.getFullYear() + 1);
+      const daysLeft = Math.ceil((christmas - today) / 86400000);
+      const giftHoroscopes = [
       { sign: "♈ 牡羊座", msg: "行動派的你最適合收到一台咖啡機，提神又提速 ☕" },
       { sign: "♉ 金牛座", msg: "一條高級圍巾最能溫暖你——還有你的理財心 💰" },
       { sign: "♊ 雙子座", msg: "兩份禮物會讓你比較不糾結，因為你都想要 😎" },
@@ -260,16 +252,18 @@
       { sign: "♑ 摩羯座", msg: "實用的保溫瓶或筆電支架，職場聖誕 MVP 💼" },
       { sign: "♒ 水瓶座", msg: "電子小玩具是你的浪漫，越怪越喜歡 ⚡" },
       { sign: "♓ 雙魚座", msg: "音樂盒或星空燈，讓夢想在夜裡閃閃發光 🌙" }
-    ];
-    const randomGift = giftHoroscopes[Math.floor(Math.random() * giftHoroscopes.length)];
-    document.getElementById("holiday-box").innerHTML =
-      `<div class="holiday-title">🎄 聖誕節倒數</div>
-       <div class="holiday-date">距離聖誕節還有 <span class="flip-number">${daysLeft}</span> 天</div>
-       <div class="horoscope"><strong>${randomGift.sign}</strong><br>${randomGift.msg}</div>`;
+      ];
+      const randomGift = giftHoroscopes[Math.floor(Math.random() * giftHoroscopes.length)];
+      document.getElementById("holiday-box").innerHTML =
+        `<div class="holiday-title">🎄 聖誕節倒數</div>
+         <div class="holiday-date">距離聖誕節還有 <span class="flip-number">${daysLeft}</span> 天</div>
+         <div class="horoscope"><strong>${randomGift.sign}</strong><br>${randomGift.msg}</div>`;
+    })();
 
-    // ===== Mariah Carey 進度（日期對應進度） =====
+    // Mariah Carey 播放點位依日期
     const mariahVideo = document.getElementById("mariahVideo");
     mariahVideo.addEventListener("loadedmetadata", () => {
+      const today = new Date();
       const yearStart = new Date(today.getFullYear(), 0, 1);
       const dayOfYear = Math.floor((today - yearStart) / 86400000);
       const christmasEveDay = Math.floor((new Date(today.getFullYear(), 11, 24) - yearStart) / 86400000);
@@ -277,7 +271,7 @@
       mariahVideo.currentTime = mariahVideo.duration * progress;
     });
 
-    // ===== 吹氣互動：長按/空白鍵/觸控 -> 起霧 -> 3次後才問要不要播歌 =====
+    // 吹氣互動
     const mariahWrap = document.getElementById("mariahWrap");
     const fog = document.createElement("div");
     fog.style.position = "absolute";
@@ -310,11 +304,33 @@
         const overlay = document.getElementById("xmasOverlay");
         overlay.style.display = "flex";
         overlay.innerHTML = `
-          <div style="max-width:360px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.2);padding:20px;border-radius:12px;">
-            <div style="font-size:18px;margin-bottom:10px;">💬 Mariah：你已經等不及要先聽我唱了嗎？</div>
-            <div style="font-size:13px;margin-bottom:12px;">滑鼠再點一次才播音樂。（🎶 播放 / ❌ 取消）</div>
-            <button id="playBtn">🎶 播放</button>
-            <button id="cancelBtn">❌ 取消</button>
+          <div style="
+            max-width:380px;
+            padding:24px;
+            border-radius:16px;
+            background:rgba(255,255,255,0.15);
+            backdrop-filter:blur(12px);
+            border:1px solid rgba(255,215,128,0.6);
+            box-shadow:0 0 25px rgba(255,200,100,0.3);
+            text-align:center;
+          ">
+            <div style="font-size:20px;color:#ffe9b3;margin-bottom:14px;font-weight:600;">
+              💬 Mariah：你已經等不及要先聽我唱了嗎？
+            </div>
+            <div style="font-size:14px;color:#fff9e6;margin-bottom:18px;opacity:0.9;">
+              滑鼠再點一次才播音樂。（🎶 播放 / ❌ 取消）
+            </div>
+            <button id="playBtn" style="
+              background:linear-gradient(135deg,#f8c25c 0%,#ff9500 100%);
+              border:none;color:#fff;padding:10px 20px;border-radius:8px;
+              font-size:16px;cursor:pointer;margin:4px 8px;
+            ">🎶 播放</button>
+            <button id="cancelBtn" style="
+              background:rgba(0,0,0,0.25);
+              border:1px solid rgba(255,255,255,0.4);
+              color:#fff;padding:10px 20px;border-radius:8px;
+              font-size:16px;cursor:pointer;margin:4px 8px;
+            ">❌ 取消</button>
           </div>
         `;
         document.getElementById("playBtn").onclick = () => {
@@ -332,24 +348,16 @@
 
     mariahWrap.addEventListener("mousedown", startBlow);
     document.addEventListener("mouseup", stopBlow);
-    mariahWrap.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      startBlow();
-    }, { passive: false });
+    mariahWrap.addEventListener("touchstart", (e) => { e.preventDefault(); startBlow(); }, { passive: false });
     document.addEventListener("touchend", stopBlow);
     document.addEventListener("keydown", (e) => {
-      if (e.code === "Space") {
-        e.preventDefault();
-        startBlow();
-      }
+      if (e.code === "Space") { e.preventDefault(); startBlow(); }
     });
     document.addEventListener("keyup", (e) => {
-      if (e.code === "Space") {
-        stopBlow();
-      }
+      if (e.code === "Space") { stopBlow(); }
     });
 
-    // ===== 雪花（取代萬聖節南瓜） =====
+    // 雪花
     const snowflakes = [];
     const maxSnow = 50;
     class Snow {
@@ -366,12 +374,10 @@
         document.body.appendChild(this.el);
       }
       update() {
-        this.x += this.vx;
-        this.y += this.vy;
+        this.x += this.vx; this.y += this.vy;
         if (this.y >= window.innerHeight - this.size) {
           this.y = window.innerHeight - this.size;
-          this.vy = 0;
-          this.vx = 0;
+          this.vy = 0; this.vx = 0;
         }
         this.el.style.left = this.x + 'px';
         this.el.style.top = this.y + 'px';
@@ -382,24 +388,10 @@
     }
     function animateSnow() {
       createSnow();
-      for (const s of snowflakes) s.update();
+      snowflakes.forEach(s => s.update());
       requestAnimationFrame(animateSnow);
     }
     animateSnow();
-
-    // 週五彈窗
-    const todayDay = new Date().getDay();
-    if (todayDay === 5) {
-      document.querySelector('#friday .friday-content').style.display = 'block';
-      document.getElementById('friday').style.display = 'flex';
-      document.getElementById('friday').style.justifyContent = 'center';
-      document.getElementById('friday').style.alignItems = 'center';
-      document.getElementById('friday').style.position = 'fixed';
-      document.getId = 'friday';
-      document.getElementById('friday').style.inset = '0';
-      document.getElementById('friday').style.background = 'rgba(0,0,0,0.8)';
-      document.getElementById('friday').style.zIndex = '999';
-    }
   </script>
 </body>
 </html>
