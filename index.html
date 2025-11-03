@@ -5,211 +5,58 @@
   <title>🎄 Mariah Carey 聖誕倒數 x 下班計算機</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    * { box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      margin: 0; padding: 20px; min-height: 100vh;
-      color: #fff; overflow-x: hidden;
-    }
-    .main-wrapper {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
-      position: relative; z-index: 5;
+      margin: 0; padding: 20px; color: #fff;
+      min-height: 100vh; overflow-x: hidden;
     }
     .panel {
-      background: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.1);
+      border: 2px solid #f8c25c;
       border-radius: 12px;
       padding: 20px;
       max-width: 380px;
-      border: 2px solid #f8c25c;
+      margin: 10px auto;
       box-shadow: 0 8px 24px rgba(255,255,255,0.2);
       backdrop-filter: blur(6px);
     }
-    h1, h2 { text-align: center; color: #f8c25c; }
-    label { font-size: 16px; display: block; margin-top: 10px; }
-    input[type="text"] {
-      width: 100%; padding: 10px; margin: 5px 0 15px;
-      border: 2px solid #f8c25c; border-radius: 4px; font-size: 16px;
-      background: rgba(0,0,0,0.15); color: #fff;
-    }
+    h1, h2, h3 { text-align: center; color: #f8c25c; }
     button {
       background: linear-gradient(135deg, #f8c25c 0%, #f7b733 100%);
-      color: #fff; padding: 14px; font-size: 18px;
-      border: none; border-radius: 6px; cursor: pointer; width: 100%;
-      transition: 0.3s;
+      border: none; border-radius: 6px;
+      padding: 14px; font-size: 16px;
+      color: #fff; width: 100%; cursor: pointer;
     }
-    button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(248,194,92,0.6); }
-    #loading { display: none; text-align: center; margin: 15px 0; }
-    .loader-icon { font-size: 46px; animation: spin 2s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #result { text-align: center; margin-top: 15px; font-size: 17px; }
-    #countdown {
-      margin-top: 20px; background: rgba(0,0,0,0.15);
-      border-radius: 12px; padding: 15px; display: none; text-align: center;
-      border: 1px solid rgba(248,194,92,0.4);
-    }
-    #countdown-display { display: flex; justify-content: center; gap: 10px; }
-    .countdown-unit {
-      background: rgba(255,255,255,0.07);
-      border-radius: 8px;
-      padding: 10px 14px;
-      min-width: 72px;
-    }
-    .countdown-number { font-size: 30px; font-weight: bold; color: #f8c25c; }
-    .countdown-label { font-size: 13px; }
-    .holiday-title { font-size: 22px; font-weight: bold; text-align: center; color: #f8c25c; margin-bottom: 10px; }
-    .holiday-date { text-align: center; margin-bottom: 10px; }
-    .flip-number {
-      display: inline-block; font-family: 'Courier New', monospace;
-      background: linear-gradient(135deg, #f8c25c 0%, #f7b733 100%);
-      color: #fff; padding: 6px 12px; border-radius: 6px;
-      font-size: 20px; margin: 0 4px; box-shadow: 0 4px 12px rgba(248,194,92,0.4);
-    }
-    .horoscope {
-      margin-top: 15px; padding: 12px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 8px;
-      color: #ffe9a1; font-size: 14px; line-height: 1.6;
-      border: 1px solid rgba(248,194,92,0.4);
-      box-shadow: 0 2px 8px rgba(248,194,92,0.2);
-    }
-    #mariahVideo { width: 100%; border-radius: 12px; }
     #xmasOverlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000; z-index: 9999; display: none;
+      background: rgba(0,0,0,0.9); color: #fff; display: none;
       justify-content: center; align-items: center; flex-direction: column;
-      animation: fadeIn 0.5s ease;
+      z-index: 9999; text-align: center;
     }
-    #xmasOverlay iframe {
-      width: 100%; height: 100%; border: none; object-fit: cover;
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .snowflake {
-      position: fixed; color: #fff; pointer-events: none;
-      z-index: 0; opacity: 0.9; text-shadow: 0 0 8px rgba(255,255,255,0.6);
+    #xmasOverlay button {
+      width: auto; margin: 10px; font-size: 16px;
+      background: linear-gradient(135deg, #f8c25c 0%, #f7b733 100%);
     }
     .footer-note {
-      text-align: center;
-      font-size: 14px;
-      color: #f8e8b0;
-      margin-top: 30px;
-      animation: glowText 2s infinite alternate;
+      text-align: center; color: #f8e8b0; font-size: 14px;
+      margin-top: 30px; animation: glow 2s infinite alternate;
     }
-    @keyframes glowText {
-      from { text-shadow: 0 0 5px #f8c25c; }
-      to { text-shadow: 0 0 15px #fff6b7; }
-    }
+    @keyframes glow { from{ text-shadow:0 0 5px #f8c25c; } to{ text-shadow:0 0 15px #fff6b7; } }
   </style>
 </head>
 <body>
-  <div id="xmasOverlay"></div>
-  <div class="main-wrapper">
-    <div class="panel" id="holiday-box"></div>
-    <div class="panel">
-      <h1>🎄 什麼時候可以回家</h1>
-      <h2>HURC下班時間計算機</h2>
-      <label for="start">上班時間 (hhmm):</label>
-      <input type="text" id="start" placeholder="HHMM" inputmode="numeric" pattern="[0-9]*" />
-      <button onclick="calc()">計算你的下班時間</button>
-      <div id="loading"><div class="loader-icon">🎅</div><div style="margin-top:10px;">計算中...</div></div>
-      <h3 id="result"></h3>
-      <div id="countdown">
-        <div style="font-size:18px;font-weight:bold;margin-bottom:15px">距離可以離開辦公室還有</div>
-        <div id="countdown-display">
-          <div class="countdown-unit"><span class="countdown-number" id="h">00</span><div class="countdown-label">小時</div></div>
-          <div class="countdown-unit"><span class="countdown-number" id="m">00</span><div class="countdown-label">分鐘</div></div>
-          <div class="countdown-unit"><span class="countdown-number" id="s">00</span><div class="countdown-label">秒</div></div>
-        </div>
-        <div style="margin-top:10px;font-size:13px;opacity:0.9;">💡 不要加班太久喔！</div>
-      </div>
-    </div>
-    <div class="panel">
-      <div class="holiday-title">🎅 正在解凍 Mariah Carey...</div>
-      <video id="mariahVideo" src="./mariah-defrosting-slow.mp4" muted playsinline preload="auto"></video>
-    </div>
+  <div class="panel">
+    <h1>🎄 Mariah Carey 解凍中</h1>
+    <video id="mariahVideo" src="./mariah-defrosting-slow.mp4" muted playsinline preload="auto" style="width:100%;border-radius:12px;"></video>
   </div>
+  <div id="xmasOverlay"></div>
   <div class="footer-note">👩‍💻 沛恩 更新於 2025 年 11 月 2 日（回來上班了ＱＱ）</div>
   <script>
-    let timer, offTime;
-    function updateCountdown() {
-      if (!offTime) return;
-      const now = new Date();
-      const diff = offTime - now;
-      if (diff <= 0) {
-        clearInterval(timer);
-        document.getElementById('countdown').style.display = 'none';
-        const result = document.getElementById('result');
-        if (!result.innerHTML.includes('下班時間到了')) {
-          result.innerHTML += '<br><br>🎉 <strong>下班時間到了！快回家吧！</strong>';
-        }
-        return;
-      }
-      document.getElementById('h').textContent = String(Math.floor(diff / 3600000)).padStart(2, '0');
-      document.getElementById('m').textContent = String(Math.floor(diff % 3600000 / 60000)).padStart(2, '0');
-      document.getElementById('s').textContent = String(Math.floor(diff % 60000 / 1000)).padStart(2, '0');
-    }
-    function calc() {
-      const input = document.getElementById("start").value;
-      const result = document.getElementById("result");
-      const loading = document.getElementById("loading");
-      loading.style.display = 'block';
-      result.innerHTML = '';
-      document.getElementById('countdown').style.display = 'none';
-      setTimeout(() => {
-        loading.style.display = 'none';
-        if (!input || input.length !== 4 || isNaN(input)) { result.innerText = "請您再仔細確認上班時間，不要玩系統 ^^"; return; }
-        const h = parseInt(input.substring(0, 2)), min = parseInt(input.substring(2, 4));
-        if (h < 0 || h > 23 || min < 0 || min > 59) { result.innerText = "請您再仔細確認上班時間，不要玩系統 ^^"; return; }
-        if (input >= "0000" && input < "0730") { result.innerText = "上班時間最早從 07:30 打卡唷！"; return; }
-        if (input >= "1200" && input <= "2359") { result.innerText = "建議您直接請假 ^^"; return; }
-        const now = new Date();
-        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, min, 0);
-        const work = 9.5 * 3600000;
-        const late = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
-        if (start > late) {
-          const leaveMins = Math.ceil((start - late) / 60000 / 30) * 30;
-          const leaveStart = new Date(start.getTime() - leaveMins * 60000);
-          const properOffTime = new Date(leaveStart.getTime() + work);
-          result.innerHTML = (h >= 11 ? "⚠️ 太晚了吧！要不要直接回家<br>" : "⚠️ 注意！您已經遲到了！<br>") +
-            `建議您這樣請假：${leaveStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}。<br>
-             ⏰ 建議請假時長為：${Math.floor(leaveMins/60)}小時${leaveMins%60}分鐘。<br>`;
-          result.innerHTML += `🕔 請完假後建議在 ${properOffTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} 下班`;
-          offTime = new Date(start.getTime() + work);
-        } else {
-          result.innerHTML = "🎉 今天努力起床上班了！繼續保持！<br>";
-          offTime = new Date(start.getTime() + work);
-          result.innerHTML += `🕔 您的下班時間是：${offTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-        }
-        document.getElementById('countdown').style.display = 'block';
-        if (timer) clearInterval(timer);
-        updateCountdown();
-        timer = setInterval(updateCountdown, 1000);
-      }, 800);
-    }
-    const today = new Date();
-    const christmas = new Date(today.getFullYear(), 11, 25);
-    if (today > christmas) christmas.setFullYear(today.getFullYear() + 1);
-    const daysLeft = Math.ceil((christmas - today) / 86400000);
-    const holidayBox = document.getElementById("holiday-box");
-    holidayBox.innerHTML = `<div class="holiday-title">🎁 聖誕節倒數</div><div class="holiday-date">距離聖誕節還有 <span class="flip-number">${daysLeft}</span> 天</div>`;
-    const horoscopes = [
-      { sign: "♈ 牡羊座", msg: "行動派的你最適合收到一台咖啡機，提神又提速 ☕" },
-      { sign: "♉ 金牛座", msg: "一條高級圍巾最能溫暖你——還有你的理財心 💰" },
-      { sign: "♊ 雙子座", msg: "兩份禮物會讓你比較不糾結，因為你都想要 😎" },
-      { sign: "♋ 巨蟹座", msg: "柔軟毛毯 + 熱可可，完美的冬夜標配 💖" },
-      { sign: "♌ 獅子座", msg: "金色香水或亮片外套，讓你在派對上閃瞎全場 ✨" },
-      { sign: "♍ 處女座", msg: "整齊的手帳本會讓你心情大好 📘" },
-      { sign: "♎ 天秤座", msg: "香氛蠟燭能讓你找到節日的平衡與浪漫 🔥" },
-      { sign: "♏ 天蠍座", msg: "神秘黑巧克力禮盒，一口甜一口心動 🍫" },
-      { sign: "♐ 射手座", msg: "旅遊基金或露營裝備，世界都在呼喚你 🌍" },
-      { sign: "♑ 摩羯座", msg: "實用的保溫瓶或筆電支架，職場聖誕 MVP 💼" },
-      { sign: "♒ 水瓶座", msg: "電子小玩具是你的浪漫，越怪越喜歡 ⚡" },
-      { sign: "♓ 雙魚座", msg: "音樂盒或星空燈，讓夢想在夜裡閃閃發光 🌙" }
-    ];
-    const randomHoroscope = horoscopes[Math.floor(Math.random() * horoscopes.length)];
-    holidayBox.innerHTML += `<div class="horoscope"><strong>${randomHoroscope.sign}</strong><br>${randomHoroscope.msg}</div>`;
     const mariahBox = document.getElementById("mariahVideo");
+    const overlay = document.getElementById("xmasOverlay");
     let blowCount = 0, blowing = false, blurLevel = 0;
+
     const fog = document.createElement("div");
     fog.style.position = "absolute";
     fog.style.inset = "0";
@@ -218,11 +65,12 @@
     fog.style.transition = "backdrop-filter .15s ease";
     fog.style.borderRadius = "12px";
     const wrap = document.createElement("div");
-    mariahBox.parentNode.insertBefore(wrap, mariahBox);
     wrap.style.position = "relative";
     wrap.style.borderRadius = "12px";
+    mariahBox.parentNode.insertBefore(wrap, mariahBox);
     wrap.appendChild(mariahBox);
     wrap.appendChild(fog);
+
     function startBlow() {
       blowing = true;
       blurLevel = Math.min(12, blurLevel + 2);
@@ -236,23 +84,29 @@
         blurLevel = Math.max(0, blurLevel - 1.5);
         fog.style.backdropFilter = `blur(${blurLevel}px)`;
       }, 200);
+
       if (blowCount >= 3) {
-        const overlay = document.getElementById("xmasOverlay");
         overlay.style.display = "flex";
-        overlay.innerHTML = `<iframe src="https://www.youtube.com/embed/aAkMkVFwAoo?autoplay=1&controls=1&fs=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+        overlay.innerHTML = `
+          <div style="max-width:360px;padding:20px;border-radius:12px;background:rgba(255,255,255,0.1);border:2px solid #f8c25c;">
+            <div style="margin-bottom:12px;font-size:18px;">💬 Mariah：你已經等不及要先聽我唱了嗎？</div>
+            <div style="font-size:14px;margin-bottom:10px;">滑鼠再點一次才播音樂。（🎶 播放 / ❌ 取消）</div>
+            <button id="playBtn">🎶 播放</button>
+            <button id="cancelBtn">❌ 取消</button>
+          </div>`;
+        document.getElementById("playBtn").onclick = () => {
+          overlay.innerHTML = `<iframe src="https://www.youtube.com/embed/aAkMkVFwAoo?autoplay=1&controls=1&fs=1&rel=0" allow="autoplay; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+        };
+        document.getElementById("cancelBtn").onclick = () => overlay.style.display = "none";
       }
     }
+
     wrap.addEventListener("mousedown", startBlow);
     document.addEventListener("mouseup", stopBlow);
     wrap.addEventListener("touchstart", (e)=>{e.preventDefault();startBlow();},{passive:false});
     document.addEventListener("touchend", stopBlow);
     document.addEventListener("keydown",(e)=>{if(e.code==="Space"){e.preventDefault();startBlow();}});
     document.addEventListener("keyup",(e)=>{if(e.code==="Space"){stopBlow();}});
-    const snowflakes = []; const maxSnowflakes = 100;
-    class Snowflake {constructor(){this.size=Math.random()*8+4;this.x=Math.random()*window.innerWidth;this.y=-this.size;this.vx=(Math.random()-0.5)*0.25;this.vy=Math.random()*0.5+0.2;this.el=document.createElement("div");this.el.className="snowflake";this.el.textContent="❄️";this.el.style.fontSize=this.size+"px";document.body.appendChild(this.el);}update(){this.x+=this.vx;this.y+=this.vy;if(this.y>=window.innerHeight-this.size){this.y=window.innerHeight-this.size;this.vy=0;this.vx=0;}this.el.style.left=this.x+"px";this.el.style.top=this.y+"px";}}
-    function createSnowflake(){if(snowflakes.length<maxSnowflakes)snowflakes.push(new Snowflake());}
-    function animateSnow(){createSnowflake();for(const f of snowflakes)f.update();requestAnimationFrame(animateSnow);}
-    animateSnow();
   </script>
 </body>
 </html>
