@@ -103,15 +103,10 @@
 
     .mariah-wrap {
       position: relative; border-radius: 8px; overflow: hidden;
+      min-height: 200px; /* 避免內容未載入時高度為 0 */
+      background: radial-gradient(closest-side, rgba(255,255,255,0.15), transparent);
     }
     .mariah-video { width: 100%; border-radius: 8px; display: block; }
-
-    .friday-close {
-      background: white; color: #f5576c; border: none;
-      padding: 12px 30px; font-size: 16px; border-radius: 25px;
-      cursor: pointer; font-weight: bold; margin-top: 20px;
-    }
-    .friday-close:hover { transform: scale(1.05); }
 
     @media (max-width: 1024px) {
       .main-wrapper { flex-direction: column; align-items: center; }
@@ -158,7 +153,15 @@
     <div class="panel panel-tall">
       <div class="holiday-title" style="margin-bottom:12px;">❄️ 正在解凍 Mariah Carey...</div>
       <div class="mariah-wrap" id="mariahWrap">
-        <video id="mariahVideo" class="mariah-video" src="./mariah-defrosting-slow.mp4" muted playsinline preload="auto"></video>
+        <video
+          id="mariahVideo"
+          class="mariah-video"
+          src="./mariah-defrosting-slow.mp4"
+          poster="./mariah-poster.jpg"
+          muted playsinline preload="auto"
+        ></video>
+        <!-- 影像載入失敗時的備援圖片 -->
+        <img id="mariahFallback" alt="Mariah Carey" style="display:none;width:100%;border-radius:8px;" />
       </div>
     </div>
   </div>
@@ -240,18 +243,18 @@
       if (christmas < today) christmas.setFullYear(today.getFullYear() + 1);
       const daysLeft = Math.ceil((christmas - today) / 86400000);
       const giftHoroscopes = [
-      { sign: "♈ 牡羊座", msg: "行動派的你最適合收到一台咖啡機，提神又提速 ☕" },
-      { sign: "♉ 金牛座", msg: "一條高級圍巾最能溫暖你——還有你的理財心 💰" },
-      { sign: "♊ 雙子座", msg: "兩份禮物會讓你比較不糾結，因為你都想要 😎" },
-      { sign: "♋ 巨蟹座", msg: "柔軟毛毯 + 熱可可，完美的冬夜標配 💖" },
-      { sign: "♌ 獅子座", msg: "金色香水或亮片外套，讓你在派對上閃瞎全場 ✨" },
-      { sign: "♍ 處女座", msg: "整齊的手帳本會讓你心情大好 📘" },
-      { sign: "♎ 天秤座", msg: "香氛蠟燭能讓你找到節日的平衡與浪漫 🔥" },
-      { sign: "♏ 天蠍座", msg: "神秘黑巧克力禮盒，一口甜一口心動 🍫" },
-      { sign: "♐ 射手座", msg: "聖誕就該發旅行獎金或是直接放你下班 ✈️" },
-      { sign: "♑ 摩羯座", msg: "實用的保溫瓶或筆電支架，職場聖誕 MVP 💼" },
-      { sign: "♒ 水瓶座", msg: "電子小玩具是你的浪漫，越怪越喜歡 ⚡" },
-      { sign: "♓ 雙魚座", msg: "音樂盒或星空燈，讓夢想在夜裡閃閃發光 🌙" }
+        { sign: "♈ 牡羊座", msg: "送你一點熱可可，跟你一樣火熱🔥" },
+        { sign: "♉ 金牛座", msg: "甜甜的肉桂捲＋一整天睡覺最適合你 😴" },
+        { sign: "♊ 雙子座", msg: "雙份禮物比較公平，你都想要 😎" },
+        { sign: "♋ 巨蟹座", msg: "一條毛毯就能把你留在家裡 ❤️" },
+        { sign: "♌ 獅子座", msg: "金色圍巾讓你繼續當全辦公室最亮的 ☀️" },
+        { sign: "♍ 處女座", msg: "手帳＋貼紙，聖誕也要有秩序 📘" },
+        { sign: "♎ 天秤座", msg: "香氛蠟燭＋聖誕歌，全部都要很美 ✨" },
+        { sign: "♏ 天蠍座", msg: "神秘黑巧克力跟你一樣高級 🍫" },
+        { sign: "♐ 射手座", msg: "旅行基金或是直接放你下班 ✈️" },
+        { sign: "♑ 摩羯座", msg: "實用的保溫瓶，邊加班邊喝 🥤" },
+        { sign: "♒ 水瓶座", msg: "奇怪的聖誕電子小物你會最愛 ⚡" },
+        { sign: "♓ 雙魚座", msg: "雪景音樂盒，讓你邊聽邊做夢 🌨️" }
       ];
       const randomGift = giftHoroscopes[Math.floor(Math.random() * giftHoroscopes.length)];
       document.getElementById("holiday-box").innerHTML =
@@ -260,16 +263,45 @@
          <div class="horoscope"><strong>${randomGift.sign}</strong><br>${randomGift.msg}</div>`;
     })();
 
-    // Mariah Carey 播放點位依日期
+    // Mariah Carey 播放點位依日期 + 備援顯示
     const mariahVideo = document.getElementById("mariahVideo");
+    const mariahFallback = document.getElementById("mariahFallback");
+
+    function showFallbackImage() {
+      // 以 SVG data URI 當通用備援（避免路徑錯誤時整塊消失）
+      const svg = `
+        <svg xmlns='http://www.w3.org/2000/svg' width='1200' height='675'>
+          <defs>
+            <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+              <stop offset='0%' stop-color='#2d1b4e'/>
+              <stop offset='100%' stop-color='#1a1a2e'/>
+            </linearGradient>
+          </defs>
+          <rect width='100%' height='100%' fill='url(#g)'/>
+          <text x='50%' y='48%' fill='#ffb347' font-size='42' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif'>Mariah Carey</text>
+          <text x='50%' y='58%' fill='#ff6b00' font-size='28' text-anchor='middle' font-family='Segoe UI, Arial, sans-serif'>解凍預覽（影像載入失敗時顯示）</text>
+        </svg>`;
+      const dataUri = "data:image/svg+xml;utf8," + encodeURIComponent(svg.trim());
+      mariahVideo.style.display = "none";
+      mariahFallback.src = dataUri;
+      mariahFallback.style.display = "block";
+    }
+
+    let metaLoaded = false;
     mariahVideo.addEventListener("loadedmetadata", () => {
+      metaLoaded = true;
       const today = new Date();
       const yearStart = new Date(today.getFullYear(), 0, 1);
       const dayOfYear = Math.floor((today - yearStart) / 86400000);
       const christmasEveDay = Math.floor((new Date(today.getFullYear(), 11, 24) - yearStart) / 86400000);
       const progress = Math.min(dayOfYear / christmasEveDay, 1);
-      mariahVideo.currentTime = mariahVideo.duration * progress;
+      if (isFinite(mariahVideo.duration) && mariahVideo.duration > 0) {
+        mariahVideo.currentTime = mariahVideo.duration * progress;
+      }
     });
+    mariahVideo.addEventListener("error", showFallbackImage);
+    // 若 3 秒內仍未讀到 metadata，也換用備援圖
+    setTimeout(() => { if (!metaLoaded) showFallbackImage(); }, 3000);
 
     // 吹氣互動
     const mariahWrap = document.getElementById("mariahWrap");
@@ -321,7 +353,7 @@
               滑鼠再點一次才播音樂。（🎶 播放 / ❌ 取消）
             </div>
             <button id="playBtn" style="
-              background:linear-gradient(135deg,#f8c25c 0%,#ff9500 100%);
+              background:linear-gradient(135deg,#f8c25c 0%, #ff9500 100%);
               border:none;color:#fff;padding:10px 20px;border-radius:8px;
               font-size:16px;cursor:pointer;margin:4px 8px;
             ">🎶 播放</button>
@@ -383,14 +415,8 @@
         this.el.style.top = this.y + 'px';
       }
     }
-    function createSnow() {
-      if (snowflakes.length < maxSnow) snowflakes.push(new Snow());
-    }
-    function animateSnow() {
-      createSnow();
-      snowflakes.forEach(s => s.update());
-      requestAnimationFrame(animateSnow);
-    }
+    function createSnow() { if (snowflakes.length < maxSnow) snowflakes.push(new Snow()); }
+    function animateSnow() { createSnow(); snowflakes.forEach(s => s.update()); requestAnimationFrame(animateSnow); }
     animateSnow();
   </script>
 </body>
