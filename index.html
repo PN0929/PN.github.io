@@ -2,110 +2,184 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>🎄 Mariah Carey 聖誕倒數 x 下班計算機</title>
+  <title>什麼時候可以回家 下班時間計算機</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * { box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #493240 100%);
-      margin: 0; padding: 20px; color: #fff;
-      overflow-x: hidden; min-height: 100vh;
+      background: linear-gradient(135deg, #2d1b4e 0%, #1a1a2e 100%);
+      margin: 0; padding: 20px; min-height: 100vh;
     }
-    h1, h2 { text-align: center; color: #f8c25c; }
     .main-wrapper {
       display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 20px; align-items: flex-start; position: relative; z-index: 2;
+      gap: 20px; position: relative; z-index: 10; align-items: stretch;
     }
+    .panel-tall { display: flex; flex-direction: column; }
+    #holiday-box { justify-content: center; }
     .panel {
-      background: rgba(255,255,255,0.08);
-      border: 2px solid #f8c25c;
-      border-radius: 12px;
+      background: white; border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(255, 107, 0, 0.3);
       padding: 20px; width: 100%; max-width: 360px;
-      box-shadow: 0 8px 24px rgba(255,255,255,0.15);
-      backdrop-filter: blur(6px);
+      border: 2px solid #ff6b00; position: relative;
+      transition: box-shadow 0.3s;
     }
+    .panel:hover {
+      box-shadow: 0 8px 40px rgba(255, 107, 0, 0.6), 0 0 30px rgba(255, 149, 0, 0.4);
+    }
+    .holiday-title {
+      font-size: 22px; font-weight: bold; text-align: center;
+      color: #ff6b00; margin-bottom: 10px; margin-top: 0;
+    }
+    .holiday-date { font-size: 16px; text-align: center; margin-bottom: 12px; color: #444; }
+    .holiday-countdown { text-align: center; font-size: 16px; color: #555; }
+    .horoscope {
+      margin-top: 15px; padding: 12px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 100%);
+      border-radius: 8px; color: #ffb347; font-size: 14px; line-height: 1.6;
+      box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3); border: 1px solid #ff6b00;
+    }
+    .flip-number {
+      display: inline-block; font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
+      color: #fff; padding: 10px 14px; border-radius: 6px;
+      font-size: 26px; margin: 0 6px;
+      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4); border: none; letter-spacing: 1px;
+    }
+    h1, h2 { text-align: center; color: #ff6b00; }
+    label { font-size: 16px; display: block; margin-top: 10px; }
+    input[type="text"] {
+      width: 100%; padding: 10px; margin: 5px 0 15px;
+      border: 2px solid #ffb347; border-radius: 4px; font-size: 16px; transition: border 0.3s;
+    }
+    input[type="text"]:focus { outline: none; border-color: #ff6b00; }
     button {
-      background: linear-gradient(135deg, #f8c25c 0%, #f7b733 100%);
-      border: none; border-radius: 6px; padding: 14px;
-      font-size: 16px; color: #fff; width: 100%;
-      cursor: pointer; transition: all 0.3s;
+      background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
+      color: white; padding: 14px; font-size: 18px; border: none; border-radius: 4px;
+      cursor: pointer; width: 100%; position: relative; overflow: hidden;
     }
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255,255,255,0.3);
+      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.6);
+      transition: all 0.3s;
     }
-    input[type="text"] {
-      width: 100%; padding: 10px; border-radius: 4px;
-      border: 2px solid #f8c25c; font-size: 16px;
-      background: rgba(255,255,255,0.1); color: #fff;
+    button:hover::after {
+      content: '🎄';
+      position: absolute; right: 15px; top: 50%;
+      transform: translateY(-50%); animation: ghostFloat 2s infinite;
     }
-    .holiday-title { font-size: 20px; color: #f8c25c; text-align: center; }
-    .holiday-date, .holiday-countdown { text-align: center; color: #f8e8b0; }
-    .horoscope {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid #f8c25c;
-      border-radius: 8px; padding: 10px; margin-top: 15px;
-      color: #f8e8b0; text-align: center;
+    @keyframes ghostFloat { 0%, 100% { transform: translateY(-50%); } 50% { transform: translateY(-70%); } }
+    #result { text-align: center; margin-top: 20px; font-size: 18px; }
+    #countdown {
+      margin-top: 25px; padding: 20px;
+      background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
+      border-radius: 10px; text-align: center; display: none;
+      color: white; box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4); border: 2px solid #ff6b00;
     }
-    .footer-note {
-      text-align: center; color: #f8e8b0; font-size: 14px;
-      margin-top: 30px; animation: glow 2s infinite alternate;
-    }
-    @keyframes glow { from {text-shadow: 0 0 5px #f8c25c;} to {text-shadow: 0 0 15px #fff6b7;} }
+    #countdown-display { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+    .countdown-unit { background: rgba(255,255,255,0.2); border-radius: 8px; padding: 15px 20px; min-width: 80px; }
+    .countdown-number { font-size: 32px; font-weight: bold; display: block; }
+    .countdown-label { font-size: 14px; margin-top: 5px; opacity: 0.9; }
+    .countdown-reminder { margin-top: 10px; font-size: 13px; opacity: 0.9; }
+    #loading { display: none; text-align: center; margin: 20px 0; }
+    .ghost-loader { display: inline-block; font-size: 50px; animation: ghostSpin 1.5s linear infinite; }
+    @keyframes ghostSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* overlay for Maria */
     #xmasOverlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9); display: none;
-      justify-content: center; align-items: center; flex-direction: column;
-      z-index: 9999; text-align: center; color: #fff;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      display: none; justify-content: center; align-items: center; flex-direction: column;
+      z-index: 9999;
     }
     #xmasOverlay button {
-      width: auto; margin: 10px; font-size: 16px;
-      background: linear-gradient(135deg, #f8c25c 0%, #f7b733 100%);
+      background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
+      border: none; color: #fff; padding: 10px 16px; border-radius: 6px;
+      margin: 6px; cursor: pointer;
     }
+
+    /* snowflakes */
     .snowflake {
-      position: fixed; color: #fff; user-select: none;
-      z-index: 0; opacity: 0.8;
+      position: fixed; color: white; pointer-events: none; z-index: 0;
+      text-shadow: 0 0 8px rgba(255,255,255,0.6);
+    }
+
+    .mariah-wrap {
+      position: relative; border-radius: 8px; overflow: hidden;
+    }
+    .mariah-video { width: 100%; border-radius: 8px; display: block; }
+
+    @media (max-width: 1024px) {
+      .main-wrapper { flex-direction: column; align-items: center; }
     }
   </style>
 </head>
 <body>
-  <div class="main-wrapper">
-    <div class="panel" id="holiday-box"></div>
+  <!-- 原本的週五彈窗保留 -->
+  <div id="friday">
+    <div class="friday-content" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 40px; border-radius: 20px; text-align: center; max-width: 90%; display:none;">
+      <div class="friday-emoji" style="font-size:80px;">🎉</div>
+      <div class="friday-text" style="color:white;font-size:32px;font-weight:bold;margin:20px 0;">終於週五啦！</div>
+      <div style="color: white; font-size: 18px;">週末就在眼前，加油！💪</div>
+      <button class="friday-close" onclick="document.getElementById('friday').style.display='none'">太好了！👍</button>
+    </div>
+  </div>
 
-    <div class="panel">
+  <!-- 聖誕/Mariah 播放 overlay -->
+  <div id="xmasOverlay"></div>
+
+  <div class="main-wrapper">
+    <!-- 左：倒數＋星座 -->
+    <div class="panel panel-tall" id="holiday-box"></div>
+
+    <!-- 中：下班時間計算 -->
+    <div class="panel panel-tall">
       <h1>什麼時候可以回家</h1>
-      <h2>🎅 HURC下班時間計算機</h2>
+      <h2>HURC下班時間計算機</h2>
       <label for="start">上班時間 (hhmm):</label>
       <input type="text" id="start" placeholder="HHMM" inputmode="numeric" pattern="[0-9]*" />
       <button onclick="calc()">計算你的下班時間</button>
-      <div id="loading" style="display:none;text-align:center;margin:10px;">🎄 計算中...</div>
+      <div id="loading">
+        <div class="ghost-loader">🎅</div>
+        <div style="margin-top:10px;color:#666;">計算中...</div>
+      </div>
       <h3 id="result"></h3>
-      <div id="countdown" style="display:none;text-align:center;margin-top:15px;">
-        <div style="font-weight:bold;">距離可以離開辦公室還有</div>
-        <div id="countdown-display" style="display:flex;justify-content:center;gap:10px;margin-top:10px;">
-          <div><span id="h">00</span> 小時</div>
-          <div><span id="m">00</span> 分鐘</div>
-          <div><span id="s">00</span> 秒</div>
+      <div id="countdown">
+        <div style="font-size:18px;font-weight:bold;margin-bottom:15px">距離可以離開辦公室還有</div>
+        <div id="countdown-display">
+          <div class="countdown-unit">
+            <span class="countdown-number" id="h">00</span>
+            <div class="countdown-label">小時</div>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-number" id="m">00</span>
+            <div class="countdown-label">分鐘</div>
+          </div>
+          <div class="countdown-unit">
+            <span class="countdown-number" id="s">00</span>
+            <div class="countdown-label">秒</div>
+          </div>
         </div>
+        <div class="countdown-reminder">💡 不要加班太久喔！</div>
       </div>
     </div>
 
-    <div class="panel">
-      <h2>🎄 Mariah Carey 解凍中</h2>
-      <video id="mariahVideo" src="./mariah-defrosting-slow.mp4" muted playsinline preload="auto" style="width:100%;border-radius:12px;"></video>
+    <!-- 右：Mariah Carey 解凍 -->
+    <div class="panel panel-tall">
+      <div class="holiday-title" style="margin-bottom:12px;">❄️ 正在解凍 Mariah Carey...</div>
+      <div class="mariah-wrap" id="mariahWrap">
+        <video id="mariahVideo" class="mariah-video" src="./mariah-defrosting-slow.mp4" muted playsinline preload="auto"></video>
+      </div>
     </div>
   </div>
 
-  <div id="xmasOverlay"></div>
-
-  <div class="footer-note">
-    👩‍💻 沛恩 更新於 2025 年 11 月 2 日（回來上班了ＱＱ）
+  <div style="text-align: center; margin-top: 20px; padding: 15px;">
+    <div style="font-size: 14px; color: #ffe2bf;">👩‍💻 沛恩 更新於 2025 年 11 月 2 日</div>
+    <div style="font-size: 13px; color: #ffe2bf; margin-top: 5px;">📍 回來上班了ＱＱ</div>
   </div>
 
   <script>
-    // ======== 下班計算 ========
     let timer, offTime;
+
     function update() {
       if (!offTime) return;
       const now = new Date();
@@ -113,7 +187,10 @@
       if (diff <= 0) {
         clearInterval(timer);
         document.getElementById('countdown').style.display = 'none';
-        document.getElementById('result').innerHTML += '<br><br>🎉 下班時間到了！快回家吧！';
+        const result = document.getElementById('result');
+        if (!result.innerHTML.includes('下班時間到了')) {
+          result.innerHTML += '<br><br>🎉 <strong>下班時間到了！快回家吧！</strong>';
+        }
         return;
       }
       document.getElementById('h').textContent = String(Math.floor(diff / 3600000)).padStart(2, '0');
@@ -125,9 +202,13 @@
       const input = document.getElementById("start").value;
       const result = document.getElementById("result");
       const loading = document.getElementById("loading");
-      loading.style.display = 'block'; result.innerHTML = ''; document.getElementById('countdown').style.display = 'none';
+      loading.style.display = 'block';
+      result.innerHTML = '';
+      document.getElementById('countdown').style.display = 'none';
+
       setTimeout(() => {
         loading.style.display = 'none';
+
         if (!input || input.length !== 4 || isNaN(input)) { result.innerText = "請您再仔細確認上班時間，不要玩系統 ^^"; return; }
         const h = parseInt(input.substring(0, 2)), min = parseInt(input.substring(2, 4));
         if (h < 0 || h > 23 || min < 0 || min > 59) { result.innerText = "請您再仔細確認上班時間，不要玩系統 ^^"; return; }
@@ -137,29 +218,36 @@
         const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, min, 0);
         const work = 9.5 * 3600000;
         const late = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
+
         if (start > late) {
           const leaveMins = Math.ceil((start - late) / 60000 / 30) * 30;
           const leaveStart = new Date(start.getTime() - leaveMins * 60000);
           const properOffTime = new Date(leaveStart.getTime() + work);
-          result.innerHTML = `⚠️ 遲到了！建議請假 ${Math.floor(leaveMins/60)}小時${leaveMins%60}分鐘。<br>`;
+          result.innerHTML =
+            (h >= 11 ? "⚠️ 太晚了吧！要不要直接回家<br>" : "⚠️ 注意！您已經遲到了！<br>") +
+            `建議您這樣請假：${leaveStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}。<br>` +
+            `⏰ 建議請假時長為：${Math.floor(leaveMins/60)}小時${leaveMins%60}分鐘。<br>`;
           result.innerHTML += `🕔 請完假後建議在 ${properOffTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} 下班`;
           offTime = new Date(start.getTime() + work);
         } else {
-          result.innerHTML = "🎉 今天努力起床上班了！<br>";
+          result.innerHTML = "🎉 今天努力起床上班了！繼續保持！<br>";
           offTime = new Date(start.getTime() + work);
           result.innerHTML += `🕔 您的下班時間是：${offTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
         }
+
         document.getElementById('countdown').style.display = 'block';
         if (timer) clearInterval(timer);
-        update(); timer = setInterval(update, 1000);
+        update();
+        timer = setInterval(update, 1000);
       }, 800);
     }
 
-    // ======== 假期倒數 + 星座聖誕禮物 ========
-    const holidays = [
-      { name: "聖誕節", month: 12, day: 25 }, { name: "元旦", month: 1, day: 1 }
-    ];
-    const gifts = [
+    // ===== 聖誕倒數 + 星座建議（放在左側 panel） =====
+    const today = new Date();
+    const christmas = new Date(today.getFullYear(), 11, 25);
+    if (christmas < today) christmas.setFullYear(today.getFullYear() + 1);
+    const daysLeft = Math.ceil((christmas - today) / 86400000);
+    const giftHoroscopes = [
       { sign: "♈ 牡羊座", msg: "行動派的你最適合收到一台咖啡機，提神又提速 ☕" },
       { sign: "♉ 金牛座", msg: "一條高級圍巾最能溫暖你——還有你的理財心 💰" },
       { sign: "♊ 雙子座", msg: "兩份禮物會讓你比較不糾結，因為你都想要 😎" },
@@ -168,37 +256,41 @@
       { sign: "♍ 處女座", msg: "整齊的手帳本會讓你心情大好 📘" },
       { sign: "♎ 天秤座", msg: "香氛蠟燭能讓你找到節日的平衡與浪漫 🔥" },
       { sign: "♏ 天蠍座", msg: "神秘黑巧克力禮盒，一口甜一口心動 🍫" },
-      { sign: "♐ 射手座", msg: "旅遊基金或露營裝備，世界都在呼喚你 🌍" },
+      { sign: "♐ 射手座", msg: "聖誕就該發旅行獎金或是直接放你下班 ✈️" },
       { sign: "♑ 摩羯座", msg: "實用的保溫瓶或筆電支架，職場聖誕 MVP 💼" },
       { sign: "♒ 水瓶座", msg: "電子小玩具是你的浪漫，越怪越喜歡 ⚡" },
       { sign: "♓ 雙魚座", msg: "音樂盒或星空燈，讓夢想在夜裡閃閃發光 🌙" }
     ];
-    const today = new Date();
-    let nearest = null, minDiff = Infinity;
-    holidays.forEach(h => {
-      const holiday = new Date(today.getFullYear(), h.month - 1, h.day);
-      if (holiday < today) holiday.setFullYear(today.getFullYear() + 1);
-      const diff = Math.floor((holiday - today) / 86400000);
-      if (diff < minDiff) { minDiff = diff; nearest = h; }
-    });
-    const gift = gifts[Math.floor(Math.random() * gifts.length)];
+    const randomGift = giftHoroscopes[Math.floor(Math.random() * giftHoroscopes.length)];
     document.getElementById("holiday-box").innerHTML =
-      `<div class='holiday-title'>下一個節日：${nearest.name}</div>
-       <div class='holiday-date'>${nearest.month}月${nearest.day}日 倒數 ${minDiff} 天</div>
-       <div class='horoscope'><strong>${gift.sign}</strong><br>${gift.msg}</div>`;
+      `<div class="holiday-title">🎄 聖誕節倒數</div>
+       <div class="holiday-date">距離聖誕節還有 <span class="flip-number">${daysLeft}</span> 天</div>
+       <div class="horoscope"><strong>${randomGift.sign}</strong><br>${randomGift.msg}</div>`;
 
-    // ======== Mariah Carey 解凍互動 ========
-    const mariahBox = document.getElementById("mariahVideo");
-    const overlay = document.getElementById("xmasOverlay");
-    let blowCount = 0, blowing = false, blurLevel = 0;
+    // ===== Mariah Carey 進度（日期對應進度） =====
+    const mariahVideo = document.getElementById("mariahVideo");
+    mariahVideo.addEventListener("loadedmetadata", () => {
+      const yearStart = new Date(today.getFullYear(), 0, 1);
+      const dayOfYear = Math.floor((today - yearStart) / 86400000);
+      const christmasEveDay = Math.floor((new Date(today.getFullYear(), 11, 24) - yearStart) / 86400000);
+      const progress = Math.min(dayOfYear / christmasEveDay, 1);
+      mariahVideo.currentTime = mariahVideo.duration * progress;
+    });
+
+    // ===== 吹氣互動：長按/空白鍵/觸控 -> 起霧 -> 3次後才問要不要播歌 =====
+    const mariahWrap = document.getElementById("mariahWrap");
     const fog = document.createElement("div");
-    fog.style.position = "absolute"; fog.style.inset = "0";
-    fog.style.pointerEvents = "none"; fog.style.backdropFilter = "blur(0px)";
-    fog.style.transition = "backdrop-filter .15s ease"; fog.style.borderRadius = "12px";
-    const wrap = document.createElement("div");
-    wrap.style.position = "relative"; wrap.style.borderRadius = "12px";
-    mariahBox.parentNode.insertBefore(wrap, mariahBox);
-    wrap.appendChild(mariahBox); wrap.appendChild(fog);
+    fog.style.position = "absolute";
+    fog.style.inset = "0";
+    fog.style.pointerEvents = "none";
+    fog.style.backdropFilter = "blur(0px)";
+    fog.style.transition = "backdrop-filter 0.15s ease";
+    fog.style.borderRadius = "8px";
+    mariahWrap.appendChild(fog);
+
+    let blowing = false;
+    let blurLevel = 0;
+    let blowCount = 0;
 
     function startBlow() {
       blowing = true;
@@ -213,53 +305,101 @@
         blurLevel = Math.max(0, blurLevel - 1.5);
         fog.style.backdropFilter = `blur(${blurLevel}px)`;
       }, 200);
+
       if (blowCount >= 3) {
+        const overlay = document.getElementById("xmasOverlay");
         overlay.style.display = "flex";
         overlay.innerHTML = `
-          <div style="max-width:360px;padding:20px;border-radius:12px;background:rgba(255,255,255,0.1);border:2px solid #f8c25c;">
-            <div style="margin-bottom:12px;font-size:18px;">💬 Mariah：你已經等不及要先聽我唱了嗎？</div>
-            <div style="font-size:14px;margin-bottom:10px;">滑鼠再點一次才播音樂。（🎶 播放 / ❌ 取消）</div>
+          <div style="max-width:360px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.2);padding:20px;border-radius:12px;">
+            <div style="font-size:18px;margin-bottom:10px;">💬 Mariah：你已經等不及要先聽我唱了嗎？</div>
+            <div style="font-size:13px;margin-bottom:12px;">滑鼠再點一次才播音樂。（🎶 播放 / ❌ 取消）</div>
             <button id="playBtn">🎶 播放</button>
             <button id="cancelBtn">❌ 取消</button>
-          </div>`;
+          </div>
+        `;
         document.getElementById("playBtn").onclick = () => {
-          overlay.innerHTML = `<iframe src="https://www.youtube.com/embed/aAkMkVFwAoo?autoplay=1&controls=1&fs=1&rel=0" allow="autoplay; fullscreen" allowfullscreen style="width:100%;height:100%;border:none;"></iframe>`;
+          overlay.innerHTML = `
+            <iframe src="https://www.youtube.com/embed/aAkMkVFwAoo?autoplay=1&controls=1&fs=1&rel=0"
+                    allow="autoplay; fullscreen" allowfullscreen
+                    style="width:100%;height:100%;border:none;"></iframe>
+          `;
         };
-        document.getElementById("cancelBtn").onclick = () => overlay.style.display = "none";
+        document.getElementById("cancelBtn").onclick = () => {
+          overlay.style.display = "none";
+        };
       }
     }
-    wrap.addEventListener("mousedown", startBlow);
-    document.addEventListener("mouseup", stopBlow);
-    wrap.addEventListener("touchstart", (e)=>{e.preventDefault();startBlow();},{passive:false});
-    document.addEventListener("touchend", stopBlow);
-    document.addEventListener("keydown",(e)=>{if(e.code==="Space"){e.preventDefault();startBlow();}});
-    document.addEventListener("keyup",(e)=>{if(e.code==="Space"){stopBlow();}});
 
-    // ======== 雪花特效 ========
+    mariahWrap.addEventListener("mousedown", startBlow);
+    document.addEventListener("mouseup", stopBlow);
+    mariahWrap.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      startBlow();
+    }, { passive: false });
+    document.addEventListener("touchend", stopBlow);
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        startBlow();
+      }
+    });
+    document.addEventListener("keyup", (e) => {
+      if (e.code === "Space") {
+        stopBlow();
+      }
+    });
+
+    // ===== 雪花（取代萬聖節南瓜） =====
     const snowflakes = [];
-    const maxSnowflakes = 50;
-    class Snowflake {
+    const maxSnow = 50;
+    class Snow {
       constructor() {
+        this.size = Math.random() * 10 + 6;
         this.x = Math.random() * window.innerWidth;
-        this.y = Math.random() * -50;
-        this.size = Math.random() * 8 + 4;
-        this.vx = Math.random() * 0.3 - 0.15;
-        this.vy = Math.random() * 1 + 0.3;
-        this.el = document.createElement("div");
-        this.el.className = "snowflake";
-        this.el.textContent = "❄️";
-        this.el.style.fontSize = this.size + "px";
+        this.y = -this.size;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = Math.random() * 0.5 + 0.2;
+        this.el = document.createElement('div');
+        this.el.className = 'snowflake';
+        this.el.textContent = '❄️';
+        this.el.style.fontSize = this.size + 'px';
         document.body.appendChild(this.el);
       }
       update() {
-        this.x += this.vx; this.y += this.vy;
-        if (this.y > window.innerHeight) { this.y = Math.random() * -50; this.x = Math.random() * window.innerWidth; }
-        this.el.style.left = `${this.x}px`; this.el.style.top = `${this.y}px`;
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.y >= window.innerHeight - this.size) {
+          this.y = window.innerHeight - this.size;
+          this.vy = 0;
+          this.vx = 0;
+        }
+        this.el.style.left = this.x + 'px';
+        this.el.style.top = this.y + 'px';
       }
     }
-    function createSnowflake(){ if(snowflakes.length<maxSnowflakes) snowflakes.push(new Snowflake()); }
-    function animateSnow(){ createSnowflake(); for(const f of snowflakes) f.update(); requestAnimationFrame(animateSnow); }
+    function createSnow() {
+      if (snowflakes.length < maxSnow) snowflakes.push(new Snow());
+    }
+    function animateSnow() {
+      createSnow();
+      for (const s of snowflakes) s.update();
+      requestAnimationFrame(animateSnow);
+    }
     animateSnow();
+
+    // 週五彈窗
+    const todayDay = new Date().getDay();
+    if (todayDay === 5) {
+      document.querySelector('#friday .friday-content').style.display = 'block';
+      document.getElementById('friday').style.display = 'flex';
+      document.getElementById('friday').style.justifyContent = 'center';
+      document.getElementById('friday').style.alignItems = 'center';
+      document.getElementById('friday').style.position = 'fixed';
+      document.getId = 'friday';
+      document.getElementById('friday').style.inset = '0';
+      document.getElementById('friday').style.background = 'rgba(0,0,0,0.8)';
+      document.getElementById('friday').style.zIndex = '999';
+    }
   </script>
 </body>
 </html>
