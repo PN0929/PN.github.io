@@ -8,7 +8,7 @@
     * { box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #2d1b4e 0%, #1a1a2e 100%);
+      background: linear-gradient(135deg, #737F4E 0%, #5a6640 100%);
       margin: 0; padding: 20px; min-height: 100vh;
     }
     .main-wrapper {
@@ -18,49 +18,56 @@
     .panel-tall { display: flex; flex-direction: column; }
     #holiday-box { justify-content: center; }
     .panel {
-      background: white; border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(255, 107, 0, 0.3);
+      background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(204, 160, 50, 0.4), 0 0 20px rgba(188, 92, 55, 0.2);
       padding: 20px; width: 100%; max-width: 360px;
-      border: 2px solid #ff6b00; position: relative;
-      transition: box-shadow 0.3s;
+      border: 3px solid #CCA032; position: relative;
+      transition: all 0.3s;
     }
     .panel:hover {
-      box-shadow: 0 8px 40px rgba(255, 107, 0, 0.6), 0 0 30px rgba(255, 149, 0, 0.4);
+      box-shadow: 0 8px 40px rgba(204, 160, 50, 0.6), 0 0 30px rgba(188, 92, 55, 0.4);
+      transform: translateY(-2px);
     }
     .holiday-title {
       font-size: 22px; font-weight: bold; text-align: center;
-      color: #ff6b00; margin-bottom: 10px; margin-top: 0;
+      color: #BC5C37; margin-bottom: 10px; margin-top: 0;
+      text-shadow: 0 0 10px rgba(188, 92, 55, 0.3);
     }
-    .holiday-date { font-size: 16px; text-align: center; margin-bottom: 12px; color: #444; }
+    .holiday-date { font-size: 16px; text-align: center; margin-bottom: 12px; color: #5a6640; }
     .holiday-countdown { text-align: center; font-size: 16px; color: #555; }
     .horoscope {
       margin-top: 15px; padding: 12px;
-      background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 100%);
-      border-radius: 8px; color: #ffb347; font-size: 14px; line-height: 1.6;
-      box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3); border: 1px solid #ff6b00;
+      background: linear-gradient(135deg, #737F4E 0%, #5a6640 100%);
+      border-radius: 8px; color: #fef08a; font-size: 14px; line-height: 1.6;
+      box-shadow: 0 2px 8px rgba(115, 127, 78, 0.3); border: 2px solid #CCA032;
     }
     .flip-number {
       display: inline-block; font-family: 'Courier New', monospace;
-      background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
+      background: linear-gradient(135deg, #BC5C37 0%, #a54d2f 100%);
       color: #fff; padding: 10px 14px; border-radius: 6px;
       font-size: 26px; margin: 0 6px;
-      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4); border: none; letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(188, 92, 55, 0.5), 0 0 15px rgba(204, 160, 50, 0.3);
+      border: 2px solid #CCA032; letter-spacing: 1px;
     }
-    h1, h2 { text-align: center; color: #ff6b00; }
-    label { font-size: 16px; display: block; margin-top: 10px; }
+    h1, h2 { text-align: center; color: #BC5C37; text-shadow: 0 0 10px rgba(188, 92, 55, 0.2); }
+    label { font-size: 16px; display: block; margin-top: 10px; color: #737F4E; font-weight: 600; }
     input[type="text"] {
       width: 100%; padding: 10px; margin: 5px 0 15px;
-      border: 2px solid #ffb347; border-radius: 4px; font-size: 16px; transition: border 0.3s;
+      border: 2px solid #CCA032; border-radius: 4px; font-size: 16px; transition: border 0.3s;
+      background: #faf9f0;
     }
-    input[type="text"]:focus { outline: none; border-color: #ff6b00; }
+    input[type="text"]:focus { outline: none; border-color: #BC5C37; background: #fff; }
     button {
-      background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
+      background: linear-gradient(135deg, #BC5C37 0%, #a54d2f 100%);
       color: white; padding: 14px; font-size: 18px; border: none; border-radius: 4px;
       cursor: pointer; width: 100%; position: relative; overflow: hidden;
+      box-shadow: 0 4px 12px rgba(188, 92, 55, 0.4);
+      font-weight: 600;
     }
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 107, 0, 0.6);
+      box-shadow: 0 6px 16px rgba(188, 92, 55, 0.6), 0 0 20px rgba(204, 160, 50, 0.4);
       transition: all 0.3s;
     }
     button:hover::after {
@@ -69,18 +76,23 @@
       transform: translateY(-50%); animation: ghostFloat 2s infinite;
     }
     @keyframes ghostFloat { 0%, 100% { transform: translateY(-50%); } 50% { transform: translateY(-70%); } }
-    #result { text-align: center; margin-top: 20px; font-size: 18px; }
+    #result { text-align: center; margin-top: 20px; font-size: 18px; color: #737F4E; }
     #countdown {
       margin-top: 25px; padding: 20px;
-      background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
+      background: linear-gradient(135deg, #BC5C37 0%, #a54d2f 100%);
       border-radius: 10px; text-align: center; display: none;
-      color: white; box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4); border: 2px solid #ff6b00;
+      color: white; box-shadow: 0 4px 12px rgba(188, 92, 55, 0.5), 0 0 20px rgba(204, 160, 50, 0.3);
+      border: 3px solid #CCA032;
     }
     #countdown-display { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-    .countdown-unit { background: rgba(255,255,255,0.2); border-radius: 8px; padding: 15px 20px; min-width: 80px; }
-    .countdown-number { font-size: 32px; font-weight: bold; display: block; }
-    .countdown-label { font-size: 14px; margin-top: 5px; opacity: 0.9; }
-    .countdown-reminder { margin-top: 10px; font-size: 13px; opacity: 0.9; }
+    .countdown-unit { 
+      background: rgba(255,255,255,0.25); 
+      border-radius: 8px; padding: 15px 20px; min-width: 80px;
+      border: 2px solid rgba(204, 160, 50, 0.5);
+    }
+    .countdown-number { font-size: 32px; font-weight: bold; display: block; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .countdown-label { font-size: 14px; margin-top: 5px; opacity: 0.95; }
+    .countdown-reminder { margin-top: 10px; font-size: 13px; opacity: 0.95; }
     #loading { display: none; text-align: center; margin: 20px 0; }
     .ghost-loader { display: inline-block; font-size: 50px; animation: ghostSpin 1.5s linear infinite; }
     @keyframes ghostSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -91,9 +103,9 @@
       z-index: 9999; padding: 20px;
     }
     #xmasOverlay button {
-      background: linear-gradient(135deg, #ff6b00 0%, #ff9500 100%);
-      border: none; color: #fff; padding: 10px 16px; border-radius: 6px;
-      margin: 6px; cursor: pointer;
+      background: linear-gradient(135deg, #BC5C37 0%, #a54d2f 100%);
+      border: 2px solid #CCA032; color: #fff; padding: 10px 16px; border-radius: 6px;
+      margin: 6px; cursor: pointer; font-weight: 600;
     }
 
     .snowflake {
@@ -103,17 +115,16 @@
 
     .mariah-wrap {
       position: relative; border-radius: 8px; overflow: hidden;
-      background: radial-gradient(closest-side, rgba(255,255,255,0.15), transparent);
+      background: radial-gradient(closest-side, rgba(188, 92, 55, 0.15), transparent);
+      border: 2px solid rgba(204, 160, 50, 0.5);
     }
-    /* 關鍵：確保行動裝置上也有可見高度與版面 */
     .mariah-video, .mariah-fallback {
       width: 100%; display: block; border-radius: 8px;
       aspect-ratio: 16 / 9; object-fit: cover; height: auto;
       background: #000;
     }
-    /* iOS Safari poster 不顯示時，先保留一塊高度 */
     @supports not (aspect-ratio: 1 / 1) {
-      .mariah-video, .mariah-fallback { height: 202px; } /* 約 16:9 in mobile */
+      .mariah-video, .mariah-fallback { height: 202px; }
     }
 
     @media (max-width: 1024px) {
@@ -128,14 +139,14 @@
     <div class="panel panel-tall" id="holiday-box"></div>
 
     <div class="panel panel-tall">
-      <h1>什麼時候可以回家</h1>
+      <h1>🎄 什麼時候可以回家 🎅</h1>
       <h2>HURC下班時間計算機</h2>
       <label for="start">上班時間 (hhmm):</label>
       <input type="text" id="start" placeholder="HHMM" inputmode="numeric" pattern="[0-9]*" />
       <button onclick="calc()">計算你的下班時間</button>
       <div id="loading">
         <div class="ghost-loader">🎅</div>
-        <div style="margin-top:10px;color:#666;">計算中...</div>
+        <div style="margin-top:10px;color:#737F4E;">計算中...</div>
       </div>
       <h3 id="result"></h3>
       <div id="countdown">
@@ -154,14 +165,13 @@
             <div class="countdown-label">秒</div>
           </div>
         </div>
-        <div class="countdown-reminder">💡 不要加班太久喔！</div>
+        <div class="countdown-reminder">🎁 不要加班太久喔！</div>
       </div>
     </div>
 
     <div class="panel panel-tall">
       <div class="holiday-title" style="margin-bottom:12px;">❄️ 正在解凍 Mariah Carey...</div>
 
-      <!-- 圖片優先：先放 fallback 圖，待影片可用再替換 -->
       <img
         id="mariahFallback"
         class="mariah-fallback"
@@ -188,8 +198,8 @@
   </div>
 
   <div style="text-align: center; margin-top: 20px; padding: 15px;">
-    <div style="font-size: 14px; color: #ffe2bf;">👩‍💻 沛恩 更新於 2025 年 11 月 2 日</div>
-    <div style="font-size: 13px; color: #ffe2bf; margin-top: 5px;">📍 回來上班了ＱＱ</div>
+    <div style="font-size: 14px; color: #fef08a;">👩‍💻 沛恩 更新於 2025 年 11 月 2 日</div>
+    <div style="font-size: 13px; color: #fef08a; margin-top: 5px;">📍 回來上班了ＱＱ</div>
   </div>
 
   <script>
@@ -290,40 +300,34 @@
     let metaLoaded = false;
 
     function switchToVideoIfReady() {
-      // iOS 需有寬高才能顯示 poster，已在 CSS 設定 aspect-ratio
       if (isFinite(mariahVideo.duration) && mariahVideo.duration > 0) {
-        // 依 12/24 進度設定起始時間
         const today = new Date();
         const yearStart = new Date(today.getFullYear(), 0, 1);
         const dayOfYear = Math.floor((today - yearStart) / 86400000);
         const christmasEveDay = Math.floor((new Date(today.getFullYear(), 11, 24) - yearStart) / 86400000);
         const progress = Math.min(dayOfYear / christmasEveDay, 1);
         mariahVideo.currentTime = mariahVideo.duration * progress;
-        // 顯示影片、隱藏圖片
         mariahFallback.style.display = "none";
         mariahVideo.style.visibility = "visible";
       }
     }
 
-    mariahVideo.style.visibility = "hidden"; // 先隱藏，避免黑塊閃爍
+    mariahVideo.style.visibility = "hidden";
     mariahVideo.addEventListener("loadedmetadata", () => {
       metaLoaded = true;
       switchToVideoIfReady();
     }, { once: true });
 
     mariahVideo.addEventListener("loadeddata", () => {
-      // 某些行動瀏覽器只觸發 loadeddata
       if (!metaLoaded) metaLoaded = true;
       switchToVideoIfReady();
     }, { once: true });
 
     mariahVideo.addEventListener("error", () => {
-      // 保持圖片，不做事
       mariahVideo.style.visibility = "hidden";
       mariahFallback.style.display = "block";
     });
 
-    // 若 2.5 秒後仍未取得 metadata，就維持圖片
     setTimeout(() => {
       if (!metaLoaded) {
         mariahVideo.style.visibility = "hidden";
@@ -331,7 +335,7 @@
       }
     }, 2500);
 
-    // 吹氣互動：3 次後詢問是否播放
+    // 吹氣互動
     const mariahWrap = document.getElementById("mariahWrap");
     const fog = document.createElement("div");
     fog.style.position = "absolute";
@@ -368,40 +372,40 @@
             max-width:380px;
             padding:24px;
             border-radius:16px;
-            background:rgba(255,255,255,0.15);
+            background:rgba(115, 127, 78, 0.3);
             backdrop-filter:blur(12px);
-            border:1px solid rgba(255,215,128,0.6);
-            box-shadow:0 0 25px rgba(255,200,100,0.3);
+            border:2px solid rgba(204, 160, 50, 0.8);
+            box-shadow:0 0 30px rgba(188, 92, 55, 0.4), 0 0 20px rgba(204, 160, 50, 0.3);
             text-align:center;
           ">
-            <div style="font-size:20px;color:#ffe9b3;margin-bottom:14px;font-weight:600;">
+            <div style="font-size:20px;color:#fef08a;margin-bottom:14px;font-weight:600;">
               💬 Mariah：你已經等不及要先聽我唱了嗎？
             </div>
-            <div style="font-size:14px;color:#fff9e6;margin-bottom:18px;opacity:0.9;">
+            <div style="font-size:14px;color:#fef9e6;margin-bottom:18px;opacity:0.9;">
               滑鼠再點一次才播音樂。（🎶 播放 / ❌ 取消）
             </div>
             <button id="playBtn" style="
-              background:linear-gradient(135deg,#f8c25c 0%, #ff9500 100%);
-              border:none;color:#fff;padding:10px 20px;border-radius:8px;
-              font-size:16px;cursor:pointer;margin:4px 8px;
+              background:linear-gradient(135deg,#BC5C37 0%, #a54d2f 100%);
+              border:2px solid #CCA032;color:#fff;padding:10px 20px;border-radius:8px;
+              font-size:16px;cursor:pointer;margin:4px 8px;font-weight:600;
             ">🎶 播放</button>
             <button id="cancelBtn" style="
-              background:rgba(0,0,0,0.25);
-              border:1px solid rgba(255,255,255,0.4);
+              background:rgba(115, 127, 78, 0.6);
+              border:2px solid rgba(204, 160, 50, 0.8);
               color:#fff;padding:10px 20px;border-radius:8px;
-              font-size:16px;cursor:pointer;margin:4px 8px;
+              font-size:16px;cursor:pointer;margin:4px 8px;font-weight:600;
             ">❌ 取消</button>
           </div>
         `;
-              document.getElementById("playBtn").onclick = () => {
-              overlay.innerHTML = `
-              <iframe
+        document.getElementById("playBtn").onclick = () => {
+          overlay.innerHTML = `
+            <iframe
               src="https://www.youtube.com/embed/aAkMkVFwAoo?autoplay=1&controls=1&fs=1&rel=0&mute=0"
               allow="autoplay; fullscreen"
               allowfullscreen
               style="width:100%;height:100%;border:none;">
-              </iframe>
-         `;
+            </iframe>
+          `;
         };
         document.getElementById("cancelBtn").onclick = () => { overlay.style.display = "none"; };
       }
@@ -446,4 +450,3 @@
   </script>
 </body>
 </html>
-
