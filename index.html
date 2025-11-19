@@ -1,453 +1,544 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title>什麼時候可以回家 下班時間計算機</title>
+  <title>HURC 下班計算機 & 逃跑計畫</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --primary: #BC5C37;
+      --secondary: #CCA032;
+      --bg-gradient: linear-gradient(135deg, #5a6640 0%, #2c3e50 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-main: #2d3748;
+      --text-muted: #718096;
+    }
+
+    * { box-sizing: border-box; outline: none; }
+    
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #737F4E 0%, #5a6640 100%);
-      margin: 0; padding: 20px; min-height: 100vh;
+      font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+      background: var(--bg-gradient);
+      margin: 0;
+      padding: 40px 20px;
+      min-height: 100vh;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center; /* 垂直置中 */
+      overflow-x: hidden;
     }
-    .main-wrapper {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 20px; position: relative; z-index: 10; align-items: stretch;
+
+    /* 格狀佈局系統：確保對齊 */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+      width: 100%;
+      max-width: 1200px;
+      position: relative;
+      z-index: 10;
     }
-    .panel-tall { display: flex; flex-direction: column; }
-    #holiday-box { justify-content: center; }
-    .panel {
-      background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(204, 160, 50, 0.4), 0 0 20px rgba(188, 92, 55, 0.2);
-      padding: 20px; width: 100%; max-width: 360px;
-      border: 3px solid #CCA032; position: relative;
-      transition: all 0.3s;
+
+    /* 卡片通用樣式 */
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(10px);
+      height: 100%; /* 強制等高 */
     }
-    .panel:hover {
-      box-shadow: 0 8px 40px rgba(204, 160, 50, 0.6), 0 0 30px rgba(188, 92, 55, 0.4);
-      transform: translateY(-2px);
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
     }
-    .holiday-title {
-      font-size: 22px; font-weight: bold; text-align: center;
-      color: #BC5C37; margin-bottom: 10px; margin-top: 0;
-      text-shadow: 0 0 10px rgba(188, 92, 55, 0.3);
-    }
-    .holiday-date { font-size: 16px; text-align: center; margin-bottom: 12px; color: #5a6640; }
-    .holiday-countdown { text-align: center; font-size: 16px; color: #555; }
-    .horoscope {
-      margin-top: 15px; padding: 12px;
-      background: linear-gradient(135deg, #737F4E 0%, #5a6640 100%);
-      border-radius: 8px; color: #fef08a; font-size: 14px; line-height: 1.6;
-      box-shadow: 0 2px 8px rgba(115, 127, 78, 0.3); border: 2px solid #CCA032;
-    }
-    .flip-number {
-      display: inline-block; font-family: 'Courier New', monospace;
-      background: linear-gradient(135deg, #BC5C37 0%, #a54d2f 100%);
-      color: #fff; padding: 10px 14px; border-radius: 6px;
-      font-size: 26px; margin: 0 6px;
-      box-shadow: 0 4px 12px rgba(188, 92, 55, 0.5), 0 0 15px rgba(204, 160, 50, 0.3);
-      border: 2px solid #CCA032; letter-spacing: 1px;
-    }
-    h1, h2 { text-align: center; color: #BC5C37; text-shadow: 0 0 10px rgba(188, 92, 55, 0.2); }
-    label { font-size: 16px; display: block; margin-top: 10px; color: #737F4E; font-weight: 600; }
+
+    h1, h2, h3 { margin: 0; text-align: center; }
+    h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
+    h2 { font-size: 14px; color: var(--text-muted); font-weight: normal; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+
+    /* 輸入區塊 */
+    .input-group { margin-bottom: 20px; }
+    label { display: block; font-size: 14px; font-weight: 600; color: #4a5568; margin-bottom: 8px; }
+    
     input[type="text"] {
-      width: 100%; padding: 10px; margin: 5px 0 15px;
-      border: 2px solid #CCA032; border-radius: 4px; font-size: 16px; transition: border 0.3s;
-      background: #faf9f0;
+      width: 100%; padding: 12px 16px;
+      border: 2px solid #e2e8f0; border-radius: 10px;
+      font-size: 18px; transition: all 0.2s;
+      text-align: center; letter-spacing: 2px;
+      background: #f7fafc; color: #2d3748;
     }
-    input[type="text"]:focus { outline: none; border-color: #BC5C37; background: #fff; }
+    input[type="text"]:focus { border-color: var(--primary); background: #fff; }
+
     button {
-      background: linear-gradient(135deg, #BC5C37 0%, #a54d2f 100%);
-      color: white; padding: 14px; font-size: 18px; border: none; border-radius: 4px;
-      cursor: pointer; width: 100%; position: relative; overflow: hidden;
-      box-shadow: 0 4px 12px rgba(188, 92, 55, 0.4);
-      font-weight: 600;
+      width: 100%; padding: 14px;
+      border: none; border-radius: 10px;
+      font-size: 16px; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; position: relative; overflow: hidden;
     }
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(188, 92, 55, 0.6), 0 0 20px rgba(204, 160, 50, 0.4);
-      transition: all 0.3s;
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #BC5C37 0%, #c0392b 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(188, 92, 55, 0.3);
     }
-    button:hover::after {
-      content: '🎄';
-      position: absolute; right: 15px; top: 50%;
-      transform: translateY(-50%); animation: ghostFloat 2s infinite;
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    
+    .btn-flight {
+      background: linear-gradient(135deg, #4a90e2 0%, #2980b9 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
     }
-    @keyframes ghostFloat { 0%, 100% { transform: translateY(-50%); } 50% { transform: translateY(-70%); } }
-    #result { text-align: center; margin-top: 20px; font-size: 18px; color: #737F4E; }
-    #countdown {
-      margin-top: 25px; padding: 20px;
-      background: linear-gradient(135deg, #BC5C37 0%, #a54d2f 100%);
-      border-radius: 10px; text-align: center; display: none;
-      color: white; box-shadow: 0 4px 12px rgba(188, 92, 55, 0.5), 0 0 20px rgba(204, 160, 50, 0.3);
-      border: 3px solid #CCA032;
-    }
-    #countdown-display { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-    .countdown-unit { 
-      background: rgba(255,255,255,0.25); 
-      border-radius: 8px; padding: 15px 20px; min-width: 80px;
-      border: 2px solid rgba(204, 160, 50, 0.5);
-    }
-    .countdown-number { font-size: 32px; font-weight: bold; display: block; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-    .countdown-label { font-size: 14px; margin-top: 5px; opacity: 0.95; }
-    .countdown-reminder { margin-top: 10px; font-size: 13px; opacity: 0.95; }
-    #loading { display: none; text-align: center; margin: 20px 0; }
-    .ghost-loader { display: inline-block; font-size: 50px; animation: ghostSpin 1.5s linear infinite; }
-    @keyframes ghostSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .btn-flight:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-    #xmasOverlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-      display: none; justify-content: center; align-items: center; flex-direction: column;
-      z-index: 9999; padding: 20px;
+    /* 計算結果與倒數 */
+    #result { margin-top: 20px; text-align: center; font-size: 15px; line-height: 1.6; color: #2d3748; }
+    .countdown-box {
+      margin-top: auto; /* 推到底部 */
+      background: #fff5f5; border: 1px solid #fed7d7;
+      border-radius: 12px; padding: 15px; text-align: center;
+      display: none;
     }
-    #xmasOverlay button {
-      background: linear-gradient(135deg, #BC5C37 0%, #a54d2f 100%);
-      border: 2px solid #CCA032; color: #fff; padding: 10px 16px; border-radius: 6px;
-      margin: 6px; cursor: pointer; font-weight: 600;
+    .countdown-flex { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+    .time-unit { background: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-width: 60px; }
+    .time-num { display: block; font-size: 24px; font-weight: 800; color: var(--primary); font-family: monospace; }
+    .time-label { font-size: 12px; color: #718096; }
+
+    /* 解凍條樣式 */
+    .defrost-wrap { margin-top: 20px; }
+    .progress-track {
+      height: 24px; background: #edf2f7; border-radius: 12px;
+      overflow: hidden; position: relative;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+    .progress-bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #a1c4fd 0%, #c2e9fb 100%);
+      position: relative; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    /* 冰霜紋理 */
+    .progress-bar::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0, rgba(255,255,255,0.3) 10px, transparent 10px, transparent 20px);
+    }
+    .mariah-img-box {
+      margin-top: 15px; border-radius: 12px; overflow: hidden;
+      position: relative; aspect-ratio: 16/9; background: #000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .mariah-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.8; }
+
+    /* 機票輪盤樣式 */
+    .boarding-pass {
+      background: #fff; border: 2px dashed #cbd5e0; border-radius: 12px;
+      padding: 20px; margin-bottom: 20px; position: relative;
+    }
+    .flight-route { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .airport-code { font-size: 28px; font-weight: 900; color: #2d3748; }
+    .airport-name { font-size: 12px; color: #718096; text-transform: uppercase; }
+    .plane-icon { color: #4a90e2; font-size: 24px; transform: rotate(90deg); }
+    .flight-reason { 
+      font-size: 14px; color: var(--secondary); font-weight: 600; 
+      text-align: center; min-height: 44px; display: flex; align-items: center; justify-content: center;
     }
 
+    /* 雪花 */
     .snowflake {
-      position: fixed; color: white; pointer-events: none; z-index: 0;
-      text-shadow: 0 0 8px rgba(255,255,255,0.6);
+      position: fixed; pointer-events: none; top: -20px;
+      background: white; border-radius: 50%;
+      z-index: 1; filter: blur(0.5px);
     }
 
-    .mariah-wrap {
-      position: relative; border-radius: 8px; overflow: hidden;
-      background: radial-gradient(closest-side, rgba(188, 92, 55, 0.15), transparent);
-      border: 2px solid rgba(204, 160, 50, 0.5);
+    /* 載入動畫 */
+    .loading-spinner {
+      display: none; margin: 20px auto;
+      width: 40px; height: 40px;
+      border: 4px solid rgba(188, 92, 55, 0.1);
+      border-left-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
-    .mariah-video, .mariah-fallback {
-      width: 100%; display: block; border-radius: 8px;
-      aspect-ratio: 16 / 9; object-fit: cover; height: auto;
-      background: #000;
-    }
-    @supports not (aspect-ratio: 1 / 1) {
-      .mariah-video, .mariah-fallback { height: 202px; }
-    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
 
-    @media (max-width: 1024px) {
-      .main-wrapper { flex-direction: column; align-items: center; }
+    /* RWD */
+    @media (max-width: 768px) {
+      .grid-container { grid-template-columns: 1fr; }
+      body { padding: 20px 10px; align-items: flex-start; }
+      .card { padding: 20px; }
     }
   </style>
 </head>
 <body>
-  <div id="xmasOverlay"></div>
 
-  <div class="main-wrapper">
-    <div class="panel panel-tall" id="holiday-box"></div>
-
-    <div class="panel panel-tall">
-      <h1>🎄 什麼時候可以回家 🎅</h1>
-      <h2>HURC下班時間計算機</h2>
-      <label for="start">上班時間 (hhmm):</label>
-      <input type="text" id="start" placeholder="HHMM" inputmode="numeric" pattern="[0-9]*" />
-      <button onclick="calc()">計算你的下班時間</button>
-      <div id="loading">
-        <div class="ghost-loader">🎅</div>
-        <div style="margin-top:10px;color:#737F4E;">計算中...</div>
+<div class="grid-container">
+  
+  <!-- Panel 1: Mariah 解凍進度 -->
+  <div class="card">
+    <h1>🎅 解凍倒數</h1>
+    <h2>SHE IS DEFROSTING...</h2>
+    
+    <div class="defrost-wrap">
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:#718096; margin-bottom:5px;">
+        <span>🧊 11/01</span>
+        <span>🎄 12/25</span>
       </div>
-      <h3 id="result"></h3>
-      <div id="countdown">
-        <div style="font-size:18px;font-weight:bold;margin-bottom:15px">距離可以離開辦公室還有</div>
-        <div id="countdown-display">
-          <div class="countdown-unit">
-            <span class="countdown-number" id="h">00</span>
-            <div class="countdown-label">小時</div>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-number" id="m">00</span>
-            <div class="countdown-label">分鐘</div>
-          </div>
-          <div class="countdown-unit">
-            <span class="countdown-number" id="s">00</span>
-            <div class="countdown-label">秒</div>
-          </div>
+      <div class="progress-track">
+        <div class="progress-bar" id="defrostBar"></div>
+      </div>
+      <div id="defrostText" style="text-align:center; font-size:13px; color:var(--primary); margin-top:8px; font-weight:bold;">計算中...</div>
+    </div>
+
+    <div class="mariah-img-box">
+      <!-- 替換為一張 Mariah Carey 的圖片 URL，這裡用佔位符 -->
+      <img src="https://upload.wikimedia.org/wikipedia/en/4/4e/Mariah_Carey_-_Merry_Christmas.png" alt="Mariah" class="mariah-img" id="mariahVisual">
+      <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.6); color:white; font-size:12px; padding:5px 10px; text-align:center;">
+        🔊 警告：音波攻擊準備中
+      </div>
+    </div>
+
+    <div style="margin-top:20px; font-size:13px; color:#555; line-height:1.5;">
+      <strong style="color:var(--secondary);">⭐ 今日星座運勢：</strong><br>
+      <span id="horoscope-text">載入中...</span>
+    </div>
+  </div>
+
+  <!-- Panel 2: 下班計算機 (核心功能) -->
+  <div class="card">
+    <h1>🎄 什麼時候可以回家</h1>
+    <h2>HURC 下班時間計算機</h2>
+    
+    <div class="input-group">
+      <label for="start">上班打卡時間 (HHMM)</label>
+      <input type="text" id="start" placeholder="例如：0900" inputmode="numeric" pattern="[0-9]*" maxlength="4" />
+    </div>
+
+    <button class="btn-primary" onclick="calc()">計算下班時間</button>
+    
+    <div class="loading-spinner" id="loading"></div>
+    
+    <div id="result"></div>
+
+    <div id="countdown" class="countdown-box">
+      <div style="font-size:14px; font-weight:bold; color:#e53e3e;">距離逃離辦公室還有</div>
+      <div class="countdown-flex">
+        <div class="time-unit"><span class="time-num" id="h">00</span><span class="time-label">時</span></div>
+        <div class="time-unit"><span class="time-num" id="m">00</span><span class="time-label">分</span></div>
+        <div class="time-unit"><span class="time-num" id="s">00</span><span class="time-label">秒</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel 3: 逃離工作輪盤 -->
+  <div class="card">
+    <h1>✈️ 逃離工作計畫</h1>
+    <h2>ESCAPE ROULETTE</h2>
+
+    <div class="boarding-pass">
+      <div class="flight-route">
+        <div style="text-align:center;">
+          <div class="airport-code">TPE</div>
+          <div class="airport-name">TAIPEI</div>
         </div>
-        <div class="countdown-reminder">🎁 不要加班太久喔！</div>
+        <div style="font-size:20px; color:#ccc;">✈</div>
+        <div style="text-align:center;">
+          <div class="airport-code" id="destCode" style="color:var(--primary)">???</div>
+          <div class="airport-name" id="destCity">DESTINATION</div>
+        </div>
+      </div>
+      <div id="flightReason" class="flight-reason">
+        覺得累了嗎？點擊下方按鈕
       </div>
     </div>
 
-    <div class="panel panel-tall">
-      <div class="holiday-title" style="margin-bottom:12px;">❄️ 正在解凍 Mariah Carey...</div>
-
-      <img
-        id="mariahFallback"
-        class="mariah-fallback"
-        src="./mariah-poster.jpg"
-        alt="Mariah Carey"
-        loading="eager"
-      />
-
-      <div class="mariah-wrap" id="mariahWrap">
-        <video
-          id="mariahVideo"
-          class="mariah-video"
-          poster="./mariah-poster.jpg"
-          preload="metadata"
-          muted
-          playsinline
-          webkit-playsinline
-          disablepictureinpicture
-        >
-          <source src="./mariah-defrosting-slow.mp4" type="video/mp4" />
-        </video>
-      </div>
+    <button class="btn-flight" onclick="spinFlight()">🌍 搜本週末便宜機票</button>
+    
+    <div style="margin-top:15px; font-size:12px; color:#aaa; text-align:center;">
+      * 自動搜尋本週五去、下週一回的航班<br>
+      (勇敢一點，假單遞出去)
     </div>
   </div>
 
-  <div style="text-align: center; margin-top: 20px; padding: 15px;">
-    <div style="font-size: 14px; color: #fef08a;">👩‍💻 沛恩 更新於 2025 年 11 月 2 日</div>
-    <div style="font-size: 13px; color: #fef08a; margin-top: 5px;">📍 回來上班了ＱＱ</div>
-  </div>
+</div>
 
-  <script>
-    let timer, offTime;
+<script>
+  /* --- 1. 真實物理雪花 (Sine Wave) --- */
+  const snowflakes = [];
+  const maxSnow = 60; // 雪花數量
 
-    function update() {
-      if (!offTime) return;
-      const now = new Date();
-      const diff = offTime - now;
-      if (diff <= 0) {
-        clearInterval(timer);
-        document.getElementById('countdown').style.display = 'none';
-        const result = document.getElementById('result');
-        if (!result.innerHTML.includes('下班時間到了')) {
-          result.innerHTML += '<br><br>🎉 <strong>下班時間到了！快回家吧！</strong>';
-        }
-        return;
-      }
-      document.getElementById('h').textContent = String(Math.floor(diff / 3600000)).padStart(2, '0');
-      document.getElementById('m').textContent = String(Math.floor(diff % 3600000 / 60000)).padStart(2, '0');
-      document.getElementById('s').textContent = String(Math.floor(diff % 60000 / 1000)).padStart(2, '0');
+  class Snow {
+    constructor() {
+      this.init();
     }
+    init(firstTime = false) {
+      this.el = document.createElement('div');
+      this.el.className = 'snowflake';
+      document.body.appendChild(this.el);
+      this.reset(firstTime);
+    }
+    reset(firstTime = false) {
+      // 隨機大小 (2px - 7px)
+      this.size = Math.random() * 5 + 2;
+      this.el.style.width = `${this.size}px`;
+      this.el.style.height = `${this.size}px`;
+      
+      // 初始透明度
+      this.opacity = Math.random() * 0.6 + 0.2;
+      this.el.style.opacity = this.opacity;
 
-    function calc() {
-      const input = document.getElementById("start").value;
-      const result = document.getElementById("result");
-      const loading = document.getElementById("loading");
-      loading.style.display = 'block';
-      result.innerHTML = '';
+      // 位置與速度
+      this.x = Math.random() * window.innerWidth;
+      this.y = firstTime ? Math.random() * window.innerHeight : -10;
+      this.speed = Math.random() * 1 + 0.5; // 下落速度
+      
+      // 左右飄移參數
+      this.sway = Math.random() * 0.02 + 0.005; // 飄移頻率
+      this.swayAmp = Math.random() * 20 + 10;   // 飄移幅度
+      this.swayOffset = Math.random() * Math.PI * 2; // 起始相位
+    }
+    update() {
+      this.y += this.speed;
+      // Sine wave 運動
+      const currentSway = Math.sin(this.y * this.sway + this.swayOffset) * this.swayAmp;
+      
+      // 循環機制
+      if (this.y > window.innerHeight + 10) {
+        this.reset();
+      }
+      
+      this.el.style.transform = `translate(${this.x + currentSway}px, ${this.y}px)`;
+    }
+  }
+
+  // 啟動雪花
+  for(let i=0; i<maxSnow; i++) {
+    const s = new Snow();
+    s.reset(true); // 一開始佈滿畫面
+    snowflakes.push(s);
+  }
+  function animateSnow() {
+    snowflakes.forEach(s => s.update());
+    requestAnimationFrame(animateSnow);
+  }
+  animateSnow();
+
+  /* --- 2. 瑪麗亞凱莉解凍進度 --- */
+  (function updateDefrost() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    // 設定：11月1日開始解凍，12月25日完全解凍
+    const startDefrost = new Date(currentYear, 10, 1); 
+    const christmas = new Date(currentYear, 11, 25);
+    
+    let percent = 0;
+    if (now < startDefrost) percent = 0;
+    else if (now > christmas) percent = 100;
+    else {
+      const total = christmas - startDefrost;
+      const elapsed = now - startDefrost;
+      percent = (elapsed / total) * 100;
+    }
+    
+    // 更新 UI
+    setTimeout(() => {
+      document.getElementById('defrostBar').style.width = percent + '%';
+      document.getElementById('defrostText').innerText = `目前解凍進度：${percent.toFixed(2)}%`;
+      
+      // 簡單的圖像濾鏡效果：越接近聖誕節，越不透明
+      const visual = document.getElementById('mariahVisual');
+      visual.style.filter = `sepia(${100 - percent}%) blur(${ (100-percent)/10 }px)`;
+    }, 500);
+
+    // 隨機星座
+    const gifts = [
+      "牡羊：送你一杯熱美式，降火氣 🔥", "金牛：肉桂捲+被窩是最佳解 🥐", "雙子：你需要兩份禮物才公平 🎁",
+      "巨蟹：早點回家煮火鍋吧 🍲", "獅子：聖誕樹上的星就是你 ⭐", "處女：把辦公桌整理好再下班 🧹",
+      "天秤：今天適合穿紅色大衣 🧥", "天蠍：神秘的眼神嚇退老闆 🦂", "射手：直接買機票飛走了 ✈️",
+      "摩羯：保溫瓶裡裝熱紅酒 🍷", "水瓶：送大家奇怪的迷因圖 👽", "雙魚：雪花都在為你跳舞 ❄️"
+    ];
+    document.getElementById('horoscope-text').innerText = gifts[Math.floor(Math.random()*gifts.length)];
+  })();
+
+  /* --- 3. 下班計算機 + 遲到藉口 --- */
+  let timer;
+  let offTime;
+
+  // 遲到藉口庫
+  const funnyExcuses = [
+    "家裡的貓突然學會後空翻，我必須留下來錄影 🐱",
+    "路上的紅綠燈今天好像在針對我，全是紅燈 🚦",
+    "被棉被封印了，我花了一小時才解開結界 🛌",
+    "出門前發現眉毛畫歪了，這不能忍 🤨",
+    "早餐店阿姨叫我帥哥/美女，害我迷失了自我 😎",
+    "機車/捷運今天心情不好，發動得比較慢 🛵",
+    "昨晚夢到在工作，以為已經打卡了 💤",
+    "為了維護世界和平，我在被窩裡多待了半小時 🦸"
+  ];
+
+  function updateTimer() {
+    if (!offTime) return;
+    const now = new Date();
+    const diff = offTime - now;
+
+    if (diff <= 0) {
+      clearInterval(timer);
       document.getElementById('countdown').style.display = 'none';
-
-      setTimeout(() => {
-        loading.style.display = 'none';
-
-        if (!input || input.length !== 4 || isNaN(input)) { result.innerText = "請您再仔細確認上班時間，不要玩系統 ^^"; return; }
-        const h = parseInt(input.substring(0, 2)), min = parseInt(input.substring(2, 4));
-        if (h < 0 || h > 23 || min < 0 || min > 59) { result.innerText = "請您再仔細確認上班時間，不要玩系統 ^^"; return; }
-        if (input >= "0000" && input < "0730") { result.innerText = "上班時間最早從 07:30 打卡唷！"; return; }
-        if (input >= "1200" && input <= "2359") { result.innerText = "建議您直接請假 ^^"; return; }
-        const now = new Date();
-        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, min, 0);
-        const work = 9.5 * 3600000;
-        const late = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
-
-        if (start > late) {
-          const leaveMins = Math.ceil((start - late) / 60000 / 30) * 30;
-          const leaveStart = new Date(start.getTime() - leaveMins * 60000);
-          const properOffTime = new Date(leaveStart.getTime() + work);
-          result.innerHTML =
-            (h >= 11 ? "⚠️ 太晚了吧！要不要直接回家<br>" : "⚠️ 注意！您已經遲到了！<br>") +
-            `建議您這樣請假：${leaveStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}。<br>` +
-            `⏰ 建議請假時長為：${Math.floor(leaveMins/60)}小時${leaveMins%60}分鐘。<br>`;
-          result.innerHTML += `🕔 請完假後建議在 ${properOffTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} 下班`;
-          offTime = new Date(start.getTime() + work);
-        } else {
-          result.innerHTML = "🎉 今天努力起床上班了！繼續保持！<br>";
-          offTime = new Date(start.getTime() + work);
-          result.innerHTML += `🕔 您的下班時間是：${offTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-        }
-
-        document.getElementById('countdown').style.display = 'block';
-        if (timer) clearInterval(timer);
-        update();
-        timer = setInterval(update, 1000);
-      }, 800);
+      document.getElementById('result').innerHTML += "<br><strong style='color:#e53e3e; font-size:18px;'>🎉 下班啦！快逃！</strong>";
+      return;
     }
+    document.getElementById('h').textContent = String(Math.floor(diff / 3600000)).padStart(2, '0');
+    document.getElementById('m').textContent = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+    document.getElementById('s').textContent = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+  }
 
-    // 聖誕倒數 + 星座建議
-    (function(){
-      const today = new Date();
-      const christmas = new Date(today.getFullYear(), 11, 25);
-      if (christmas < today) christmas.setFullYear(today.getFullYear() + 1);
-      const daysLeft = Math.ceil((christmas - today) / 86400000);
-      const giftHoroscopes = [
-        { sign: "♈ 牡羊座", msg: "送你一點熱可可，跟你一樣火熱🔥" },
-        { sign: "♉ 金牛座", msg: "甜甜的肉桂捲＋一整天睡覺最適合你 😴" },
-        { sign: "♊ 雙子座", msg: "雙份禮物比較公平，你都想要 😎" },
-        { sign: "♋ 巨蟹座", msg: "一條毛毯就能把你留在家裡 ❤️" },
-        { sign: "♌ 獅子座", msg: "金色圍巾讓你繼續當全辦公室最亮的 ☀️" },
-        { sign: "♍ 處女座", msg: "手帳＋貼紙，聖誕也要有秩序 📘" },
-        { sign: "♎ 天秤座", msg: "香氛蠟燭＋聖誕歌，全部都要很美 ✨" },
-        { sign: "♏ 天蠍座", msg: "神秘黑巧克力跟你一樣高級 🍫" },
-        { sign: "♐ 射手座", msg: "旅行基金或是直接放你下班 ✈️" },
-        { sign: "♑ 摩羯座", msg: "實用的保溫瓶，邊加班邊喝 🥤" },
-        { sign: "♒ 水瓶座", msg: "奇怪的聖誕電子小物你會最愛 ⚡" },
-        { sign: "♓ 雙魚座", msg: "雪景音樂盒，讓你邊聽邊做夢 🌨️" }
-      ];
-      const randomGift = giftHoroscopes[Math.floor(Math.random() * giftHoroscopes.length)];
-      document.getElementById("holiday-box").innerHTML =
-        `<div class="holiday-title">🎄 聖誕節倒數</div>
-         <div class="holiday-date">距離聖誕節還有 <span class="flip-number">${daysLeft}</span> 天</div>
-         <div class="horoscope"><strong>${randomGift.sign}</strong><br>${randomGift.msg}</div>`;
-    })();
-
-    // 影片可用則顯示影片、否則保持圖片
-    const mariahVideo = document.getElementById("mariahVideo");
-    const mariahFallback = document.getElementById("mariahFallback");
-    let metaLoaded = false;
-
-    function switchToVideoIfReady() {
-      if (isFinite(mariahVideo.duration) && mariahVideo.duration > 0) {
-        const today = new Date();
-        const yearStart = new Date(today.getFullYear(), 0, 1);
-        const dayOfYear = Math.floor((today - yearStart) / 86400000);
-        const christmasEveDay = Math.floor((new Date(today.getFullYear(), 11, 24) - yearStart) / 86400000);
-        const progress = Math.min(dayOfYear / christmasEveDay, 1);
-        mariahVideo.currentTime = mariahVideo.duration * progress;
-        mariahFallback.style.display = "none";
-        mariahVideo.style.visibility = "visible";
-      }
-    }
-
-    mariahVideo.style.visibility = "hidden";
-    mariahVideo.addEventListener("loadedmetadata", () => {
-      metaLoaded = true;
-      switchToVideoIfReady();
-    }, { once: true });
-
-    mariahVideo.addEventListener("loadeddata", () => {
-      if (!metaLoaded) metaLoaded = true;
-      switchToVideoIfReady();
-    }, { once: true });
-
-    mariahVideo.addEventListener("error", () => {
-      mariahVideo.style.visibility = "hidden";
-      mariahFallback.style.display = "block";
-    });
+  function calc() {
+    const input = document.getElementById("start").value;
+    const result = document.getElementById("result");
+    const loading = document.getElementById("loading");
+    const countdownBox = document.getElementById("countdown");
+    
+    // 重置狀態
+    result.innerHTML = '';
+    countdownBox.style.display = 'none';
+    loading.style.display = 'block';
 
     setTimeout(() => {
-      if (!metaLoaded) {
-        mariahVideo.style.visibility = "hidden";
-        mariahFallback.style.display = "block";
+      loading.style.display = 'none';
+
+      // 驗證輸入
+      if (!input || input.length !== 4 || isNaN(input)) {
+        result.innerHTML = "<span style='color:red'>❌ 格式錯誤！請輸入 4 位數字 (如 0900)</span>";
+        return;
       }
-    }, 2500);
+      
+      const h = parseInt(input.substring(0, 2));
+      const m = parseInt(input.substring(2, 4));
+      if (h < 0 || h > 23 || m < 0 || m > 59) {
+        result.innerHTML = "<span style='color:red'>❌ 時間不合理，你是在平行時空上班嗎？</span>";
+        return;
+      }
+      if (h < 6) {
+        result.innerHTML = "🌞 這麼早上班？辛苦了...記得吃早餐。";
+        return;
+      }
 
-    // 吹氣互動
-    const mariahWrap = document.getElementById("mariahWrap");
-    const fog = document.createElement("div");
-    fog.style.position = "absolute";
-    fog.style.inset = "0";
-    fog.style.pointerEvents = "none";
-    fog.style.backdropFilter = "blur(0px)";
-    fog.style.transition = "backdrop-filter 0.15s ease";
-    fog.style.borderRadius = "8px";
-    mariahWrap.appendChild(fog);
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
+      const workHours = 9.5 * 3600000; // 9.5 小時
+      const lateThreshold = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0); // 09:00 遲到線
 
-    let blowing = false;
-    let blurLevel = 0;
-    let blowCount = 0;
+      // 計算下班時間
+      offTime = new Date(start.getTime() + workHours);
+      
+      let htmlContent = "";
 
-    function startBlow() {
-      blowing = true;
-      blurLevel = Math.min(12, blurLevel + 2);
-      fog.style.backdropFilter = `blur(${blurLevel}px)`;
-    }
-    function stopBlow() {
-      if (!blowing) return;
-      blowing = false;
-      blowCount++;
-      setTimeout(() => {
-        blurLevel = Math.max(0, blurLevel - 1.5);
-        fog.style.backdropFilter = `blur(${blurLevel}px)`;
-      }, 200);
-
-      if (blowCount >= 3) {
-        const overlay = document.getElementById("xmasOverlay");
-        overlay.style.display = "flex";
-        overlay.innerHTML = `
-          <div style="
-            max-width:380px;
-            padding:24px;
-            border-radius:16px;
-            background:rgba(115, 127, 78, 0.3);
-            backdrop-filter:blur(12px);
-            border:2px solid rgba(204, 160, 50, 0.8);
-            box-shadow:0 0 30px rgba(188, 92, 55, 0.4), 0 0 20px rgba(204, 160, 50, 0.3);
-            text-align:center;
-          ">
-            <div style="font-size:20px;color:#fef08a;margin-bottom:14px;font-weight:600;">
-              💬 Mariah：你已經等不及了嗎？
-            </div>
-            <div style="font-size:14px;color:#fef9e6;margin-bottom:18px;opacity:0.9;">
-              🎶 播放 / ❌ 取消
-            </div>
-            <button id="playBtn" style="
-              background:linear-gradient(135deg,#BC5C37 0%, #a54d2f 100%);
-              border:2px solid #CCA032;color:#fff;padding:10px 20px;border-radius:8px;
-              font-size:16px;cursor:pointer;margin:4px 8px;font-weight:600;
-            ">🎶 播放</button>
-            <button id="cancelBtn" style="
-              background:rgba(115, 127, 78, 0.6);
-              border:2px solid rgba(204, 160, 50, 0.8);
-              color:#fff;padding:10px 20px;border-radius:8px;
-              font-size:16px;cursor:pointer;margin:4px 8px;font-weight:600;
-            ">❌ 取消</button>
+      // 遲到判斷
+      if (start > lateThreshold) {
+        const leaveMins = Math.ceil((start - lateThreshold) / 60000 / 30) * 30;
+        const leaveStart = new Date(start.getTime() - leaveMins * 60000);
+        const randomExcuse = funnyExcuses[Math.floor(Math.random() * funnyExcuses.length)];
+        
+        htmlContent += `<div style="background:#fff; border-left:4px solid #BC5C37; padding:10px; text-align:left; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+          <strong style="color:#BC5C37;">⚠️ 遲到警報！</strong><br>
+          建議請假：${leaveStart.getHours().toString().padStart(2,'0')}:${leaveStart.getMinutes().toString().padStart(2,'0')} - ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}<br>
+          <div style="margin-top:8px; color:#555; font-size:13px;">
+            💡 <strong>推薦理由：</strong>${randomExcuse}
           </div>
-        `;
-        document.getElementById("playBtn").onclick = () => {
-          overlay.innerHTML = `
-            <iframe
-              src="https://www.youtube.com/embed/aAkMkVFwAoo?autoplay=1&controls=1&fs=1&rel=0&mute=0"
-              allow="autoplay; fullscreen"
-              allowfullscreen
-              style="width:100%;height:100%;border:none;">
-            </iframe>
-          `;
-        };
-        document.getElementById("cancelBtn").onclick = () => { overlay.style.display = "none"; };
+        </div>`;
+      } else {
+        htmlContent += "<div style='color:green; font-weight:bold; margin-bottom:10px;'>✨ 準時的好寶寶，今天也要加油！</div>";
       }
-    }
 
-    mariahWrap.addEventListener("mousedown", startBlow);
-    document.addEventListener("mouseup", stopBlow);
-    mariahWrap.addEventListener("touchstart", (e) => { e.preventDefault(); startBlow(); }, { passive: false });
-    document.addEventListener("touchend", stopBlow);
-    document.addEventListener("keydown", (e) => { if (e.code === "Space") { e.preventDefault(); startBlow(); }});
-    document.addEventListener("keyup", (e) => { if (e.code === "Space") { stopBlow(); }});
+      htmlContent += `您的預計下班時間：<span style="font-size:24px; font-weight:bold; color:#2d3748; display:block; margin-top:5px;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
+      
+      result.innerHTML = htmlContent;
+      countdownBox.style.display = 'block';
+      
+      if (timer) clearInterval(timer);
+      updateTimer();
+      timer = setInterval(updateTimer, 1000);
+    }, 600); // 模擬計算延遲
+  }
 
-    // 雪花
-    const snowflakes = [];
-    const maxSnow = 50;
-    class Snow {
-      constructor() {
-        this.size = Math.random() * 10 + 6;
-        this.x = Math.random() * window.innerWidth;
-        this.y = -this.size;
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = Math.random() * 0.5 + 0.2;
-        this.el = document.createElement('div');
-        this.el.className = 'snowflake';
-        this.el.textContent = '❄️';
-        this.el.style.fontSize = this.size + 'px';
-        document.body.appendChild(this.el);
+  /* --- 4. 逃離工作機票輪盤 --- */
+  const destinations = [
+    { code: "NRT", city: "東京", reason: "不管了，我需要拉麵跟迪士尼 🍜" },
+    { code: "KIX", city: "大阪", reason: "去環球影城大叫發洩一下吧 🎢" },
+    { code: "BKK", city: "曼谷", reason: "這種壓力需要兩小時的泰式按摩 💆" },
+    { code: "CTS", city: "北海道", reason: "去雪地裡把老闆的臉埋進去 ❄️" },
+    { code: "ICN", city: "首爾", reason: "吃炸雞配啤酒，這才是人生 🍗" },
+    { code: "FUK", city: "福岡", reason: "下班直接飛過去吃屋台宵夜 🥟" },
+    { code: "OKA", city: "沖繩", reason: "看海發呆，什麼都不想做 🌊" },
+    { code: "HKG", city: "香港", reason: "去維多利亞港吹風冷靜一下 🌃" },
+    { code: "CEB", city: "宿霧", reason: "跟鯨鯊游泳比跟同事相處好 🐋" }
+  ];
+
+  function getNextWeekend() {
+    const today = new Date();
+    const day = today.getDay();
+    let daysToFri = (5 - day + 7) % 7;
+    if(daysToFri === 0) daysToFri = 7; // 如果是週五，找下週五
+    
+    const nextFri = new Date(today);
+    nextFri.setDate(today.getDate() + daysToFri);
+    const nextMon = new Date(nextFri);
+    nextMon.setDate(nextFri.getDate() + 3);
+    
+    return { 
+      out: nextFri.toISOString().split('T')[0], 
+      back: nextMon.toISOString().split('T')[0] 
+    };
+  }
+
+  let isSpinning = false;
+  function spinFlight() {
+    if (isSpinning) return;
+    isSpinning = true;
+    
+    const codeEl = document.getElementById('destCode');
+    const cityEl = document.getElementById('destCity');
+    const reasonEl = document.getElementById('flightReason');
+    let count = 0;
+    
+    // 動畫開始
+    const interval = setInterval(() => {
+      const rand = destinations[Math.floor(Math.random() * destinations.length)];
+      codeEl.innerText = rand.code;
+      cityEl.innerText = rand.city;
+      count++;
+      if(count > 15) { // 轉15次停下
+        clearInterval(interval);
+        finishSpin(rand);
       }
-      update() {
-        this.x += this.vx; this.y += this.vy;
-        if (this.y >= window.innerHeight - this.size) {
-          this.y = window.innerHeight - this.size;
-          this.vy = 0; this.vx = 0;
-        }
-        this.el.style.left = this.x + 'px';
-        this.el.style.top = this.y + 'px';
+    }, 60);
+  }
+
+  function finishSpin(dest) {
+    const codeEl = document.getElementById('destCode');
+    const reasonEl = document.getElementById('flightReason');
+    
+    codeEl.style.color = "#e53e3e";
+    reasonEl.innerHTML = dest.reason;
+    
+    const dates = getNextWeekend();
+    // Google Flights Search URL
+    const url = `https://www.google.com/travel/flights?q=Taipei+to+${dest.city}+on+${dates.out}+returning+${dates.back}`;
+    
+    setTimeout(() => {
+      if(confirm(`命運決定了：去【${dest.city}】！\n\n"${dest.reason}"\n\n要查看本週五 (${dates.out}) 出發的票價嗎？`)) {
+        window.open(url, '_blank');
       }
-    }
-    function createSnow() { if (snowflakes.length < maxSnow) snowflakes.push(new Snow()); }
-    function animateSnow() { createSnow(); snowflakes.forEach(s => s.update()); requestAnimationFrame(animateSnow); }
-    animateSnow();
-  </script>
+      isSpinning = false;
+      codeEl.style.color = "var(--primary)";
+    }, 500);
+  }
+</script>
 </body>
 </html>
-
