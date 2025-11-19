@@ -8,13 +8,14 @@
     :root {
       --primary: #BC5C37;
       --secondary: #CCA032;
-      --bg-gradient: linear-gradient(135deg, #5a6640 0%, #2c3e50 100%);
-      --card-bg: rgba(255, 255, 255, 0.95);
+      /* 背景改深一點，讓雪花更明顯 */
+      --bg-gradient: linear-gradient(135deg, #4b5836 0%, #1a252f 100%); 
+      --card-bg: rgba(255, 255, 255, 0.92);
       --text-main: #2d3748;
       --text-muted: #718096;
     }
 
-    * { box-sizing: border-box; outline: none; }
+    * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
     
     body {
       font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
@@ -24,12 +25,12 @@
       min-height: 100vh;
       color: var(--text-main);
       display: flex;
-      justify-content: center;
-      align-items: center; /* 垂直置中 */
+      flex-direction: column;
+      align-items: center;
       overflow-x: hidden;
     }
 
-    /* 格狀佈局系統：確保對齊 */
+    /* 格狀佈局系統 */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -38,141 +39,155 @@
       max-width: 1200px;
       position: relative;
       z-index: 10;
+      margin-bottom: 40px; /* 留空間給 Footer */
     }
 
     /* 卡片通用樣式 */
     .card {
       background: var(--card-bg);
-      border-radius: 20px;
-      padding: 30px;
+      border-radius: 24px;
+      padding: 28px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.6);
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      backdrop-filter: blur(10px);
-      height: 100%; /* 強制等高 */
+      backdrop-filter: blur(12px);
+      transition: transform 0.2s;
     }
+    .card:hover { transform: translateY(-3px); }
 
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    h1, h2, h3 { margin: 0; text-align: center; }
-    h1 { font-size: 22px; color: var(--primary); margin-bottom: 5px; }
-    h2 { font-size: 14px; color: var(--text-muted); font-weight: normal; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    h1 { font-size: 22px; color: var(--primary); margin: 0 0 5px 0; text-align: center; }
+    h2 { font-size: 13px; color: var(--text-muted); margin: 0 0 20px 0; text-align: center; letter-spacing: 1.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
 
     /* 輸入區塊 */
     .input-group { margin-bottom: 20px; }
-    label { display: block; font-size: 14px; font-weight: 600; color: #4a5568; margin-bottom: 8px; }
+    label { display: block; font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 8px; }
     
     input[type="text"] {
-      width: 100%; padding: 12px 16px;
-      border: 2px solid #e2e8f0; border-radius: 10px;
-      font-size: 18px; transition: all 0.2s;
-      text-align: center; letter-spacing: 2px;
-      background: #f7fafc; color: #2d3748;
+      width: 100%; padding: 14px;
+      border: 2px solid #cbd5e0; border-radius: 12px;
+      font-size: 20px; text-align: center; letter-spacing: 3px;
+      background: #fff; color: #2d3748; transition: border 0.3s;
     }
-    input[type="text"]:focus { border-color: var(--primary); background: #fff; }
+    input[type="text"]:focus { border-color: var(--primary); }
 
     button {
-      width: 100%; padding: 14px;
-      border: none; border-radius: 10px;
+      width: 100%; padding: 15px; border: none; border-radius: 12px;
       font-size: 16px; font-weight: 700; cursor: pointer;
       transition: all 0.2s; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     
     .btn-primary {
       background: linear-gradient(135deg, #BC5C37 0%, #c0392b 100%);
-      color: white;
-      box-shadow: 0 4px 12px rgba(188, 92, 55, 0.3);
+      color: white; box-shadow: 0 4px 15px rgba(188, 92, 55, 0.4);
     }
-    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-primary:active { transform: scale(0.98); }
     
     .btn-flight {
-      background: linear-gradient(135deg, #4a90e2 0%, #2980b9 100%);
-      color: white;
-      box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+      background: linear-gradient(135deg, #4a90e2 0%, #0056b3 100%);
+      color: white; box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
     }
-    .btn-flight:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-    /* 計算結果與倒數 */
-    #result { margin-top: 20px; text-align: center; font-size: 15px; line-height: 1.6; color: #2d3748; }
+    /* 計算結果 */
+    #result { margin-top: 20px; text-align: center; font-size: 16px; line-height: 1.6; min-height: 20px; }
+    
     .countdown-box {
-      margin-top: auto; /* 推到底部 */
-      background: #fff5f5; border: 1px solid #fed7d7;
-      border-radius: 12px; padding: 15px; text-align: center;
-      display: none;
+      margin-top: auto;
+      background: #fff; border: 2px solid #fed7d7;
+      border-radius: 16px; padding: 20px; text-align: center;
+      display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .countdown-flex { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
-    .time-unit { background: white; padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-width: 60px; }
-    .time-num { display: block; font-size: 24px; font-weight: 800; color: var(--primary); font-family: monospace; }
-    .time-label { font-size: 12px; color: #718096; }
+    @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-    /* 解凍條樣式 */
-    .defrost-wrap { margin-top: 20px; }
+    .countdown-flex { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
+    .time-unit { background: #f7fafc; padding: 10px; border-radius: 10px; min-width: 65px; border: 1px solid #e2e8f0; }
+    .time-num { display: block; font-size: 28px; font-weight: 800; color: var(--primary); font-family: monospace; line-height: 1; }
+    .time-label { font-size: 12px; color: #718096; margin-top: 4px; }
+
+    /* 🧊 瑪麗亞凱莉互動區 */
+    .defrost-wrap { margin-top: 10px; position: relative; }
+    .mariah-container {
+      position: relative;
+      border-radius: 16px; overflow: hidden;
+      aspect-ratio: 16/9;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+    .mariah-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    
+    /* 冰層遮罩 */
+    .ice-overlay {
+      position: absolute; inset: 0;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      transition: all 0.4s ease;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+    }
+    .ice-overlay:hover { background: rgba(255, 255, 255, 0.6); }
+    .ice-overlay.cracked { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(0px); }
+
+    .click-hint {
+      background: rgba(0,0,0,0.6); color: white;
+      padding: 8px 16px; border-radius: 20px;
+      font-size: 14px; font-weight: bold;
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,0.5);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
     .progress-track {
-      height: 24px; background: #edf2f7; border-radius: 12px;
-      overflow: hidden; position: relative;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
+      height: 20px; background: #edf2f7; border-radius: 10px;
+      margin-top: 15px; overflow: hidden; border: 1px solid #cbd5e0;
     }
     .progress-bar {
       height: 100%; width: 0%;
       background: linear-gradient(90deg, #a1c4fd 0%, #c2e9fb 100%);
-      position: relative; transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.5s ease-out;
     }
-    /* 冰霜紋理 */
-    .progress-bar::after {
-      content: ''; position: absolute; inset: 0;
-      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0, rgba(255,255,255,0.3) 10px, transparent 10px, transparent 20px);
-    }
-    .mariah-img-box {
-      margin-top: 15px; border-radius: 12px; overflow: hidden;
-      position: relative; aspect-ratio: 16/9; background: #000;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-    .mariah-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.8; }
 
-    /* 機票輪盤樣式 */
+    /* ✈️ 機票輪盤 */
     .boarding-pass {
-      background: #fff; border: 2px dashed #cbd5e0; border-radius: 12px;
+      background: #f8fbff; border: 2px dashed #4a90e2; border-radius: 16px;
       padding: 20px; margin-bottom: 20px; position: relative;
     }
-    .flight-route { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .airport-code { font-size: 28px; font-weight: 900; color: #2d3748; }
-    .airport-name { font-size: 12px; color: #718096; text-transform: uppercase; }
-    .plane-icon { color: #4a90e2; font-size: 24px; transform: rotate(90deg); }
-    .flight-reason { 
-      font-size: 14px; color: var(--secondary); font-weight: 600; 
-      text-align: center; min-height: 44px; display: flex; align-items: center; justify-content: center;
-    }
+    .flight-route { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .airport-code { font-size: 32px; font-weight: 900; color: #2d3748; line-height: 1; }
+    .airport-name { font-size: 12px; color: #718096; margin-top: 4px; font-weight: 600; }
+    .plane-icon { color: #4a90e2; font-size: 24px; }
 
     /* 雪花 */
     .snowflake {
       position: fixed; pointer-events: none; top: -20px;
       background: white; border-radius: 50%;
-      z-index: 1; filter: blur(0.5px);
+      z-index: 1; 
+      box-shadow: 0 0 4px rgba(255,255,255,0.8); /* 增加發光感 */
     }
 
-    /* 載入動畫 */
-    .loading-spinner {
-      display: none; margin: 20px auto;
-      width: 40px; height: 40px;
-      border: 4px solid rgba(188, 92, 55, 0.1);
-      border-left-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+    /* Footer 作者宣告 */
+    .footer-credit {
+      margin-top: 20px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      z-index: 10;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
+    .footer-credit span {
+      display: inline-block;
+      background: rgba(0,0,0,0.3);
+      padding: 4px 12px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
 
     /* RWD */
     @media (max-width: 768px) {
       .grid-container { grid-template-columns: 1fr; }
-      body { padding: 20px 10px; align-items: flex-start; }
-      .card { padding: 20px; }
+      body { padding: 20px 15px; }
     }
   </style>
 </head>
@@ -180,54 +195,59 @@
 
 <div class="grid-container">
   
-  <!-- Panel 1: Mariah 解凍進度 -->
+  <!-- Panel 1: Mariah 解凍互動 -->
   <div class="card">
-    <h1>🎅 解凍倒數</h1>
-    <h2>SHE IS DEFROSTING...</h2>
+    <h1>🧊 解凍挑戰</h1>
+    <h2>DEFROSTING PROGRESS</h2>
     
     <div class="defrost-wrap">
-      <div style="display:flex; justify-content:space-between; font-size:12px; color:#718096; margin-bottom:5px;">
-        <span>🧊 11/01</span>
-        <span>🎄 12/25</span>
+      <div class="mariah-container" onclick="crackIce()">
+        <!-- 換了一張更有聖誕氣氛的圖 -->
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3VweXJtYjF6bmJ6bmJ6bmJ6bmJ6bmJ6bmJ6bmJ6bmJ6biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUPOqo6E1MnHOgbRmE/giphy.gif" alt="Mariah" class="mariah-img">
+        
+        <!-- 互動冰層 -->
+        <div class="ice-overlay" id="iceOverlay">
+          <div class="click-hint">👆 點擊幫忙解凍</div>
+        </div>
       </div>
+
       <div class="progress-track">
         <div class="progress-bar" id="defrostBar"></div>
       </div>
-      <div id="defrostText" style="text-align:center; font-size:13px; color:var(--primary); margin-top:8px; font-weight:bold;">計算中...</div>
-    </div>
-
-    <div class="mariah-img-box">
-      <!-- 替換為一張 Mariah Carey 的圖片 URL，這裡用佔位符 -->
-      <img src="https://upload.wikimedia.org/wikipedia/en/4/4e/Mariah_Carey_-_Merry_Christmas.png" alt="Mariah" class="mariah-img" id="mariahVisual">
-      <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.6); color:white; font-size:12px; padding:5px 10px; text-align:center;">
-        🔊 警告：音波攻擊準備中
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:#718096; margin-top:5px;">
+        <span id="icePercent">冰層厚度: 100%</span>
+        <span>🎄 12/25</span>
       </div>
     </div>
 
-    <div style="margin-top:20px; font-size:13px; color:#555; line-height:1.5;">
-      <strong style="color:var(--secondary);">⭐ 今日星座運勢：</strong><br>
+    <div style="margin-top:20px; background:#f7fafc; padding:12px; border-radius:12px; font-size:13px; color:#555;">
+      <strong style="color:#BC5C37;">⭐ 今日運勢：</strong>
       <span id="horoscope-text">載入中...</span>
     </div>
   </div>
 
-  <!-- Panel 2: 下班計算機 (核心功能) -->
+  <!-- Panel 2: 下班計算機 (修正邏輯) -->
   <div class="card">
-    <h1>🎄 什麼時候可以回家</h1>
-    <h2>HURC 下班時間計算機</h2>
+    <h1>🕒 什麼時候可以回家</h1>
+    <h2>WORK OFF CALCULATOR</h2>
     
     <div class="input-group">
-      <label for="start">上班打卡時間 (HHMM)</label>
-      <input type="text" id="start" placeholder="例如：0900" inputmode="numeric" pattern="[0-9]*" maxlength="4" />
+      <label for="start">上班打卡時間</label>
+      <input type="text" id="start" placeholder="0900" inputmode="numeric" pattern="[0-9]*" maxlength="4" />
     </div>
 
-    <button class="btn-primary" onclick="calc()">計算下班時間</button>
+    <button class="btn-primary" onclick="calc()">
+      <span>🧮 計算下班時間</span>
+    </button>
     
-    <div class="loading-spinner" id="loading"></div>
+    <div id="loading" style="display:none; text-align:center; margin:15px 0;">
+      <span style="font-size:24px; animation:spin 1s infinite linear; display:inline-block;">⏳</span>
+    </div>
     
     <div id="result"></div>
 
     <div id="countdown" class="countdown-box">
-      <div style="font-size:14px; font-weight:bold; color:#e53e3e;">距離逃離辦公室還有</div>
+      <div style="font-size:14px; font-weight:bold; color:#e53e3e; margin-bottom:5px;">距離自由還有</div>
       <div class="countdown-flex">
         <div class="time-unit"><span class="time-num" id="h">00</span><span class="time-label">時</span></div>
         <div class="time-unit"><span class="time-num" id="m">00</span><span class="time-label">分</span></div>
@@ -236,7 +256,7 @@
     </div>
   </div>
 
-  <!-- Panel 3: 逃離工作輪盤 -->
+  <!-- Panel 3: 逃離工作 (修正機票連結) -->
   <div class="card">
     <h1>✈️ 逃離工作計畫</h1>
     <h2>ESCAPE ROULETTE</h2>
@@ -247,29 +267,40 @@
           <div class="airport-code">TPE</div>
           <div class="airport-name">TAIPEI</div>
         </div>
-        <div style="font-size:20px; color:#ccc;">✈</div>
+        <div class="plane-icon">✈</div>
         <div style="text-align:center;">
           <div class="airport-code" id="destCode" style="color:var(--primary)">???</div>
           <div class="airport-name" id="destCity">DESTINATION</div>
         </div>
       </div>
-      <div id="flightReason" class="flight-reason">
+      <div id="flightReason" style="text-align:center; font-size:14px; color:#555; font-weight:600; min-height:40px; display:flex; align-items:center; justify-content:center;">
         覺得累了嗎？點擊下方按鈕
       </div>
     </div>
 
-    <button class="btn-flight" onclick="spinFlight()">🌍 搜本週末便宜機票</button>
+    <button class="btn-flight" onclick="spinFlight()">
+      <span>🌍 搜本週末便宜機票</span>
+    </button>
     
     <div style="margin-top:15px; font-size:12px; color:#aaa; text-align:center;">
-      * 自動搜尋本週五去、下週一回的航班<br>
-      (勇敢一點，假單遞出去)
+      * 自動幫你找好「本週五去、下週一回」的機票
+      <br>(勇敢一點，假單遞出去)
     </div>
   </div>
 
 </div>
 
+<!-- Footer 作者宣告 -->
+<div class="footer-credit">
+  <span>👩‍💻 Designed by 沛恩 | Last updated: <span id="2025/11/19"></span></span>
+</div>
+
 <script>
-  /* --- 1. 真實物理雪花 (Sine Wave) --- */
+  // 更新時間
+  const todayStr = new Date().toISOString().split('T')[0];
+  document.getElementById('updateDate').innerText = todayStr;
+
+  /* --- 1. 顯眼的物理雪花 (Snowflakes) --- */
   const snowflakes = [];
   const maxSnow = 60; // 雪花數量
 
@@ -284,43 +315,36 @@
       this.reset(firstTime);
     }
     reset(firstTime = false) {
-      // 隨機大小 (2px - 7px)
-      this.size = Math.random() * 5 + 2;
+      // 增大尺寸：3px - 8px
+      this.size = Math.random() * 5 + 3;
       this.el.style.width = `${this.size}px`;
       this.el.style.height = `${this.size}px`;
       
-      // 初始透明度
-      this.opacity = Math.random() * 0.6 + 0.2;
+      // 增加不透明度：0.4 - 0.9 (更明顯)
+      this.opacity = Math.random() * 0.5 + 0.4;
       this.el.style.opacity = this.opacity;
 
-      // 位置與速度
       this.x = Math.random() * window.innerWidth;
       this.y = firstTime ? Math.random() * window.innerHeight : -10;
-      this.speed = Math.random() * 1 + 0.5; // 下落速度
+      this.speed = Math.random() * 1.5 + 0.5; // 稍微快一點
       
-      // 左右飄移參數
-      this.sway = Math.random() * 0.02 + 0.005; // 飄移頻率
-      this.swayAmp = Math.random() * 20 + 10;   // 飄移幅度
-      this.swayOffset = Math.random() * Math.PI * 2; // 起始相位
+      // 左右飄移
+      this.sway = Math.random() * 0.02 + 0.005;
+      this.swayAmp = Math.random() * 20 + 10;
+      this.swayOffset = Math.random() * Math.PI * 2;
     }
     update() {
       this.y += this.speed;
-      // Sine wave 運動
       const currentSway = Math.sin(this.y * this.sway + this.swayOffset) * this.swayAmp;
       
-      // 循環機制
-      if (this.y > window.innerHeight + 10) {
-        this.reset();
-      }
-      
+      if (this.y > window.innerHeight + 10) this.reset();
       this.el.style.transform = `translate(${this.x + currentSway}px, ${this.y}px)`;
     }
   }
 
-  // 啟動雪花
   for(let i=0; i<maxSnow; i++) {
     const s = new Snow();
-    s.reset(true); // 一開始佈滿畫面
+    s.reset(true);
     snowflakes.push(s);
   }
   function animateSnow() {
@@ -329,57 +353,67 @@
   }
   animateSnow();
 
-  /* --- 2. 瑪麗亞凱莉解凍進度 --- */
-  (function updateDefrost() {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    // 設定：11月1日開始解凍，12月25日完全解凍
-    const startDefrost = new Date(currentYear, 10, 1); 
-    const christmas = new Date(currentYear, 11, 25);
+  /* --- 2. 互動式解凍 (Ice Crack) --- */
+  let defrostLevel = 0; // 0% 解凍
+  
+  // 根據真實日期設定初始解凍值
+  const now = new Date();
+  const startDefrost = new Date(now.getFullYear(), 10, 1); // 11/1
+  const christmas = new Date(now.getFullYear(), 11, 25); // 12/25
+  let realProgress = 0;
+  if (now > startDefrost && now < christmas) {
+    realProgress = ((now - startDefrost) / (christmas - startDefrost)) * 100;
+  }
+  
+  document.getElementById('defrostBar').style.width = realProgress + '%';
+
+  // 點擊破冰功能
+  function crackIce() {
+    const overlay = document.getElementById('iceOverlay');
+    const hint = overlay.querySelector('.click-hint');
+    const iceText = document.getElementById('icePercent');
     
-    let percent = 0;
-    if (now < startDefrost) percent = 0;
-    else if (now > christmas) percent = 100;
-    else {
-      const total = christmas - startDefrost;
-      const elapsed = now - startDefrost;
-      percent = (elapsed / total) * 100;
-    }
+    // 視覺回饋：讓冰層變透明一點
+    overlay.classList.add('cracked');
+    hint.innerText = "❄️ 正在解凍中...";
     
-    // 更新 UI
+    // 簡單動畫：進度條往前衝一下
+    let currentWidth = parseFloat(document.getElementById('defrostBar').style.width) || realProgress;
+    let newWidth = Math.min(currentWidth + 10, 100);
+    
+    document.getElementById('defrostBar').style.width = newWidth + '%';
+    iceText.innerText = `冰層強度剩餘: ${Math.max(0, 100 - newWidth).toFixed(0)}%`;
+    
+    // 5秒後稍微恢復一點冰層 (好玩的互動)
     setTimeout(() => {
-      document.getElementById('defrostBar').style.width = percent + '%';
-      document.getElementById('defrostText').innerText = `目前解凍進度：${percent.toFixed(2)}%`;
-      
-      // 簡單的圖像濾鏡效果：越接近聖誕節，越不透明
-      const visual = document.getElementById('mariahVisual');
-      visual.style.filter = `sepia(${100 - percent}%) blur(${ (100-percent)/10 }px)`;
-    }, 500);
+      overlay.classList.remove('cracked');
+      hint.innerText = "👆 再次點擊破冰";
+      // 進度條退回真實日期進度
+      document.getElementById('defrostBar').style.width = realProgress + '%';
+      iceText.innerText = `冰層強度: ${Math.max(0, 100 - realProgress).toFixed(0)}%`;
+    }, 2000);
+  }
 
-    // 隨機星座
-    const gifts = [
-      "牡羊：送你一杯熱美式，降火氣 🔥", "金牛：肉桂捲+被窩是最佳解 🥐", "雙子：你需要兩份禮物才公平 🎁",
-      "巨蟹：早點回家煮火鍋吧 🍲", "獅子：聖誕樹上的星就是你 ⭐", "處女：把辦公桌整理好再下班 🧹",
-      "天秤：今天適合穿紅色大衣 🧥", "天蠍：神秘的眼神嚇退老闆 🦂", "射手：直接買機票飛走了 ✈️",
-      "摩羯：保溫瓶裡裝熱紅酒 🍷", "水瓶：送大家奇怪的迷因圖 👽", "雙魚：雪花都在為你跳舞 ❄️"
-    ];
-    document.getElementById('horoscope-text').innerText = gifts[Math.floor(Math.random()*gifts.length)];
-  })();
+  // 隨機星座
+  const gifts = [
+    "牡羊：今天行動力滿滿，適合處理卡很久的事情。感情上多點耐心會讓氣氛更柔和。", "金牛：專注力提升，工作表現穩定亮眼。財運不錯，可能有小確幸進帳。", "雙子：靈感爆棚的一天，適合創作或頭腦風暴。人際互動熱絡，說話有磁場。",
+    "巨蟹：情緒穩定，心裡有一種被安放的感覺。家人相關的事今天會特別順利。", "獅子：人氣上升、容易成為焦點。下午開始注意不要太逞強，適度休息更有力。", "處女：效率高、能快速完成任務。感情運回溫，願意多表達讓對方更懂你。",
+    "天秤：今天特別有魅力，適合社交與拓展人脈。但心裡要有底：選擇太多反而容易亂。", "天蠍：直覺敏銳，能看穿事情的核心。工作與感情都適合深度交流。", "射手：心情輕鬆自在，適合旅遊、學習或嘗試新事物。小心一時衝動的花費。",
+    "摩羯：穩扎穩打的一天，努力會獲得肯定。感情上適合談計畫、談未來。", "水瓶：創意大爆發，適合做新企劃或嘗試不同方法。朋友之間可能會有意外的好消息。", "雙魚：情感豐富的一天，直覺很準。適合照顧自己、做些讓心靈放鬆的事。"
+  ];
+  document.getElementById('horoscope-text').innerText = gifts[Math.floor(Math.random()*gifts.length)];
 
-  /* --- 3. 下班計算機 + 遲到藉口 --- */
+  /* --- 3. 下班計算機 (邏輯修正) --- */
   let timer;
   let offTime;
 
-  // 遲到藉口庫
+  // 遲到藉口
   const funnyExcuses = [
     "家裡的貓突然學會後空翻，我必須留下來錄影 🐱",
     "路上的紅綠燈今天好像在針對我，全是紅燈 🚦",
     "被棉被封印了，我花了一小時才解開結界 🛌",
     "出門前發現眉毛畫歪了，這不能忍 🤨",
-    "早餐店阿姨叫我帥哥/美女，害我迷失了自我 😎",
-    "機車/捷運今天心情不好，發動得比較慢 🛵",
-    "昨晚夢到在工作，以為已經打卡了 💤",
-    "為了維護世界和平，我在被窩裡多待了半小時 🦸"
+    "早餐店阿姨叫我帥哥，害我迷失了自我 😎"
   ];
 
   function updateTimer() {
@@ -404,7 +438,6 @@
     const loading = document.getElementById("loading");
     const countdownBox = document.getElementById("countdown");
     
-    // 重置狀態
     result.innerHTML = '';
     countdownBox.style.display = 'none';
     loading.style.display = 'block';
@@ -412,7 +445,6 @@
     setTimeout(() => {
       loading.style.display = 'none';
 
-      // 驗證輸入
       if (!input || input.length !== 4 || isNaN(input)) {
         result.innerHTML = "<span style='color:red'>❌ 格式錯誤！請輸入 4 位數字 (如 0900)</span>";
         return;
@@ -420,43 +452,45 @@
       
       const h = parseInt(input.substring(0, 2));
       const m = parseInt(input.substring(2, 4));
-      if (h < 0 || h > 23 || m < 0 || m > 59) {
-        result.innerHTML = "<span style='color:red'>❌ 時間不合理，你是在平行時空上班嗎？</span>";
+      
+      // 邏輯判斷修正
+      if (h >= 23 || h < 6) {
+        result.innerHTML = "🌙 <strong>不要鬧了，現在是睡覺時間！</strong><br>如果你真的在上班，請保重身體...";
         return;
       }
-      if (h < 6) {
-        result.innerHTML = "🌞 這麼早上班？辛苦了...記得吃早餐。";
+      
+      if (h >= 12 && h < 23) {
+        result.innerHTML = "🛑 <strong>都幾點了？直接回家吧。</strong><br>直接請半天假或回家吧，今天不適合工作。";
         return;
       }
+
+      if (m < 0 || m > 59) { result.innerHTML = "❌ 分鐘數錯誤"; return; }
 
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
-      const workHours = 9.5 * 3600000; // 9.5 小時
-      const lateThreshold = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0); // 09:00 遲到線
+      const workHours = 9.5 * 3600000; 
+      const lateThreshold = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
 
-      // 計算下班時間
       offTime = new Date(start.getTime() + workHours);
-      
       let htmlContent = "";
 
-      // 遲到判斷
       if (start > lateThreshold) {
         const leaveMins = Math.ceil((start - lateThreshold) / 60000 / 30) * 30;
         const leaveStart = new Date(start.getTime() - leaveMins * 60000);
         const randomExcuse = funnyExcuses[Math.floor(Math.random() * funnyExcuses.length)];
         
-        htmlContent += `<div style="background:#fff; border-left:4px solid #BC5C37; padding:10px; text-align:left; margin-bottom:10px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-          <strong style="color:#BC5C37;">⚠️ 遲到警報！</strong><br>
+        htmlContent += `<div style="background:#fff0f0; border-left:4px solid #e53e3e; padding:10px; text-align:left; margin-bottom:10px; border-radius:4px;">
+          <strong style="color:#e53e3e;">⚠️ 遲到警報</strong><br>
           建議請假：${leaveStart.getHours().toString().padStart(2,'0')}:${leaveStart.getMinutes().toString().padStart(2,'0')} - ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}<br>
-          <div style="margin-top:8px; color:#555; font-size:13px;">
-            💡 <strong>推薦理由：</strong>${randomExcuse}
+          <div style="margin-top:6px; color:#555; font-size:13px;">
+            💡 <strong>推薦藉口：</strong>${randomExcuse}
           </div>
         </div>`;
       } else {
-        htmlContent += "<div style='color:green; font-weight:bold; margin-bottom:10px;'>✨ 準時的好寶寶，今天也要加油！</div>";
+        htmlContent += "<div style='color:#38a169; font-weight:bold; margin-bottom:10px;'>✨ 準時的優秀社畜，今天也要加油！</div>";
       }
 
-      htmlContent += `您的預計下班時間：<span style="font-size:24px; font-weight:bold; color:#2d3748; display:block; margin-top:5px;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
+      htmlContent += `您的預計下班時間：<span style="font-size:26px; font-weight:bold; color:#2d3748; display:block; margin-top:5px;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
       
       result.innerHTML = htmlContent;
       countdownBox.style.display = 'block';
@@ -464,37 +498,40 @@
       if (timer) clearInterval(timer);
       updateTimer();
       timer = setInterval(updateTimer, 1000);
-    }, 600); // 模擬計算延遲
+    }, 500);
   }
 
-  /* --- 4. 逃離工作機票輪盤 --- */
+  /* --- 4. 機票輪盤 (修正連結與日期) --- */
+  // 使用機場代碼 (Airport Codes) 確保搜尋準確
   const destinations = [
-    { code: "NRT", city: "東京", reason: "不管了，我需要拉麵跟迪士尼 🍜" },
-    { code: "KIX", city: "大阪", reason: "去環球影城大叫發洩一下吧 🎢" },
-    { code: "BKK", city: "曼谷", reason: "這種壓力需要兩小時的泰式按摩 💆" },
-    { code: "CTS", city: "北海道", reason: "去雪地裡把老闆的臉埋進去 ❄️" },
-    { code: "ICN", city: "首爾", reason: "吃炸雞配啤酒，這才是人生 🍗" },
-    { code: "FUK", city: "福岡", reason: "下班直接飛過去吃屋台宵夜 🥟" },
-    { code: "OKA", city: "沖繩", reason: "看海發呆，什麼都不想做 🌊" },
-    { code: "HKG", city: "香港", reason: "去維多利亞港吹風冷靜一下 🌃" },
-    { code: "CEB", city: "宿霧", reason: "跟鯨鯊游泳比跟同事相處好 🐋" }
+    { code: "NRT", city: "Tokyo", name: "東京", reason: "拉麵、迪士尼、購物，你需要這個 🍜" },
+    { code: "KIX", city: "Osaka", name: "大阪", reason: "去環球影城大叫發洩一下吧 🎢" },
+    { code: "BKK", city: "Bangkok", name: "曼谷", reason: "這種壓力需要兩小時的泰式按摩 💆" },
+    { code: "CTS", city: "Sapporo", name: "北海道", reason: "去雪地裡把老闆的臉埋進去 ❄️" },
+    { code: "ICN", city: "Seoul", name: "首爾", reason: "吃炸雞配啤酒，這才是人生 🍗" },
+    { code: "FUK", city: "Fukuoka", name: "福岡", reason: "下班直接飛過去吃屋台宵夜 🥟" },
+    { code: "OKA", city: "Okinawa", name: "沖繩", reason: "看海發呆，什麼都不想做 🌊" },
+    { code: "HKG", city: "Hong Kong", name: "香港", reason: "去維多利亞港吹風冷靜一下 🌃" },
+    { code: "CEB", city: "Cebu", name: "宿霧", reason: "跟鯨鯊游泳比跟同事相處好 🐋" }
   ];
 
   function getNextWeekend() {
     const today = new Date();
-    const day = today.getDay();
+    const day = today.getDay(); // 0=Sun, 1=Mon...
+    
+    // 計算距離下一個週五還有幾天
     let daysToFri = (5 - day + 7) % 7;
-    if(daysToFri === 0) daysToFri = 7; // 如果是週五，找下週五
+    if(daysToFri === 0) daysToFri = 7; // 如果今天是週五，找下週五
     
     const nextFri = new Date(today);
     nextFri.setDate(today.getDate() + daysToFri);
-    const nextMon = new Date(nextFri);
-    nextMon.setDate(nextFri.getDate() + 3);
     
-    return { 
-      out: nextFri.toISOString().split('T')[0], 
-      back: nextMon.toISOString().split('T')[0] 
-    };
+    const nextMon = new Date(nextFri);
+    nextMon.setDate(nextFri.getDate() + 3); // 週五+3天=週一
+    
+    // 格式化 YYYY-MM-DD
+    const fmt = (d) => d.toISOString().split('T')[0];
+    return { out: fmt(nextFri), back: fmt(nextMon) };
   }
 
   let isSpinning = false;
@@ -507,13 +544,12 @@
     const reasonEl = document.getElementById('flightReason');
     let count = 0;
     
-    // 動畫開始
     const interval = setInterval(() => {
       const rand = destinations[Math.floor(Math.random() * destinations.length)];
       codeEl.innerText = rand.code;
-      cityEl.innerText = rand.city;
+      cityEl.innerText = rand.name;
       count++;
-      if(count > 15) { // 轉15次停下
+      if(count > 15) {
         clearInterval(interval);
         finishSpin(rand);
       }
@@ -528,12 +564,15 @@
     reasonEl.innerHTML = dest.reason;
     
     const dates = getNextWeekend();
-    // Google Flights Search URL
-    const url = `https://www.google.com/travel/flights?q=Taipei+to+${dest.city}+on+${dates.out}+returning+${dates.back}`;
+    
+    // Google Flights URL 修正：
+    // 使用 TPE to [CODE] 結構，並加上日期，這樣最容易觸發正確的搜尋結果
+    // URL 範例: https://www.google.com/travel/flights?q=TPE+to+NRT+on+2023-12-01+returning+2023-12-04
+    const searchUrl = `https://www.google.com/travel/flights?q=TPE+to+${dest.code}+on+${dates.out}+returning+${dates.back}&curr=TWD`;
     
     setTimeout(() => {
-      if(confirm(`命運決定了：去【${dest.city}】！\n\n"${dest.reason}"\n\n要查看本週五 (${dates.out}) 出發的票價嗎？`)) {
-        window.open(url, '_blank');
+      if(confirm(`命運決定了：去【${dest.name}】！\n\n"${dest.reason}"\n\n已幫您設定日期：\n去程：${dates.out} (週五)\n回程：${dates.back} (週一)\n\n要查看票價嗎？`)) {
+        window.open(searchUrl, '_blank');
       }
       isSpinning = false;
       codeEl.style.color = "var(--primary)";
