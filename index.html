@@ -8,7 +8,6 @@
     :root {
       --primary: #BC5C37;
       --secondary: #CCA032;
-      /* 背景維持深色漸層，突顯雪花 */
       --bg-gradient: linear-gradient(135deg, #4b5836 0%, #1a252f 100%); 
       --card-bg: rgba(255, 255, 255, 0.92);
       --text-main: #2d3748;
@@ -30,7 +29,6 @@
       overflow-x: hidden;
     }
 
-    /* 格狀佈局 */
     .grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -42,7 +40,6 @@
       margin-bottom: 40px;
     }
 
-    /* 卡片樣式 */
     .card {
       background: var(--card-bg);
       border-radius: 24px;
@@ -59,7 +56,6 @@
     h1 { font-size: 22px; color: var(--primary); margin: 0 0 5px 0; text-align: center; }
     h2 { font-size: 13px; color: var(--text-muted); margin: 0 0 20px 0; text-align: center; letter-spacing: 1.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
 
-    /* 輸入區塊 */
     .input-group { margin-bottom: 20px; }
     label { display: block; font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 8px; }
     
@@ -88,7 +84,6 @@
       background: linear-gradient(135deg, #4a90e2 0%, #0056b3 100%);
       color: white; box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
     }
-    /* 成功搜尋到機票後的按鈕樣式 */
     .btn-flight.ready {
       background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
       box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
@@ -96,7 +91,6 @@
     }
     @keyframes pulseBtn { 0% {transform: scale(1);} 50% {transform: scale(1.02);} 100% {transform: scale(1);} }
 
-    /* 計算結果區 */
     #result { margin-top: 20px; text-align: center; font-size: 16px; line-height: 1.6; min-height: 20px; }
     
     .countdown-box {
@@ -112,9 +106,8 @@
     .time-num { display: block; font-size: 28px; font-weight: 800; color: var(--primary); font-family: monospace; line-height: 1; }
     .time-label { font-size: 12px; color: #718096; margin-top: 4px; }
 
-    /* 🧊 瑪麗亞凱莉影片區 */
+    /* 影片與解凍區 */
     .defrost-wrap { margin-top: 10px; position: relative; }
-    
     .media-container {
       position: relative;
       border-radius: 16px; overflow: hidden;
@@ -123,12 +116,7 @@
       cursor: pointer;
       background: #000;
     }
-    
-    .media-content {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-    }
-    
-    /* 播放按鈕遮罩 */
+    .media-content { width: 100%; height: 100%; object-fit: cover; display: block; }
     .play-overlay {
       position: absolute; inset: 0;
       background: rgba(0,0,0,0.3);
@@ -136,16 +124,13 @@
       transition: background 0.3s;
     }
     .media-container:hover .play-overlay { background: rgba(0,0,0,0.1); }
-    
     .play-icon {
       font-size: 50px; color: white;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
       background: rgba(255,255,255,0.2);
       width: 80px; height: 80px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       backdrop-filter: blur(5px); border: 2px solid rgba(255,255,255,0.6);
     }
-
     .progress-track {
       height: 20px; background: #edf2f7; border-radius: 10px;
       margin-top: 15px; overflow: hidden; border: 1px solid #cbd5e0;
@@ -156,7 +141,7 @@
       transition: width 0.5s ease-out;
     }
 
-    /* ✈️ 機票輪盤 */
+    /* 機票輪盤 */
     .boarding-pass {
       background: #f8fbff; border: 2px dashed #4a90e2; border-radius: 16px;
       padding: 20px; margin-bottom: 20px; position: relative;
@@ -174,7 +159,6 @@
       box-shadow: 0 0 5px rgba(255,255,255,0.9);
     }
 
-    /* Footer */
     .footer-credit {
       margin-top: 20px; text-align: center;
       color: rgba(255, 255, 255, 0.7);
@@ -196,33 +180,22 @@
 
 <div class="grid-container">
   
-  <!-- Panel 1: Mariah 影片 (點擊播放) -->
+  <!-- Panel 1: Mariah 影片 -->
   <div class="card">
     <h1>🎅 解凍進度</h1>
     <h2>SHE IS DEFROSTING...</h2>
     
     <div class="defrost-wrap">
-      <!-- 點擊這個容器會觸發 playVideo() -->
       <div class="media-container" id="videoContainer" onclick="playVideo()">
-        
-        <!-- 1. 封面圖 (預設顯示) -->
         <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3VweXJtYjF6bmJ6bmJ6bmJ6bmJ6bmJ6bmJ6bmJ6bmJ6biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUPOqo6E1MnHOgbRmE/giphy.gif" 
              id="posterImg" class="media-content" alt="Mariah Poster">
-        
-        <!-- 2. 播放按鈕圖示 -->
-        <div class="play-overlay" id="playOverlay">
-          <div class="play-icon">▶</div>
-        </div>
-
-        <!-- 3. 影片 (預設隱藏) -->
-        <!-- 請確認 mariah-defrosting-slow.mp4 與此 html 在同一資料夾 -->
+        <div class="play-overlay" id="playOverlay"><div class="play-icon">▶</div></div>
+        <!-- 影片檔案 -->
         <video id="mariahVideo" class="media-content" style="display:none;" playsinline loop>
           <source src="./mariah-defrosting-slow.mp4" type="video/mp4">
-          您的瀏覽器不支援影片標籤。
         </video>
       </div>
 
-      <!-- 進度條 -->
       <div class="progress-track">
         <div class="progress-bar" id="defrostBar"></div>
       </div>
@@ -268,7 +241,7 @@
     </div>
   </div>
 
-  <!-- Panel 3: 逃離工作 (修正按鈕無反應) -->
+  <!-- Panel 3: 逃離工作 -->
   <div class="card">
     <h1>✈️ 逃離工作計畫</h1>
     <h2>ESCAPE ROULETTE</h2>
@@ -307,55 +280,33 @@
 </div>
 
 <script>
-  // 設定更新日期
   const todayStr = new Date().toISOString().split('T')[0];
   document.getElementById('updateDate').innerText = todayStr;
 
-  /* =========================================
-     1. 影片播放邏輯 (點擊封面 -> 播放影片)
-     ========================================= */
+  /* 1. 影片播放 */
   function playVideo() {
-    const poster = document.getElementById('posterImg');
-    const overlay = document.getElementById('playOverlay');
+    document.getElementById('posterImg').style.display = 'none';
+    document.getElementById('playOverlay').style.display = 'none';
     const video = document.getElementById('mariahVideo');
-    
-    // 隱藏封面與按鈕
-    poster.style.display = 'none';
-    overlay.style.display = 'none';
-    
-    // 顯示並播放影片
     video.style.display = 'block';
-    video.play().catch(e => {
-      console.log("Autoplay failed, probably needs explicit user interaction again.");
-    });
+    video.play();
   }
 
-  /* =========================================
-     2. 解凍進度條邏輯
-     ========================================= */
+  /* 2. 解凍進度 */
   (function initDefrost() {
     const now = new Date();
-    const startDefrost = new Date(now.getFullYear(), 10, 1); // 11/1
-    const christmas = new Date(now.getFullYear(), 11, 25);   // 12/25
-    
+    const startDefrost = new Date(now.getFullYear(), 10, 1); 
+    const christmas = new Date(now.getFullYear(), 11, 25);
     let percent = 0;
     if (now > startDefrost && now < christmas) {
       percent = ((now - startDefrost) / (christmas - startDefrost)) * 100;
-    } else if (now >= christmas) {
-      percent = 100;
-    }
-
+    } else if (now >= christmas) percent = 100;
     document.getElementById('defrostBar').style.width = percent + '%';
     document.getElementById('icePercent').innerText = `解凍進度: ${percent.toFixed(1)}%`;
   })();
 
-  /* =========================================
-     3. 運勢與雪花 (立即執行)
-     ========================================= */
-  // 雪花特效
+  /* 3. 雪花與運勢 */
   const snowflakes = [];
-  const maxSnow = 60; 
-
   class Snow {
     constructor() { this.init(); }
     init(firstTime = false) {
@@ -384,54 +335,28 @@
       this.el.style.transform = `translate(${this.x + currentSway}px, ${this.y}px)`;
     }
   }
-  for(let i=0; i<maxSnow; i++) snowflakes.push(new Snow());
-  function animateSnow() {
-    snowflakes.forEach(s => s.update());
-    requestAnimationFrame(animateSnow);
-  }
+  for(let i=0; i<60; i++) snowflakes.push(new Snow());
+  function animateSnow() { snowflakes.forEach(s => s.update()); requestAnimationFrame(animateSnow); }
   animateSnow();
 
-  // 運勢顯示 (確保 DOM 載入後執行)
   window.onload = function() {
     const gifts = [
-      "牡羊：今天行動力滿滿，適合處理卡很久的事情。", 
-      "金牛：專注力提升，工作表現穩定亮眼。財運不錯。", 
-      "雙子：靈感爆棚，適合頭腦風暴。說話很有磁場。",
-      "巨蟹：情緒穩定，家人相關的事今天會特別順利。", 
-      "獅子：人氣上升、焦點所在。下午注意適度休息。", 
-      "處女：效率高、能快速完成任務。感情運回溫。",
-      "天秤：今天特別有魅力，適合社交。但不要猶豫不決。", 
-      "天蠍：直覺敏銳，能看穿核心。適合深度交流。", 
-      "射手：心情輕鬆，適合嘗試新事物。小心衝動花費。",
-      "摩羯：穩扎穩打，努力會獲肯定。適合規劃未來。", 
-      "水瓶：創意大爆發。朋友之間會有好消息。", 
-      "雙魚：直覺很準。適合做些讓心靈放鬆的事。"
+      "牡羊：行動力滿滿，適合處理卡很久的事。", "金牛：工作表現穩定，財運不錯。", "雙子：靈感爆棚，適合頭腦風暴。",
+      "巨蟹：家人相關的事今天會特別順利。", "獅子：人氣上升，注意適度休息。", "處女：效率高，感情運回溫。",
+      "天秤：特別有魅力，適合社交。", "天蠍：直覺敏銳，適合深度交流。", "射手：心情輕鬆，小心衝動花費。",
+      "摩羯：努力會獲肯定，適合規劃未來。", "水瓶：創意爆發，朋友有好消息。", "雙魚：直覺很準，適合放鬆身心。"
     ];
-    const randomGift = gifts[Math.floor(Math.random() * gifts.length)];
-    const horoscopeEl = document.getElementById('horoscope-text');
-    if (horoscopeEl) {
-      horoscopeEl.innerText = randomGift;
-    }
+    const el = document.getElementById('horoscope-text');
+    if(el) el.innerText = gifts[Math.floor(Math.random() * gifts.length)];
   };
 
-  /* =========================================
-     4. 下班計算機 (修復邏輯)
-     ========================================= */
-  let timer;
-  let offTime;
-  const funnyExcuses = [
-    "家裡的貓突然學會後空翻，我必須留下來錄影 🐱",
-    "路上的紅綠燈今天好像在針對我，全是紅燈 🚦",
-    "被棉被封印了，我花了一小時才解開結界 🛌",
-    "出門前發現眉毛畫歪了，這不能忍 🤨",
-    "早餐店阿姨叫我帥哥，害我迷失了自我 😎"
-  ];
+  /* 4. 下班計算機 (修正 0400-0729 邏輯) */
+  let timer, offTime;
+  const funnyExcuses = ["家裡的貓學會後空翻 🐱", "紅綠燈都在針對我 🚦", "被棉被封印了 🛌", "眉毛畫歪了不能忍 🤨"];
 
   function updateTimer() {
     if (!offTime) return;
-    const now = new Date();
-    const diff = offTime - now;
-
+    const diff = offTime - new Date();
     if (diff <= 0) {
       clearInterval(timer);
       document.getElementById('countdown').style.display = 'none';
@@ -455,31 +380,36 @@
 
     setTimeout(() => {
       loading.style.display = 'none';
-
-      // 格式檢查
       if (!input || input.length !== 4 || isNaN(input)) {
-        result.innerHTML = "<span style='color:red'>❌ 格式錯誤！請輸入 4 位數字 (如 0900)</span>";
+        result.innerHTML = "<span style='color:red'>❌ 格式錯誤 (如 0900)</span>";
         return;
       }
       
       const h = parseInt(input.substring(0, 2), 10);
       const m = parseInt(input.substring(2, 4), 10);
-      
-      // 邏輯 1: 23:00 - 06:00 -> 去睡覺
-      if (h >= 23 || h < 6) {
-        result.innerHTML = "🌙 <strong>不要鬧了，現在是睡覺時間！</strong><br>如果你真的在上班，請保重身體...";
+      const timeVal = h * 100 + m; // 例如 0730 -> 730
+
+      // 1. 23:00 ~ 03:59 -> 去睡覺 (2300 <= time or time < 400)
+      if (timeVal >= 2300 || timeVal < 400) {
+        result.innerHTML = "🌙 <strong>現在是睡覺時間！</strong><br>還沒睡的話快去睡，身體要顧。";
         return;
       }
       
-      // 邏輯 2: 12:00 - 22:59 -> 直接回家
-      if (h >= 12 && h < 23) {
-        result.innerHTML = "🛑 <strong>都幾點了？直接回家吧。</strong><br>現在進辦公室也沒意義了，請假吧。";
+      // 2. 04:00 ~ 07:29 -> 太早了 (400 <= time < 730)
+      if (timeVal >= 400 && timeVal < 730) {
+        result.innerHTML = "🥱 <strong>太早了吧！</strong><br>07:30 以前都算太早，再多睡一點吧。";
+        return;
+      }
+      
+      // 3. 12:00 ~ 22:59 -> 直接回家 (1200 <= time < 2300)
+      if (timeVal >= 1200 && timeVal < 2300) {
+        result.innerHTML = "🛑 <strong>都幾點了？直接回家吧。</strong><br>下午才來也沒意義了，直接請假。";
         return;
       }
 
-      if (m < 0 || m > 59) { result.innerHTML = "❌ 分鐘數錯誤"; return; }
+      if (m < 0 || m > 59) { result.innerHTML = "❌ 時間錯誤"; return; }
 
-      // 邏輯 3: 正常計算 (06:00 - 11:59)
+      // 4. 正常計算 (07:30 ~ 11:59)
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
       const workHours = 9.5 * 3600000; 
@@ -491,33 +421,25 @@
       if (start > lateThreshold) {
         const leaveMins = Math.ceil((start - lateThreshold) / 60000 / 30) * 30;
         const leaveStart = new Date(start.getTime() - leaveMins * 60000);
-        const randomExcuse = funnyExcuses[Math.floor(Math.random() * funnyExcuses.length)];
-        
         htmlContent += `<div style="background:#fff0f0; border-left:4px solid #e53e3e; padding:10px; text-align:left; margin-bottom:10px; border-radius:4px;">
           <strong style="color:#e53e3e;">⚠️ 遲到警報</strong><br>
           建議請假：${leaveStart.getHours().toString().padStart(2,'0')}:${leaveStart.getMinutes().toString().padStart(2,'0')} - ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}<br>
-          <div style="margin-top:6px; color:#555; font-size:13px;">
-            💡 <strong>推薦藉口：</strong>${randomExcuse}
-          </div>
+          <div style="margin-top:6px; color:#555; font-size:13px;">💡 理由：${funnyExcuses[Math.floor(Math.random()*funnyExcuses.length)]}</div>
         </div>`;
       } else {
-        htmlContent += "<div style='color:#38a169; font-weight:bold; margin-bottom:10px;'>✨ 準時的優秀社畜，今天也要加油！</div>";
+        htmlContent += "<div style='color:#38a169; font-weight:bold; margin-bottom:10px;'>✨ 準時的優秀社畜，加油！</div>";
       }
 
       htmlContent += `您的預計下班時間：<span style="font-size:26px; font-weight:bold; color:#2d3748; display:block; margin-top:5px;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
-      
       result.innerHTML = htmlContent;
       countdownBox.style.display = 'block';
-      
       if (timer) clearInterval(timer);
       updateTimer();
       timer = setInterval(updateTimer, 1000);
     }, 400);
   }
 
-  /* =========================================
-     5. 機票搜尋 (解決彈窗被擋與互動問題)
-     ========================================= */
+  /* 5. 機票搜尋 (強制觸發搜尋模式) */
   const destinations = [
     { code: "NRT", city: "Tokyo", name: "東京", reason: "拉麵、迪士尼，你需要這個 🍜" },
     { code: "KIX", city: "Osaka", name: "大阪", reason: "去環球影城大叫發洩一下 🎢" },
@@ -533,38 +455,31 @@
   function getNextWeekend() {
     const today = new Date();
     const day = today.getDay(); 
-    // 計算距離下週五
     let daysToFri = (5 - day + 7) % 7;
     if(daysToFri === 0) daysToFri = 7; 
-    
     const nextFri = new Date(today);
     nextFri.setDate(today.getDate() + daysToFri);
     const nextMon = new Date(nextFri);
     nextMon.setDate(nextFri.getDate() + 3); 
-    
     const fmt = (d) => d.toISOString().split('T')[0];
     return { out: fmt(nextFri), back: fmt(nextMon) };
   }
 
   let isSpinning = false;
-  let currentDest = null; // 儲存轉到的結果
+  let currentDest = null;
 
   function handleFlightClick() {
-    const btn = document.getElementById('flightBtn');
-    
-    // 如果正在轉動，不接受點擊
     if (isSpinning) return;
-
-    // 如果已經轉出結果，按鈕變成「前往連結」
     if (currentDest) {
       const dates = getNextWeekend();
-      // 這裡只執行開窗，確保不會被擋
-      const searchUrl = `https://www.google.com/travel/flights?q=TPE+to+${currentDest.code}+on+${dates.out}+returning+${dates.back}&curr=TWD`;
+      // 修正後的 URL：強制加入 "Round trip flights from..." 等關鍵字
+      // 這樣 Google Flights 就不會只進到探索地圖，而是直接進到搜尋結果
+      const query = `Round trip flights from TPE to ${currentDest.code} on ${dates.out} returning ${dates.back}`;
+      const searchUrl = `https://www.google.com/travel/flights?q=${encodeURIComponent(query)}&curr=TWD`;
+      
       window.open(searchUrl, '_blank');
       return;
     }
-
-    // 如果還沒轉，開始轉動
     spinFlight();
   }
 
@@ -591,17 +506,11 @@
   }
 
   function finishSpin(dest) {
-    const codeEl = document.getElementById('destCode');
-    const reasonEl = document.getElementById('flightReason');
-    const btn = document.getElementById('flightBtn');
-    
-    currentDest = dest; // 存起來
+    currentDest = dest;
     isSpinning = false;
-    
-    codeEl.style.color = "#e53e3e";
-    reasonEl.innerHTML = dest.reason;
-    
-    // 改變按鈕狀態，讓使用者點擊第二次以開啟連結
+    document.getElementById('destCode').style.color = "#e53e3e";
+    document.getElementById('flightReason').innerHTML = dest.reason;
+    const btn = document.getElementById('flightBtn');
     btn.querySelector('span').innerText = `✈️ 前往 ${dest.name} (本週五出發)`;
     btn.classList.add('ready');
   }
