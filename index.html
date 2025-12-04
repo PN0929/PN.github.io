@@ -262,23 +262,15 @@
     <button id="flightBtn" class="btn-flight" onclick="handleFlightClick()">
       <span>🌍 搜本週末便宜機票</span>
     </button>
-    
-    <div style="margin-top:15px; font-size:12px; color:#aaa; text-align:center;">
-      * 自動幫你找好「本週五去、下週一回」的機票
-      <br>(勇敢一點，假單遞出去)
-    </div>
   </div>
 
 </div>
 
 <div class="footer-credit">
-  <span>👩‍💻 Designed by 沛恩 | Last updated: <span id="updateDate"></span></span>
+  <span>👩‍💻 Designed by 沛恩 | 🔧 報修請找 #309 沛恩 | Last updated: 2025-12-04</span>
 </div>
 
 <script>
-  const todayStr = new Date().toISOString().split('T')[0];
-  document.getElementById('updateDate').innerText = todayStr;
-
   /* 1. 影片播放 */
   function playVideo() {
     document.getElementById('posterImg').style.display = 'none';
@@ -344,9 +336,16 @@
     ];
     const el = document.getElementById('horoscope-text');
     if(el) el.innerText = gifts[Math.floor(Math.random() * gifts.length)];
+
+    // 新增：按下 Enter 鍵也能觸發計算
+    document.getElementById("start").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        calc();
+      }
+    });
   };
 
-  /* 4. 下班計算機 (修正後完整版) */
+  /* 4. 下班計算機 (完整版含 Enter 支援) */
   let timer, offTime;
   const funnyExcuses = ["家裡的貓學會後空翻 🐱", "紅綠燈都在針對我 🚦", "被棉被封印了 🛌", "眉毛畫歪了不能忍 🤨"];
 
@@ -383,7 +382,7 @@
       
       const h = parseInt(input.substring(0, 2), 10);
       const m = parseInt(input.substring(2, 4), 10);
-      const timeVal = h * 100 + m; // 例如 0730 -> 730
+      const timeVal = h * 100 + m; 
 
       // 1. 23:00 ~ 03:59 -> 去睡覺
       if (timeVal >= 2300 || timeVal < 400) {
@@ -420,15 +419,14 @@
       if (start > lateThreshold) {
         // 計算遲到了幾分鐘
         const diffMins = (start - lateThreshold) / 60000;
-        // 以 30 分鐘為單位向上取整 (例如遲到 10 分鐘 -> 算 1 個單位)
+        // 以 30 分鐘為單位向上取整
         const units = Math.ceil(diffMins / 30);
         const leaveDurationMins = units * 30;
 
         // 計算建議請假的「開始時間」
-        // 邏輯：從打卡時間往回推算請假時數
         const leaveStartTime = new Date(start.getTime() - leaveDurationMins * 60000);
         
-        // 【關鍵修正】既然請假了，工時計算就應該從「請假開始時間」起算
+        // 既然請假了，工時計算就應該從「請假開始時間」起算
         effectiveStart = leaveStartTime;
 
         const leaveStartStr = leaveStartTime.getHours().toString().padStart(2,'0') + ':' + leaveStartTime.getMinutes().toString().padStart(2,'0');
@@ -460,8 +458,8 @@
       updateTimer();
       timer = setInterval(updateTimer, 1000);
 
-    }, 400); // end setTimeout
-  } // end calc
+    }, 400); 
+  }
 
   /* 5. 機票搜尋 */
   const destinations = [
