@@ -409,35 +409,60 @@
 
       if (m < 0 || m > 59) { result.innerHTML = "❌ 時間錯誤"; return; }
 
-      // 4. 正常計算 (07:30 ~ 11:59)
+// 4. 正常計算 (07:30 ~ 11:59)
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
       const workHours = 9.5 * 3600000; 
+      // 設定遲到基準線為 09:00
       const lateThreshold = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
 
-      offTime = new Date(start.getTime() + workHours);
+      // 預設計算基準是「實際打卡時間」
+      let effectiveStart = start; 
       let htmlContent = "";
 
+      // 判斷是否遲到 (超過 09:00)
       if (start > lateThreshold) {
-        const leaveMins = Math.ceil((start - lateThreshold) / 60000 / 30) * 30;
-        const leaveStart = new Date(start.getTime() - leaveMins * 60000);
+        // 計算遲到了幾分鐘
+        const diffMins = (start - lateThreshold) / 60000;
+        // 以 30 分鐘為單位向上取整 (例如遲到 10 分鐘 -> 算 1 個單位)
+        const units = Math.ceil(diffMins / 30);
+        const leaveDurationMins = units * 30;
+
+        // 計算建議請假的「開始時間」
+        // 邏輯：從打卡時間往回推算請假時數
+        const leaveStartTime = new Date(start.getTime() - leaveDurationMins * 60000);
+        
+        // 【關鍵修正】既然請假了，工時計算就應該從「請假開始時間」起算
+        effectiveStart = leaveStartTime;
+
+        const leaveStartStr = leaveStartTime.getHours().toString().padStart(2,'0') + ':' + leaveStartTime.getMinutes().toString().padStart(2,'0');
+        const leaveEndStr = h.toString().padStart(2,'0') + ':' + m.toString().padStart(2,'0');
+
         htmlContent += `<div style="background:#fff0f0; border-left:4px solid #e53e3e; padding:10px; text-align:left; margin-bottom:10px; border-radius:4px;">
-          <strong style="color:#e53e3e;">⚠️ 遲到警報</strong><br>
-          建議請假：${leaveStart.getHours().toString().padStart(2,'0')}:${leaveStart.getMinutes().toString().padStart(2,'0')} - ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}<br>
+          <strong style="color:#e53e3e;">⚠️ 遲到警報 (超過 09:00)</strong><br>
+          <div style="font-size:15px; margin:4px 0;">
+            建議請假：<strong>${leaveStartStr} - ${leaveEndStr}</strong> (共 ${leaveDurationMins} 分鐘)
+          </div>
           <div style="margin-top:6px; color:#555; font-size:13px;">💡 理由：${funnyExcuses[Math.floor(Math.random()*funnyExcuses.length)]}</div>
         </div>`;
       } else {
         htmlContent += "<div style='color:#38a169; font-weight:bold; margin-bottom:10px;'>✨ 準時的優秀社畜，加油！</div>";
       }
 
+      // 計算下班時間 (使用 effectiveStart 而不是 start)
+      offTime = new Date(effectiveStart.getTime() + workHours);
+      
       htmlContent += `您的預計下班時間：<span style="font-size:26px; font-weight:bold; color:#2d3748; display:block; margin-top:5px;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
+      
+      if (start > lateThreshold) {
+         htmlContent += `<span style="font-size:12px; color:#aaa;">(已包含請假時數的工時計算)</span>`;
+      }
+
       result.innerHTML = htmlContent;
       countdownBox.style.display = 'block';
       if (timer) clearInterval(timer);
       updateTimer();
       timer = setInterval(updateTimer, 1000);
-    }, 400);
-  }
 
   /* 5. 機票搜尋 (強制觸發搜尋模式) */
   const destinations = [
@@ -517,3 +542,4 @@
 </script>
 </body>
 </html>
+
