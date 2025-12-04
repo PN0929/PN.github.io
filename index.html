@@ -180,7 +180,6 @@
 
 <div class="grid-container">
   
-  <!-- Panel 1: Mariah 影片 -->
   <div class="card">
     <h1>🎅 解凍進度</h1>
     <h2>SHE IS DEFROSTING...</h2>
@@ -190,7 +189,6 @@
         <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3VweXJtYjF6bmJ6bmJ6bmJ6bmJ6bmJ6bmJ6bmJ6bmJ6biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUPOqo6E1MnHOgbRmE/giphy.gif" 
              id="posterImg" class="media-content" alt="Mariah Poster">
         <div class="play-overlay" id="playOverlay"><div class="play-icon">▶</div></div>
-        <!-- 影片檔案 -->
         <video id="mariahVideo" class="media-content" style="display:none;" playsinline loop>
           <source src="./mariah-defrosting-slow.mp4" type="video/mp4">
         </video>
@@ -211,7 +209,6 @@
     </div>
   </div>
 
-  <!-- Panel 2: 下班計算機 -->
   <div class="card">
     <h1>🕒 什麼時候可以回家</h1>
     <h2>WORK OFF CALCULATOR</h2>
@@ -241,7 +238,6 @@
     </div>
   </div>
 
-  <!-- Panel 3: 逃離工作 -->
   <div class="card">
     <h1>✈️ 逃離工作計畫</h1>
     <h2>ESCAPE ROULETTE</h2>
@@ -350,7 +346,7 @@
     if(el) el.innerText = gifts[Math.floor(Math.random() * gifts.length)];
   };
 
-  /* 4. 下班計算機 (修正 0400-0729 邏輯) */
+  /* 4. 下班計算機 (修正後完整版) */
   let timer, offTime;
   const funnyExcuses = ["家裡的貓學會後空翻 🐱", "紅綠燈都在針對我 🚦", "被棉被封印了 🛌", "眉毛畫歪了不能忍 🤨"];
 
@@ -389,19 +385,19 @@
       const m = parseInt(input.substring(2, 4), 10);
       const timeVal = h * 100 + m; // 例如 0730 -> 730
 
-      // 1. 23:00 ~ 03:59 -> 去睡覺 (2300 <= time or time < 400)
+      // 1. 23:00 ~ 03:59 -> 去睡覺
       if (timeVal >= 2300 || timeVal < 400) {
         result.innerHTML = "🌙 <strong>現在是睡覺時間！</strong><br>還沒睡的話快去睡，身體要顧。";
         return;
       }
       
-      // 2. 04:00 ~ 07:29 -> 太早了 (400 <= time < 730)
+      // 2. 04:00 ~ 07:29 -> 太早了
       if (timeVal >= 400 && timeVal < 730) {
         result.innerHTML = "🥱 <strong>太早了吧！</strong><br>07:30 以前都算太早，再多睡一點吧。";
         return;
       }
       
-      // 3. 12:00 ~ 22:59 -> 直接回家 (1200 <= time < 2300)
+      // 3. 12:00 ~ 22:59 -> 直接回家
       if (timeVal >= 1200 && timeVal < 2300) {
         result.innerHTML = "🛑 <strong>都幾點了？直接回家吧。</strong><br>下午才來也沒意義了，直接請假。";
         return;
@@ -409,7 +405,7 @@
 
       if (m < 0 || m > 59) { result.innerHTML = "❌ 時間錯誤"; return; }
 
-// 4. 正常計算 (07:30 ~ 11:59)
+      // 4. 正常計算 (07:30 ~ 11:59)
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
       const workHours = 9.5 * 3600000; 
@@ -464,7 +460,10 @@
       updateTimer();
       timer = setInterval(updateTimer, 1000);
 
-  /* 5. 機票搜尋 (強制觸發搜尋模式) */
+    }, 400); // end setTimeout
+  } // end calc
+
+  /* 5. 機票搜尋 */
   const destinations = [
     { code: "NRT", city: "Tokyo", name: "東京", reason: "拉麵、迪士尼，你需要這個 🍜" },
     { code: "KIX", city: "Osaka", name: "大阪", reason: "去環球影城大叫發洩一下 🎢" },
@@ -497,11 +496,8 @@
     if (isSpinning) return;
     if (currentDest) {
       const dates = getNextWeekend();
-      // 修正後的 URL：強制加入 "Round trip flights from..." 等關鍵字
-      // 這樣 Google Flights 就不會只進到探索地圖，而是直接進到搜尋結果
       const query = `Round trip flights from TPE to ${currentDest.code} on ${dates.out} returning ${dates.back}`;
       const searchUrl = `https://www.google.com/travel/flights?q=${encodeURIComponent(query)}&curr=TWD`;
-      
       window.open(searchUrl, '_blank');
       return;
     }
@@ -542,4 +538,3 @@
 </script>
 </body>
 </html>
-
