@@ -221,7 +221,7 @@
     </div>
 
     <button class="btn-primary" onclick="calc()">
-      <span>🧮 計算今天的下班時間</span>
+      <span>🧮 計算今日的下班時間</span>
     </button>
     
     <div id="loading" style="display:none; text-align:center; margin:15px 0;">
@@ -454,7 +454,7 @@
   const relResult = document.getElementById('relResult');
   
   function addRel(code, name) {
-    if (relCodeStack.length >= 6) { relResult.innerText = "太遠了，請直接叫「你好」"; return; }
+    if (relCodeStack.length >= 7) { relResult.innerText = "太遠了，請直接叫「你好」"; return; }
     relCodeStack.push(code);
     relNameStack.push(name);
     updateRelScreen();
@@ -492,11 +492,23 @@
     "eb,es": "姊姊", "eb,ys": "妹妹", "yb,es": "姊姊", "yb,ys": "妹妹",
     "es,es": "姊姊", "ys,ys": "妹妹", "eb,eb": "哥哥", "yb,yb": "弟弟",
 
+    // 補強：祖父母的子女
+    "f,m,s": "爸爸 (或阿伯/叔叔)", "f,m,d": "姑姑",
+    "f,f,s": "爸爸 (或阿伯/叔叔)", "f,f,d": "姑姑",
+    "m,m,s": "舅舅", "m,m,d": "媽媽 (或阿姨)",
+    "m,f,s": "舅舅", "m,f,d": "媽媽 (或阿姨)",
+
     // 直系長輩
     "f": "爸爸", "m": "媽媽", 
     "f,f": "爺爺 (阿公)", "f,m": "奶奶 (阿嬤)", 
     "m,f": "外公 (阿公)", "m,m": "外婆 (阿嬤)",
     
+    // 曾祖父母 (阿祖)
+    "f,f,f": "曾祖父 (阿祖)", "f,f,m": "曾祖母 (阿祖)",
+    "f,m,f": "外曾祖父 (爸爸的外公)", "f,m,m": "外曾祖母 (爸爸的外婆)",
+    "m,f,f": "外曾祖父 (媽媽的阿公)", "m,f,m": "外曾祖母 (媽媽的阿嬤)",
+    "m,m,f": "外曾祖父 (媽媽的外公)", "m,m,m": "外曾祖母 (媽媽的外婆)",
+
     // 台灣人習慣：父系長輩
     "f,eb": "阿伯", "f,yb": "叔叔", 
     "f,es": "姑姑", "f,ys": "姑姑",
@@ -582,4 +594,3 @@
 </script>
 </body>
 </html>
-
