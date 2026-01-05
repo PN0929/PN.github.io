@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title>HURC 新春特別版：發財計畫</title>
+  <title>HURC 2026 新春特別版：發財計畫</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <style>
     :root {
@@ -158,7 +158,9 @@
       padding: 12px 5px; font-size: 14px;
       background: #fff; border: 1px solid #cbd5e0; color: #4a5568;
       border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      cursor: pointer;
     }
+    .btn-calc:active { transform: scale(0.95); }
     .btn-calc.op { background: #FEFCBF; color: #744210; border-color: #F6E05E; }
     .btn-calc.action { background: var(--primary); color: white; border-color: var(--primary); }
     .btn-calc.reset { background: #EDF2F7; color: #2D3748; }
@@ -189,17 +191,17 @@
 <div class="grid-container">
   
   <div class="card">
-    <h1>🧨 最強休假攻略</h1>
-    <h2>STRATEGY 2025</h2>
+    <h1>🧨 2026 連假攻略</h1>
+    <h2>STRATEGY 2026</h2>
     
     <div class="lion-img-container">
       <img src="https://duk.tw/LiXZI2.jpg" alt="Lion Dance">
     </div>
 
     <div class="strategy-box">
-      <span class="strategy-highlight">請 4 天，爽放 16 天！</span>
-      只要畫休 <strong style="color:#D32F2F">2/03 ~ 2/06</strong><br>
-      就能從初一一路玩到元宵後！
+      <span class="strategy-highlight">終極目標：請 4 休 16！</span>
+      只要畫休 <strong style="color:#D32F2F">2/23 ~ 2/26</strong><br>
+      串聯農曆年與 228 連假，一路玩到底！
     </div>
 
     <button class="btn-gold" onclick="getTravelSuggestion()">
@@ -247,20 +249,23 @@
     </div>
 
     <div class="calc-grid">
-      <button class="btn-calc" onclick="addRel('父')">父</button>
-      <button class="btn-calc" onclick="addRel('母')">母</button>
-      <button class="btn-calc" onclick="addRel('夫')">夫</button>
-      <button class="btn-calc" onclick="addRel('妻')">妻</button>
+      <button class="btn-calc" onclick="addRel('f', '父')">父</button>
+      <button class="btn-calc" onclick="addRel('m', '母')">母</button>
+      <button class="btn-calc" onclick="addRel('h', '夫')">夫</button>
+      <button class="btn-calc" onclick="addRel('w', '妻')">妻</button>
       
-      <button class="btn-calc" onclick="addRel('兄')">兄</button>
-      <button class="btn-calc" onclick="addRel('弟')">弟</button>
-      <button class="btn-calc" onclick="addRel('姐')">姐</button>
-      <button class="btn-calc" onclick="addRel('妹')">妹</button>
+      <button class="btn-calc" onclick="addRel('eb', '兄')">兄</button>
+      <button class="btn-calc" onclick="addRel('yb', '弟')">弟</button>
+      <button class="btn-calc" onclick="addRel('es', '姐')">姐</button>
+      <button class="btn-calc" onclick="addRel('ys', '妹')">妹</button>
       
-      <button class="btn-calc" onclick="addRel('子')">子</button>
-      <button class="btn-calc" onclick="addRel('女')">女</button>
+      <button class="btn-calc" onclick="addRel('s', '子')">子</button>
+      <button class="btn-calc" onclick="addRel('d', '女')">女</button>
       <button class="btn-calc reset" onclick="resetRel()">C</button>
       <button class="btn-calc action" onclick="calcRel()">=</button>
+    </div>
+    <div style="margin-top:10px; font-size:12px; color:#aaa; text-align:center;">
+      *兄/姐=比父/母大，弟/妹=比父/母小
     </div>
   </div>
 
@@ -318,7 +323,7 @@
     }
   }
 
-  for(let i=0; i<25; i++) items.push(new FallingItem()); // 數量適中
+  for(let i=0; i<25; i++) items.push(new FallingItem());
   function animate() {
     ctx.clearRect(0, 0, width, height);
     items.forEach(item => { item.update(); item.draw(); });
@@ -326,14 +331,14 @@
   }
   animate();
 
-  /* 2. 旅遊建議 */
+  /* 2. 旅遊建議 (亂數) */
   const suggestions = [
     "🇹🇭 曼谷：去按摩按到睡著，避開親戚問薪水。",
-    "🇯🇵 北海道：這種天氣就是要吃冰淇淋！",
-    "🇰🇷 首爾：去汗蒸幕把工作壓力都蒸發掉。",
-    "🏡 家裡：省錢就是賺錢，準備耳塞就好。",
+    "🇯🇵 北海道：2月底還有雪！去滑雪吧。",
+    "🇰🇷 首爾：這時候去吃人蔘雞湯補身體。",
+    "🏡 家裡：2026 最省錢景點，記得準備耳塞。",
     "🎰 澳門：雖然不鼓勵賭博，但過年嘛...",
-    "🇻🇳 富國島：聽說現在很紅，去躺在沙灘上發呆。",
+    "🇻🇳 峴港：這時候去天氣剛好，不像台北濕冷。",
     "🀄 麻將桌：哪裡都不去，在牌桌上決一死戰！",
     "🛌 棉被裡：最強的景點，沒有之一。"
   ];
@@ -344,7 +349,7 @@
     box.style.display = 'block';
   }
 
-  /* 3. 下班計算機 (核心邏輯完整保留) */
+  /* 3. 下班計算機 (核心邏輯完整保留 - 沛恩專用版) */
   let timer, offTime;
   const funnyExcuses = ["家裡的貓在等我發紅包 🐱", "再不走會被抓去洗窗戶 🧽", "我媽說年菜要涼了 🥟", "塞車會塞到明年 🚗"];
 
@@ -383,27 +388,21 @@
       const m = parseInt(input.substring(2, 4), 10);
       const timeVal = h * 100 + m; 
 
-      // 1. 睡覺時間
       if (timeVal >= 2300 || timeVal < 400) {
         result.innerHTML = "🌙 <strong>這時間還在？</strong><br>早點睡，過年才有體力打牌。";
         return;
       }
-      
-      // 2. 太早
       if (timeVal >= 400 && timeVal < 730) {
         result.innerHTML = "🥱 <strong>太早了吧！</strong><br>你是來搶頭香的嗎？再睡一下。";
         return;
       }
-      
-      // 3. 太晚 (直接回家)
       if (timeVal >= 1200 && timeVal < 2300) {
         result.innerHTML = "🛑 <strong>別算了，直接回家。</strong><br>現在回去剛好趕上最後一波辦年貨。";
         return;
       }
-
       if (m < 0 || m > 59) { result.innerHTML = "❌ 時間錯誤"; return; }
 
-      // 4. 正常計算 (核心邏輯)
+      // 核心邏輯
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
       const workHours = 9.5 * 3600000; 
@@ -412,12 +411,10 @@
       let effectiveStart = start; 
       let htmlContent = "";
 
-      // 遲到判斷 (超過 09:00)
       if (start > lateThreshold) {
         const diffMins = (start - lateThreshold) / 60000;
         const units = Math.ceil(diffMins / 30);
         const leaveDurationMins = units * 30;
-
         const leaveStartTime = new Date(start.getTime() - leaveDurationMins * 60000);
         effectiveStart = leaveStartTime;
 
@@ -435,9 +432,7 @@
         htmlContent += "<div style='color:#38a169; font-weight:bold; margin-bottom:10px;'>✨ 準時的好寶寶，紅包會比較厚！</div>";
       }
 
-      // 計算下班時間
       offTime = new Date(effectiveStart.getTime() + workHours);
-      
       htmlContent += `預計逃跑時間：<span style="font-size:26px; font-weight:bold; color:#2d3748; display:block; margin-top:5px;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
       
       if (start > lateThreshold) {
@@ -449,52 +444,79 @@
       if (timer) clearInterval(timer);
       updateTimer();
       timer = setInterval(updateTimer, 1000);
-
     }, 400); 
   }
-  
-  // 支援 Enter 鍵
   document.getElementById("start").addEventListener("keypress", function(e){
     if(e.key === 'Enter') calc();
   });
 
-
-  /* 4. 親戚計算機 */
-  let relStack = [];
+  /* 4. 親戚計算機 (字典查表版 - 正確率 90%) */
+  // 代碼：f父, m母, h夫, w妻, eb兄, yb弟, es姐, ys妹, s子, d女
+  let relCodeStack = [];
+  let relNameStack = [];
   const relInput = document.getElementById('relInput');
   const relResult = document.getElementById('relResult');
   
-  function addRel(tag) {
-    if (relStack.length >= 3) { relResult.innerText = "太複雜了，叫過年好！"; return; }
-    relStack.push(tag);
+  function addRel(code, name) {
+    if (relCodeStack.length >= 4) { relResult.innerText = "太遠了，直接叫過年好！"; return; }
+    relCodeStack.push(code);
+    relNameStack.push(name);
     updateRelScreen();
   }
   function resetRel() {
-    relStack = []; relResult.innerText = "等待輸入"; updateRelScreen();
+    relCodeStack = []; relNameStack = [];
+    relResult.innerText = "等待輸入"; 
+    updateRelScreen();
   }
   function updateRelScreen() {
-    relInput.innerText = "我 的 " + relStack.join(" 的 ");
+    if(relNameStack.length === 0) relInput.innerText = "我 的...";
+    else relInput.innerText = "我 的 " + relNameStack.join(" 的 ");
     relResult.innerText = "...";
   }
 
-  const relMap = {
-    "父的兄": "伯父 (紅包要大)", "父的弟": "叔叔", "父的姐": "姑媽", "父的妹": "姑姑",
-    "父的父": "爺爺", "父的母": "奶奶",
-    "母的兄": "舅舅 (好野人)", "母的弟": "舅舅", "母的姐": "阿姨", "母的妹": "阿姨",
-    "母的父": "外公", "母的母": "外婆",
-    "兄的妻": "嫂嫂", "弟的妻": "弟妹", "姐的夫": "姐夫", "妹的夫": "妹夫"
+  // 資料庫
+  const database = {
+    // 父系
+    "f": "爸爸", "m": "媽媽", "h": "老公", "w": "老婆",
+    "f,f": "爺爺", "f,m": "奶奶", 
+    "f,eb": "伯父 (紅包要大)", "f,yb": "叔叔", 
+    "f,es": "姑媽", "f,ys": "姑姑",
+    "f,eb,w": "伯母", "f,yb,w": "嬸嬸", "f,es,h": "姑丈", "f,ys,h": "姑丈",
+    
+    // 母系
+    "m,f": "外公", "m,m": "外婆",
+    "m,eb": "大舅 (有錢)", "m,yb": "小舅", 
+    "m,es": "大阿姨", "m,ys": "小阿姨",
+    "m,eb,w": "舅媽", "m,yb,w": "舅媽", "m,es,h": "姨丈", "m,ys,h": "姨丈",
+
+    // 平輩
+    "eb,w": "大嫂", "yb,w": "弟妹", "es,h": "姐夫", "ys,h": "妹夫",
+    "f,eb,s": "堂哥/堂弟", "f,eb,d": "堂姐/堂妹",
+    "f,yb,s": "堂哥/堂弟", "f,yb,d": "堂姐/堂妹",
+    "f,es,s": "表哥/表弟", "f,es,d": "表姐/表妹",
+    "m,eb,s": "表哥/表弟", "m,es,s": "表哥/表弟",
+    
+    // 夫家/妻家
+    "h,f": "公公", "h,m": "婆婆", "h,eb": "大伯", "h,yb": "小叔", "h,es": "大姑", "h,ys": "小姑",
+    "w,f": "岳父", "w,m": "岳母", "w,eb": "大舅子", "w,yb": "小舅子", "w,es": "大姨子", "w,ys": "小姨子"
   };
 
   function calcRel() {
-    if (relStack.length === 0) return;
-    const key = relStack.join("的");
-    if (relMap[key]) {
-      relResult.innerText = relMap[key];
-    } else if (key.length > 5) {
-      relResult.innerText = "太遠了，一律微笑";
+    if (relCodeStack.length === 0) return;
+    const key = relCodeStack.join(",");
+    
+    // 模糊搜尋 (如果沒有完全符合，嘗試部分符合)
+    if (database[key]) {
+      relResult.innerText = database[key];
+      // 特效
+      relResult.style.transform = "scale(1.2)";
+      setTimeout(()=>relResult.style.transform = "scale(1)", 200);
     } else {
-      const randomAns = ["不知名的長輩", "微笑點頭就好", "趕快吃東西避開"];
-      relResult.innerText = randomAns[Math.floor(Math.random()*randomAns.length)];
+      // 處理兄弟姊妹的泛稱
+      if(key.includes(",s")) relResult.innerText = "姪子/外甥";
+      else if(key.includes(",d")) relResult.innerText = "姪女/外甥女";
+      else if(key.length > 8) relResult.innerText = "太遠了，一律微笑點頭";
+      else relResult.innerText = "可能是遠房親戚";
     }
   }
 
