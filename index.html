@@ -147,7 +147,7 @@
       min-height: 60px; display: flex; flex-direction: column;
       justify-content: center; margin-bottom: 15px;
       text-align: right;
-      overflow: hidden; /* 修正：防止文字特效超出邊框 */
+      overflow: hidden;
     }
     .calc-input { font-size: 14px; color: #718096; margin-bottom: 4px; }
     .calc-result { font-size: 20px; font-weight: bold; color: var(--primary); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -156,7 +156,7 @@
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
     }
     .btn-calc {
-      padding: 12px 2px; font-size: 15px; font-weight: 600; /* 字體稍微調大 */
+      padding: 12px 2px; font-size: 15px; font-weight: 600;
       background: #fff; border: 1px solid #cbd5e0; color: #4a5568;
       border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       cursor: pointer;
@@ -265,7 +265,7 @@
       <button class="btn-calc reset" onclick="resetRel()">C</button>
       <button class="btn-calc action" onclick="calcRel()">=</button>
     </div>
-    </div>
+  </div>
 
 </div>
 
@@ -466,15 +466,20 @@
   }
   function updateRelScreen() {
     if(relNameStack.length === 0) relInput.innerText = "我的...";
-    else relInput.innerText = "我的" + relNameStack.join("的"); // 移除空格比較自然
+    else relInput.innerText = "我的" + relNameStack.join("的"); 
     relResult.innerText = "...";
   }
 
   const database = {
-    // 基礎邏輯修正
+    // 基礎邏輯修正 (含漏洞修補)
     "f,w": "媽媽", "m,h": "爸爸", 
     "f,h": "爸爸(假設)", "m,w": "媽媽(假設)", 
     "h,w": "我 (或親愛的)", "w,h": "我 (或親愛的)",
+    // 增加：女兒的兄弟=兒子，兒子的姊妹=女兒
+    "d,eb": "兒子", "d,yb": "兒子", 
+    "d,es": "女兒", "d,ys": "女兒",
+    "s,eb": "兒子", "s,yb": "兒子",
+    "s,es": "女兒", "s,ys": "女兒",
 
     // 直系長輩
     "f": "爸爸", "m": "媽媽", 
@@ -542,10 +547,9 @@
         relResult.style.color = "var(--primary)";
       }, 200);
     } else {
-      if (key.endsWith(",s")) relResult.innerText = "晚輩(姪/甥/孫)";
-      else if (key.endsWith(",d")) relResult.innerText = "晚輩(姪/甥/孫)";
-      else if (key.length > 10) relResult.innerText = "親戚關係太遠，微笑就好";
-      else relResult.innerText = "查無此人 (或遠房親戚)";
+      // 微笑點頭打招呼
+      relResult.innerText = "親戚關係太遠，微笑點頭就好";
+      relResult.style.fontSize = "16px"; // 稍微縮小字體以免太擠
     }
   }
 
