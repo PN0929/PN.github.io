@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title> HURC 2026 春櫻限定 </title>
+  <title>HURC 2026 春櫻限定</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <style>
     :root {
@@ -21,21 +21,14 @@
     body {
       font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
       background: var(--bg-gradient);
-      margin: 0;
-      padding: 40px 20px;
-      min-height: 100vh;
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      overflow-x: hidden;
+      margin: 0; padding: 40px 20px; min-height: 100vh;
+      color: var(--text-main); display: flex; flex-direction: column; align-items: center; overflow-x: hidden;
     }
 
     #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
     .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: 24px; width: 100%; max-width: 1200px; position: relative; z-index: 10; margin-bottom: 40px;
     }
 
@@ -46,9 +39,16 @@
     }
     .card:hover { transform: translateY(-3px); border-color: var(--primary); }
 
-    h1 { font-size: 22px; color: var(--deep-pink); margin: 0 0 5px 0; text-align: center; font-weight: 800; }
-    h2 { font-size: 13px; color: var(--text-muted); margin: 0 0 20px 0; text-align: center; letter-spacing: 1.5px; border-bottom: 1px solid #edf2f7; padding-bottom: 15px; }
+    h1 { font-size: 20px; color: var(--deep-pink); margin: 0 0 5px 0; text-align: center; font-weight: 800; }
+    h2 { font-size: 12px; color: var(--text-muted); margin: 0 0 15px 0; text-align: center; letter-spacing: 1.5px; border-bottom: 1px solid #edf2f7; padding-bottom: 12px; }
 
+    /* 番茄鐘樣式 */
+    .pomodoro-display {
+      text-align: center; margin: 10px 0 20px;
+    }
+    .pomo-time { font-size: 56px; font-weight: 800; color: var(--deep-pink); font-family: monospace; line-height: 1; margin-bottom: 10px; }
+    .pomo-label { font-size: 14px; font-weight: bold; color: #38a169; background: #e6fffa; padding: 4px 12px; border-radius: 20px; }
+    
     .input-group { margin-bottom: 20px; }
     label { display: block; font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 8px; }
     input[type="text"] {
@@ -62,6 +62,7 @@
     }
     .btn-primary { background: linear-gradient(135deg, #FFB7C5 0%, #f687b3 100%); color: #fff; box-shadow: 0 4px 15px rgba(255, 183, 197, 0.4); }
     .btn-green { background: linear-gradient(135deg, #A8E6CF 0%, #81e6d9 100%); color: #2d3748; box-shadow: 0 4px 15px rgba(168, 230, 207, 0.4); }
+    .btn-outline { background: #fff; border: 2px solid var(--primary); color: var(--deep-pink); margin-top: 10px; }
 
     #result { margin-top: 20px; text-align: center; font-size: 15px; line-height: 1.6; }
     .countdown-box {
@@ -78,7 +79,7 @@
     }
 
     .footer-credit { margin-top: 30px; text-align: center; z-index: 10; }
-    .footer-msg { display: inline-block; color: #718096; font-size: 13px; background: rgba(255,255,255,0.6); padding: 8px 16px; border-radius: 20px; backdrop-filter: blur(4px); border: 1px solid rgba(0,0,0,0.05); }
+    .footer-msg { display: inline-block; color: #718096; font-size: 13px; background: rgba(255,255,255,0.6); padding: 8px 16px; border-radius: 20px; backdrop-filter: blur(4px); }
 
     @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     @keyframes spin { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
@@ -91,17 +92,22 @@
 <div class="grid-container">
   
   <div class="card">
-    <h1> 🌸 春季連假攻略</h1>
-    <h2>SPRING STRATEGY</h2>
-    <div style="background: #fdf2f7; border: 1px dashed #f687b3; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center; font-size: 14px;">
-      <strong> 清明連假：請 4 休 10！</strong><br>
-      只要請 <span style="color:#D53F8C; font-weight:bold;">3/30 ~ 4/2</span><br>
-      就能從 3/28 一路放到 4/6！
+    <h1>🍅 專注番茄鐘</h1>
+    <h2>POMODORO TIMER</h2>
+    <div class="pomodoro-display">
+      <div class="pomo-label" id="pomoStatus">專注時間</div>
+      <div class="pomo-time" id="pomoTime">25:00</div>
+      <button class="btn-green" id="pomoBtn" onclick="togglePomo()">
+        <span>▶ 開始專注</span>
+      </button>
+      <button class="btn-outline" onclick="resetPomo()">
+        <span>🔄 重置</span>
+      </button>
     </div>
-    <button class="btn-green" onclick="getTeaTime()">
-      <span>☕ 下午茶抽籤</span>
-    </button>
-    <div id="teaResult" style="margin-top:10px; text-align:center; font-size:14px; color:#D53F8C; font-weight:bold;"></div>
+    <div style="font-size:12px; color:#a0aec0; text-align:center;">
+      25 分鐘專注 + 5 分鐘休息<br>
+      讓春季的工作節奏更輕盈 🌸
+    </div>
   </div>
 
   <div class="card">
@@ -130,7 +136,11 @@
     <h1>🍱 午餐救星轉盤</h1>
     <h2>LUNCH DECIDER</h2>
     <div class="food-display" id="foodResult">今天想吃什麼？</div>
-    <button class="btn-green" onclick="spinFood()">🎲 隨機決定</button>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+      <button class="btn-green" onclick="spinFood()">🎲 隨機</button>
+      <button class="btn-primary" style="background:#fff; color:#f687b3; border:1px solid #f687b3;" onclick="getTeaTime()">☕ 喝茶</button>
+    </div>
+    <div id="teaResult" style="margin-top:10px; text-align:center; font-size:14px; color:#D53F8C; font-weight:bold;"></div>
   </div>
 
 </div>
@@ -164,9 +174,71 @@
   function animate() { ctx.clearRect(0, 0, width, height); petals.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
   animate();
 
+  /* 番茄鐘邏輯 */
+  let pomoTime = 25 * 60;
+  let pomoTimer = null;
+  let isWorkMode = true;
+
+  function togglePomo() {
+    const btn = document.getElementById('pomoBtn');
+    if (pomoTimer) {
+      clearInterval(pomoTimer);
+      pomoTimer = null;
+      btn.innerHTML = "<span>▶ 繼續專注</span>";
+    } else {
+      pomoTimer = setInterval(updatePomo, 1000);
+      btn.innerHTML = "<span>⏸ 暫停</span>";
+    }
+  }
+
+  function updatePomo() {
+    if (pomoTime > 0) {
+      pomoTime--;
+      renderPomo();
+    } else {
+      clearInterval(pomoTimer);
+      pomoTimer = null;
+      isWorkMode = !isWorkMode;
+      pomoTime = (isWorkMode ? 25 : 5) * 60;
+      document.getElementById('pomoStatus').innerText = isWorkMode ? "專注時間" : "休息一下";
+      document.getElementById('pomoStatus').style.background = isWorkMode ? "#e6fffa" : "#fff5f7";
+      alert(isWorkMode ? "開始專注工作囉！" : "辛苦了，休息五分鐘吧！");
+      renderPomo();
+      document.getElementById('pomoBtn').innerHTML = "<span>▶ 開始</span>";
+    }
+  }
+
+  function renderPomo() {
+    const m = Math.floor(pomoTime / 60).toString().padStart(2, '0');
+    const s = (pomoTime % 60).toString().padStart(2, '0');
+    document.getElementById('pomoTime').innerText = `${m}:${s}`;
+  }
+
+  function resetPomo() {
+    clearInterval(pomoTimer);
+    pomoTimer = null;
+    isWorkMode = true;
+    pomoTime = 25 * 60;
+    document.getElementById('pomoStatus').innerText = "專注時間";
+    renderPomo();
+    document.getElementById('pomoBtn').innerHTML = "<span>▶ 開始專注</span>";
+  }
+
   /* 下班計算 */
   let timer, offTime;
-  const funnyExcuses = ["春天到了，靈魂還留在被窩裡冬眠", "天氣好到不小心走錯路", "陽光太耀眼看不到來上班的路", "俗話說春睏不是病，睏起來真的要人命"];
+  const funnyExcuses = [
+    "陽光太溫暖，差點在公車站睡著 ☀️",
+    "春天到了，靈魂還留在被窩裡冬眠 😴",
+    "天氣好到只想去公園野餐 🧺",
+    "為了吸收維生素 D，走路速度自動降為 0.5 倍 🏃‍♂️",
+    "陽光太耀眼找不到來公司的路 😎",
+    "俗話說春睏不是病，睏起來真的要人命 💤"
+  ];
+
+  // Enter 鍵監聽
+  document.getElementById("start").addEventListener("keypress", function(e) {
+    if (e.key === 'Enter') calc();
+  });
 
   function updateTimer() {
     if (!offTime) return;
@@ -203,7 +275,7 @@
 
       if (timeVal >= 2300 || timeVal < 400) { result.innerHTML = "🌙 <strong>這時間還在？</strong><br>早點睡，春天不適合熬夜。"; return; }
       if (timeVal >= 400 && timeVal < 730) { result.innerHTML = "🥱 <strong>太早了吧！</strong><br>你是先來幫辦公室植物澆水的嗎？"; return; }
-      if (timeVal >= 1200 && timeVal < 2300) { result.innerHTML = "🛑 <strong>別算了，直接回家。</strong><br>現在回去剛好趕上春季日落。"; return; }
+      if (timeVal >= 1200 && timeVal < 2300) { result.innerHTML = "🛑 <strong>別算了，直接回家。</strong><br>現在回去剛好趕上日落。"; return; }
 
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
@@ -242,12 +314,13 @@
     }, 400); 
   }
 
+  /* 下午茶與午餐 */
   function getTeaTime() {
-    const t = ["五十嵐", "星巴克", "上宇林", "可不可", "辦公室咖啡", "便利商店咖啡"];
+    const t = ["五十嵐", "星巴克", "上宇林", "可不可", "麻古", "一沐日"];
     document.getElementById('teaResult').innerText = "建議點： " + t[Math.floor(Math.random()*t.length)];
   }
   function spinFood() {
-    const f = ["便當", "乾麵", "7-11", "全家", "水餃", "健康餐", "拉麵", "壽司", "火鍋", "SUBWAY"];
+    const f = ["便當", "乾麵", "7-11", "全家", "麥當勞", "健康餐", "拉麵", "壽司"];
     document.getElementById('foodResult').innerText = f[Math.floor(Math.random()*f.length)];
   }
 </script>
