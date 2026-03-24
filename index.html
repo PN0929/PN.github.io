@@ -2,17 +2,18 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title>HURC 2026 新春特別版：發財計畫</title>
+  <title> HURC 2026 春櫻限定 </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <style>
     :root {
-      --primary: #D32F2F;   /* 春聯紅 */
-      --secondary: #FFD700; /* 元寶金 */
-      --accent: #FFE0B2;    /* 淺膚金 */
-      --bg-gradient: linear-gradient(135deg, #4b0d0d 0%, #1a0505 100%); 
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --text-main: #2d3748;
+      --primary: #FFB7C5;   /* 櫻花粉 */
+      --secondary: #A8E6CF; /* 嫩芽綠 */
+      --accent: #FFD3E0;    /* 淺粉 */
+      --bg-gradient: linear-gradient(135deg, #fff5f7 0%, #e0f2f1 100%); 
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --text-main: #4A5568;
       --text-muted: #718096;
+      --deep-pink: #D53F8C;
     }
 
     * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
@@ -30,159 +31,57 @@
       overflow-x: hidden;
     }
 
-    /* 背景 Canvas (紅包雨) */
-    #canvas-bg {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-    }
+    #canvas-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
     .grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 24px;
-      width: 100%;
-      max-width: 1200px;
-      position: relative;
-      z-index: 10;
-      margin-bottom: 40px;
+      gap: 24px; width: 100%; max-width: 1200px; position: relative; z-index: 10; margin-bottom: 40px;
     }
 
     .card {
-      background: var(--card-bg);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      border: 2px solid rgba(255, 215, 0, 0.3); /* 金色邊框 */
-      display: flex;
-      flex-direction: column;
-      backdrop-filter: blur(12px);
-      transition: transform 0.2s;
+      background: var(--card-bg); border-radius: 24px; padding: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); border: 1px solid rgba(255, 255, 255, 0.6);
+      display: flex; flex-direction: column; backdrop-filter: blur(15px); transition: transform 0.2s;
     }
-    .card:hover { transform: translateY(-3px); border-color: var(--secondary); }
+    .card:hover { transform: translateY(-3px); border-color: var(--primary); }
 
-    h1 { font-size: 22px; color: var(--primary); margin: 0 0 5px 0; text-align: center; font-weight: 800; }
-    h2 { font-size: 13px; color: var(--text-muted); margin: 0 0 20px 0; text-align: center; letter-spacing: 1.5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
+    h1 { font-size: 22px; color: var(--deep-pink); margin: 0 0 5px 0; text-align: center; font-weight: 800; }
+    h2 { font-size: 13px; color: var(--text-muted); margin: 0 0 20px 0; text-align: center; letter-spacing: 1.5px; border-bottom: 1px solid #edf2f7; padding-bottom: 15px; }
 
-    /* 輸入框與按鈕 */
     .input-group { margin-bottom: 20px; }
     label { display: block; font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 8px; }
     input[type="text"] {
-      width: 100%; padding: 14px;
-      border: 2px solid #cbd5e0; border-radius: 12px;
-      font-size: 20px; text-align: center; letter-spacing: 3px;
-      background: #fff; color: #2d3748; transition: border 0.3s;
+      width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px;
+      font-size: 20px; text-align: center; letter-spacing: 3px; background: #fff; color: #2d3748;
     }
-    input[type="text"]:focus { border-color: var(--primary); }
 
     button {
-      width: 100%; padding: 15px; border: none; border-radius: 12px;
-      font-size: 16px; font-weight: 700; cursor: pointer;
-      transition: all 0.2s; position: relative; overflow: hidden;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
     }
-    .btn-primary {
-      background: linear-gradient(135deg, #D32F2F 0%, #b71c1c 100%);
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
-    }
-    .btn-gold {
-      background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
-      color: #5d4037;
-      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-    }
-    button:active { transform: scale(0.98); }
+    .btn-primary { background: linear-gradient(135deg, #FFB7C5 0%, #f687b3 100%); color: #fff; box-shadow: 0 4px 15px rgba(255, 183, 197, 0.4); }
+    .btn-green { background: linear-gradient(135deg, #A8E6CF 0%, #81e6d9 100%); color: #2d3748; box-shadow: 0 4px 15px rgba(168, 230, 207, 0.4); }
 
-    /* 倒數計時區塊 */
-    #result { margin-top: 20px; text-align: center; font-size: 16px; line-height: 1.6; min-height: 20px; }
+    #result { margin-top: 20px; text-align: center; font-size: 15px; line-height: 1.6; }
     .countdown-box {
-      margin-top: auto;
-      background: #fff; border: 2px solid #fed7d7;
-      border-radius: 16px; padding: 20px; text-align: center;
+      margin-top: 15px; background: #fff; border: 2px solid #fff5f7; border-radius: 16px; padding: 20px; text-align: center;
       display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     .countdown-flex { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
-    .time-unit { background: #f7fafc; padding: 10px; border-radius: 10px; min-width: 65px; border: 1px solid #e2e8f0; }
-    .time-num { display: block; font-size: 28px; font-weight: 800; color: var(--primary); font-family: monospace; line-height: 1; }
-    .time-label { font-size: 12px; color: #718096; margin-top: 4px; }
+    .time-unit { background: #fffafb; padding: 10px; border-radius: 10px; min-width: 65px; border: 1px solid #ffeef2; }
+    .time-num { display: block; font-size: 28px; font-weight: 800; color: var(--deep-pink); font-family: monospace; }
 
-    /* 卡片 1: 圖片與旅遊 */
-    .lion-img-container {
-      width: 100%;
-      aspect-ratio: 16/9;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 15px;
-      border: 3px solid var(--secondary);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      position: relative;
-    }
-    .lion-img-container img {
-      width: 100%; height: 100%; object-fit: cover;
-      transition: transform 0.5s;
-    }
-    .lion-img-container:hover img { transform: scale(1.05); }
-    
-    .strategy-box {
-      background: #FFF8E1; border: 1px dashed #FFA000;
-      padding: 15px; border-radius: 12px; margin-bottom: 15px;
-      text-align: center; color: #5d4037; font-size: 15px;
-    }
-    .strategy-highlight { color: #D32F2F; font-weight: bold; font-size: 18px; display: block; margin-bottom: 4px; }
-    
-    .suggestion-popup {
-      margin-top: 10px; font-size: 14px; color: #555; background: #fff; padding: 10px; border-radius: 8px;
-      border-left: 4px solid var(--secondary); display: none;
-      animation: fadeIn 0.5s;
-    }
-    @keyframes fadeIn { from{opacity:0; transform:translateY(-5px);} to{opacity:1; transform:translateY(0);} }
-
-    /* 卡片 3: 親戚計算機 */
-    .calc-screen {
-      background: #f7fafc; border: 2px solid #e2e8f0;
-      border-radius: 12px; padding: 15px;
-      min-height: 60px; display: flex; flex-direction: column;
-      justify-content: center; margin-bottom: 15px;
-      text-align: right;
-      overflow: hidden;
-    }
-    .calc-input { font-size: 14px; color: #718096; margin-bottom: 4px; }
-    .calc-result { font-size: 20px; font-weight: bold; color: var(--primary); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    
-    .calc-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-    }
-    .btn-calc {
-      padding: 12px 2px; font-size: 15px; font-weight: 600;
-      background: #fff; border: 1px solid #cbd5e0; color: #4a5568;
-      border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      cursor: pointer;
-    }
-    .btn-calc:active { transform: scale(0.95); }
-    .btn-calc.op { background: #FEFCBF; color: #744210; border-color: #F6E05E; }
-    .btn-calc.action { background: var(--primary); color: white; border-color: var(--primary); }
-    .btn-calc.reset { background: #EDF2F7; color: #2D3748; }
-
-    /* Footer 倒數 */
-    .footer-credit {
-      margin-top: 30px; text-align: center; z-index: 10;
-    }
-    .footer-countdown {
-      display: inline-block;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 13px; font-weight: bold; font-family: monospace;
-      background: rgba(0,0,0,0.4);
-      padding: 8px 16px; border-radius: 20px;
-      backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1);
+    .food-display {
+      background: #fff; border: 2px solid var(--secondary); border-radius: 12px; padding: 30px 15px;
+      margin-bottom: 15px; text-align: center; font-size: 24px; font-weight: bold; color: #38a169; min-height: 100px; display: flex; align-items: center; justify-content: center;
     }
 
-    @media (max-width: 768px) {
-      .grid-container { grid-template-columns: 1fr; }
-      body { padding: 20px 15px; }
-    }
+    .footer-credit { margin-top: 30px; text-align: center; z-index: 10; }
+    .footer-msg { display: inline-block; color: #718096; font-size: 13px; background: rgba(255,255,255,0.6); padding: 8px 16px; border-radius: 20px; backdrop-filter: blur(4px); border: 1px solid rgba(0,0,0,0.05); }
+
+    @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes spin { from {transform: rotate(0deg);} to {transform: rotate(360deg);} }
   </style>
 </head>
 <body>
@@ -192,164 +91,82 @@
 <div class="grid-container">
   
   <div class="card">
-    <h1>🧨 2026 連假攻略</h1>
-    <h2>STRATEGY 2026</h2>
-    
-    <div class="lion-img-container">
-      <img src="https://duk.tw/EvBSUv.png" alt="Lion Dance">
+    <h1> 🌸 春季連假攻略</h1>
+    <h2>SPRING STRATEGY</h2>
+    <div style="background: #fdf2f7; border: 1px dashed #f687b3; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center; font-size: 14px;">
+      <strong> 清明連假：請 4 休 10！</strong><br>
+      只要請 <span style="color:#D53F8C; font-weight:bold;">3/30 ~ 4/2</span><br>
+      就能從 3/28 一路放到 4/6！
     </div>
-
-    <div class="strategy-box">
-      <span class="strategy-highlight">終極目標：請 4 休 16！</span>
-      只要畫休 <strong style="color:#D32F2F">2/23 ~ 2/26</strong><br>
-      串聯農曆年與 228 連假，一路玩到底！
-    </div>
-
-    <button class="btn-gold" onclick="getTravelSuggestion()">
-      <span>🌏 過年要去哪裡玩？</span>
+    <button class="btn-green" onclick="getTeaTime()">
+      <span>☕ 下午茶抽籤</span>
     </button>
-    <div id="travelResult" class="suggestion-popup"></div>
+    <div id="teaResult" style="margin-top:10px; text-align:center; font-size:14px; color:#D53F8C; font-weight:bold;"></div>
   </div>
 
   <div class="card">
-    <h1>HURC 下班時間計算機</h1>
+    <h1>🕒 準時登出計時器</h1>
     <h2>WORK OFF CALCULATOR</h2>
-    
     <div class="input-group">
       <label for="start">上班打卡時間 (如 0900)</label>
-      <input type="text" id="start" placeholder="0900" inputmode="numeric" pattern="[0-9]*" maxlength="4" />
+      <input type="text" id="start" placeholder="0900" inputmode="numeric" maxlength="4" />
     </div>
-
     <button class="btn-primary" onclick="calc()">
-      <span>🧮 計算今日的下班時間</span>
+      <span>✨ 計算今日登出時間</span>
     </button>
-    
-    <div id="loading" style="display:none; text-align:center; margin:15px 0;">
-      <span style="font-size:24px; animation:spin 1s infinite linear; display:inline-block;">⏳</span>
-    </div>
-    
+    <div id="loading" style="display:none; text-align:center; margin:15px 0;"><span style="font-size:24px; animation:spin 1s infinite linear; display:inline-block;">🌸</span></div>
     <div id="result"></div>
-
     <div id="countdown" class="countdown-box">
-      <div style="font-size:14px; font-weight:bold; color:#e53e3e; margin-bottom:5px;">距離自由還有</div>
+      <div style="font-size:14px; font-weight:bold; color:#f687b3; margin-bottom:5px;">距離自由還有</div>
       <div class="countdown-flex">
-        <div class="time-unit"><span class="time-num" id="h">00</span><span class="time-label">時</span></div>
-        <div class="time-unit"><span class="time-num" id="m">00</span><span class="time-label">分</span></div>
-        <div class="time-unit"><span class="time-num" id="s">00</span><span class="time-label">秒</span></div>
+        <div class="time-unit"><span class="time-num" id="h">00</span><span style="font-size:10px">時</span></div>
+        <div class="time-unit"><span class="time-num" id="m">00</span><span style="font-size:10px">分</span></div>
+        <div class="time-unit"><span class="time-num" id="s">00</span><span style="font-size:10px">秒</span></div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h1>👴 親戚稱謂計算機</h1>
-    <h2>RELATIVES PRO</h2>
-
-    <div class="calc-screen">
-      <div class="calc-input" id="relInput">我的...</div>
-      <div class="calc-result" id="relResult">等待輸入</div>
-    </div>
-
-    <div class="calc-grid">
-      <button class="btn-calc" onclick="addRel('f', '爸爸')">爸爸</button>
-      <button class="btn-calc" onclick="addRel('m', '媽媽')">媽媽</button>
-      <button class="btn-calc" onclick="addRel('h', '老公')">老公</button>
-      <button class="btn-calc" onclick="addRel('w', '老婆')">老婆</button>
-      
-      <button class="btn-calc" onclick="addRel('eb', '哥哥')">哥哥</button>
-      <button class="btn-calc" onclick="addRel('yb', '弟弟')">弟弟</button>
-      <button class="btn-calc" onclick="addRel('es', '姊姊')">姊姊</button>
-      <button class="btn-calc" onclick="addRel('ys', '妹妹')">妹妹</button>
-      
-      <button class="btn-calc" onclick="addRel('s', '兒子')">兒子</button>
-      <button class="btn-calc" onclick="addRel('d', '女兒')">女兒</button>
-      <button class="btn-calc reset" onclick="resetRel()">C</button>
-      <button class="btn-calc action" onclick="calcRel()">=</button>
-    </div>
+    <h1>🍱 午餐救星轉盤</h1>
+    <h2>LUNCH DECIDER</h2>
+    <div class="food-display" id="foodResult">今天想吃什麼？</div>
+    <button class="btn-green" onclick="spinFood()">🎲 隨機決定</button>
   </div>
 
 </div>
 
 <div class="footer-credit">
-  <div class="footer-countdown" id="systemMsg">
-    Loading Status...
-  </div>
-  <div style="margin-top:10px; font-size:12px; color:rgba(255,255,255,0.5);">
-    👩‍💻 Designed by 沛恩 | 🔧 報修請找 #309
+  <div class="footer-msg">
+    沛恩：雖然我登出了，但報修可以line我
   </div>
 </div>
 
 <script>
-  /* 1. 金幣紅包雨動畫 (Canvas) */
+  /* 櫻花雨動畫 */
   const canvas = document.getElementById('canvas-bg');
   const ctx = canvas.getContext('2d');
-  let width, height;
-  const items = [];
-  const symbols = ['🧧', '💰', '🌸']; 
-
-  function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  class FallingItem {
+  let width, height, petals = [];
+  function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  class Petal {
     constructor() { this.init(); }
-    init() {
-      this.x = Math.random() * width;
-      this.y = -50;
-      this.size = Math.random() * 20 + 20;
-      this.speed = Math.random() * 2 + 1;
-      this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
-      this.rotation = Math.random() * Math.PI * 2;
-      this.rotSpeed = Math.random() * 0.05 - 0.025;
-    }
-    update() {
-      this.y += this.speed;
-      this.rotation += this.rotSpeed;
-      if (this.y > height + 50) this.init();
-    }
+    init() { this.x = Math.random() * width; this.y = -20; this.size = Math.random() * 8 + 5; this.speed = Math.random() * 1 + 0.5; this.rotation = Math.random() * 360; }
+    update() { this.y += this.speed; if (this.y > height) this.init(); }
     draw() {
-      ctx.save();
-      ctx.translate(this.x, this.y);
-      ctx.rotate(this.rotation);
-      ctx.font = `${this.size}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(this.symbol, 0, 0);
-      ctx.restore();
+      ctx.beginPath(); ctx.fillStyle = "#FFB7C5"; ctx.save(); ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation * Math.PI / 180); ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-this.size, -this.size, -this.size*1.5, this.size/2, 0, this.size);
+      ctx.bezierCurveTo(this.size*1.5, this.size/2, this.size, -this.size, 0, 0);
+      ctx.fill(); ctx.restore();
     }
   }
-
-  for(let i=0; i<25; i++) items.push(new FallingItem());
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-    items.forEach(item => { item.update(); item.draw(); });
-    requestAnimationFrame(animate);
-  }
+  for(let i=0; i<30; i++) petals.push(new Petal());
+  function animate() { ctx.clearRect(0, 0, width, height); petals.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
   animate();
 
-  /* 2. 旅遊建議 (亂數) */
-  const suggestions = [
-    "🇹🇭 曼谷：去按摩按到睡著，避開親戚問薪水。",
-    "🇯🇵 北海道：2月底還有雪！去滑雪吧。",
-    "🇰🇷 首爾：這時候去吃人蔘雞湯補身體。",
-    "🏡 家裡：2026 最省錢景點，記得準備耳塞。",
-    "🎰 澳門：雖然不鼓勵賭博，但過年嘛...",
-    "🇻🇳 峴港：這時候去天氣剛好，不像台北濕冷。",
-    "🀄 麻將桌：哪裡都不去，在牌桌上決一死戰！",
-    "🛌 棉被裡：最強的景點，沒有之一。"
-  ];
-  function getTravelSuggestion() {
-    const box = document.getElementById('travelResult');
-    const randomText = suggestions[Math.floor(Math.random() * suggestions.length)];
-    box.innerText = randomText;
-    box.style.display = 'block';
-  }
-
-  /* 3. 下班計算機 (核心邏輯完整保留) */
+  /* 下班計算 */
   let timer, offTime;
-  const funnyExcuses = ["家裡的貓在等我發紅包 🐱", "再不走會被抓去洗窗戶 🧽", "我媽說年菜要涼了 🥟", "塞車會塞到明年 🚗"];
+  const funnyExcuses = ["春天到了，靈魂還留在被窩裡冬眠", "天氣好到不小心走錯路", "陽光太耀眼看不到來上班的路", "俗話說春睏不是病，睏起來真的要人命"];
 
   function updateTimer() {
     if (!offTime) return;
@@ -357,7 +174,7 @@
     if (diff <= 0) {
       clearInterval(timer);
       document.getElementById('countdown').style.display = 'none';
-      document.getElementById('result').innerHTML += "<br><strong style='color:#e53e3e; font-size:18px;'>🎉 新年快樂！快逃！</strong>";
+      document.getElementById('result').innerHTML += "<br><strong style='color:#D53F8C;'> 時間到了，快逃！</strong>";
       return;
     }
     document.getElementById('h').textContent = String(Math.floor(diff / 3600000)).padStart(2, '0');
@@ -371,9 +188,7 @@
     const loading = document.getElementById("loading");
     const countdownBox = document.getElementById("countdown");
     
-    result.innerHTML = '';
-    countdownBox.style.display = 'none';
-    loading.style.display = 'block';
+    result.innerHTML = ''; countdownBox.style.display = 'none'; loading.style.display = 'block';
 
     setTimeout(() => {
       loading.style.display = 'none';
@@ -386,19 +201,9 @@
       const m = parseInt(input.substring(2, 4), 10);
       const timeVal = h * 100 + m; 
 
-      if (timeVal >= 2300 || timeVal < 400) {
-        result.innerHTML = "🌙 <strong>這時間還在？</strong><br>早點睡，過年才有體力打牌。";
-        return;
-      }
-      if (timeVal >= 400 && timeVal < 730) {
-        result.innerHTML = "🥱 <strong>太早了吧！</strong><br>你是來搶頭香的嗎？再睡一下。";
-        return;
-      }
-      if (timeVal >= 1200 && timeVal < 2300) {
-        result.innerHTML = "🛑 <strong>別算了，直接回家。</strong><br>現在回去剛好趕上最後一波辦年貨。";
-        return;
-      }
-      if (m < 0 || m > 59) { result.innerHTML = "❌ 時間錯誤"; return; }
+      if (timeVal >= 2300 || timeVal < 400) { result.innerHTML = "🌙 <strong>這時間還在？</strong><br>早點睡，春天不適合熬夜。"; return; }
+      if (timeVal >= 400 && timeVal < 730) { result.innerHTML = "🥱 <strong>太早了吧！</strong><br>你是先來幫辦公室植物澆水的嗎？"; return; }
+      if (timeVal >= 1200 && timeVal < 2300) { result.innerHTML = "🛑 <strong>別算了，直接回家。</strong><br>現在回去剛好趕上春季日落。"; return; }
 
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
@@ -412,30 +217,23 @@
         const diffMins = (start - lateThreshold) / 60000;
         const units = Math.ceil(diffMins / 30);
         const leaveDurationMins = units * 30;
-        const leaveStartTime = new Date(start.getTime() - leaveDurationMins * 60000);
-        effectiveStart = leaveStartTime;
+        effectiveStart = new Date(start.getTime() - leaveDurationMins * 60000);
 
-        const leaveStartStr = leaveStartTime.getHours().toString().padStart(2,'0') + ':' + leaveStartTime.getMinutes().toString().padStart(2,'0');
-        const leaveEndStr = h.toString().padStart(2,'0') + ':' + m.toString().padStart(2,'0');
+        const lS = effectiveStart.getHours().toString().padStart(2,'0') + ':' + effectiveStart.getMinutes().toString().padStart(2,'0');
+        const lE = h.toString().padStart(2,'0') + ':' + m.toString().padStart(2,'0');
 
-        htmlContent += `<div style="background:#fff0f0; border-left:4px solid #e53e3e; padding:10px; text-align:left; margin-bottom:10px; border-radius:4px;">
-          <strong style="color:#e53e3e;">⚠️ 遲到警報 (超過 09:00)</strong><br>
-          <div style="font-size:15px; margin:4px 0;">
-            建議請假：<strong>${leaveStartStr} - ${leaveEndStr}</strong> (共 ${leaveDurationMins} 分鐘)
-          </div>
-          <div style="margin-top:6px; color:#555; font-size:13px;">💡 理由：${funnyExcuses[Math.floor(Math.random()*funnyExcuses.length)]}</div>
+        htmlContent += `<div style="background:#fff0f0; border-left:4px solid #f687b3; padding:10px; text-align:left; margin-bottom:10px; border-radius:4px; font-size:13px;">
+          <strong style="color:#D53F8C;">⚠️ 遲到警報 (超過 09:00)</strong><br>
+          建議請假：<strong>${lS} - ${lE}</strong> (${leaveDurationMins} 分鐘)<br>
+          💡 理由：${funnyExcuses[Math.floor(Math.random()*funnyExcuses.length)]}
         </div>`;
       } else {
-        htmlContent += "<div style='color:#38a169; font-weight:bold; margin-bottom:10px;'>✨ 準時的好寶寶，紅包會比較厚！</div>";
+        htmlContent += "<div style='color:#38a169; font-weight:bold; margin-bottom:10px;'>✨ 準時好寶寶，今天工作也加油！</div>";
       }
 
       offTime = new Date(effectiveStart.getTime() + workHours);
-      htmlContent += `預計逃跑時間：<span style="font-size:26px; font-weight:bold; color:#2d3748; display:block; margin-top:5px;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
+      htmlContent += `預計逃跑時間：<span style="font-size:26px; font-weight:bold; color:#D53F8C; display:block;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
       
-      if (start > lateThreshold) {
-         htmlContent += `<span style="font-size:12px; color:#aaa;">(已包含請假時數的工時計算)</span>`;
-      }
-
       result.innerHTML = htmlContent;
       countdownBox.style.display = 'block';
       if (timer) clearInterval(timer);
@@ -443,155 +241,15 @@
       timer = setInterval(updateTimer, 1000);
     }, 400); 
   }
-  document.getElementById("start").addEventListener("keypress", function(e){
-    if(e.key === 'Enter') calc();
-  });
 
-  /* 4. 親戚計算機 (PRO版 - 台灣在地化字典庫) */
-  let relCodeStack = [];
-  let relNameStack = [];
-  const relInput = document.getElementById('relInput');
-  const relResult = document.getElementById('relResult');
-  
-  function addRel(code, name) {
-    if (relCodeStack.length >= 7) { relResult.innerText = "太遠了，請直接叫「你好」"; return; }
-    relCodeStack.push(code);
-    relNameStack.push(name);
-    updateRelScreen();
+  function getTeaTime() {
+    const t = ["五十嵐", "星巴克", "上宇林", "可不可", "辦公室咖啡", "便利商店咖啡"];
+    document.getElementById('teaResult').innerText = "建議點： " + t[Math.floor(Math.random()*t.length)];
   }
-  function resetRel() {
-    relCodeStack = []; relNameStack = [];
-    relResult.innerText = "等待輸入"; 
-    updateRelScreen();
+  function spinFood() {
+    const f = ["便當", "乾麵", "7-11", "全家", "水餃", "健康餐", "拉麵", "壽司", "火鍋", "SUBWAY"];
+    document.getElementById('foodResult').innerText = f[Math.floor(Math.random()*f.length)];
   }
-  function updateRelScreen() {
-    if(relNameStack.length === 0) relInput.innerText = "我的...";
-    else relInput.innerText = "我的" + relNameStack.join("的"); 
-    relResult.innerText = "...";
-  }
-
-  const database = {
-    // 基礎邏輯修正 (含漏洞修補)
-    "f,w": "媽媽", "m,h": "爸爸", 
-    "f,h": "爸爸(假設)", "m,w": "媽媽(假設)", 
-    "h,w": "我 (或親愛的)", "w,h": "我 (或親愛的)",
-    // 補強：女兒的兄弟=兒子，兒子的姊妹=女兒
-    "d,eb": "兒子", "d,yb": "兒子", 
-    "d,es": "女兒", "d,ys": "女兒",
-    "s,eb": "兒子", "s,yb": "兒子",
-    "s,es": "女兒", "s,ys": "女兒",
-
-    // 補強：配偶的子女=我的子女
-    "h,s": "兒子", "h,d": "女兒",
-    "w,s": "兒子", "w,d": "女兒",
-
-    // 補強：手足的手足 (簡單化處理)
-    "es,ys": "我自己 (或姊妹)", "ys,es": "我自己 (或姊妹)",
-    "eb,yb": "我自己 (或兄弟)", "yb,eb": "我自己 (或兄弟)",
-    "es,eb": "哥哥", "es,yb": "弟弟", "ys,eb": "哥哥", "ys,yb": "弟弟",
-    "eb,es": "姊姊", "eb,ys": "妹妹", "yb,es": "姊姊", "yb,ys": "妹妹",
-    "es,es": "姊姊", "ys,ys": "妹妹", "eb,eb": "哥哥", "yb,yb": "弟弟",
-
-    // 補強：祖父母的子女
-    "f,m,s": "爸爸 (或阿伯/叔叔)", "f,m,d": "姑姑",
-    "f,f,s": "爸爸 (或阿伯/叔叔)", "f,f,d": "姑姑",
-    "m,m,s": "舅舅", "m,m,d": "媽媽 (或阿姨)",
-    "m,f,s": "舅舅", "m,f,d": "媽媽 (或阿姨)",
-
-    // 直系長輩
-    "f": "爸爸", "m": "媽媽", 
-    "f,f": "爺爺 (阿公)", "f,m": "奶奶 (阿嬤)", 
-    "m,f": "外公 (阿公)", "m,m": "外婆 (阿嬤)",
-    
-    // 曾祖父母 (阿祖)
-    "f,f,f": "曾祖父 (阿祖)", "f,f,m": "曾祖母 (阿祖)",
-    "f,m,f": "外曾祖父 (爸爸的外公)", "f,m,m": "外曾祖母 (爸爸的外婆)",
-    "m,f,f": "外曾祖父 (媽媽的阿公)", "m,f,m": "外曾祖母 (媽媽的阿嬤)",
-    "m,m,f": "外曾祖父 (媽媽的外公)", "m,m,m": "外曾祖母 (媽媽的外婆)",
-
-    // 台灣人習慣：父系長輩
-    "f,eb": "阿伯", "f,yb": "叔叔", 
-    "f,es": "姑姑", "f,ys": "姑姑",
-    "f,eb,w": "伯母", "f,yb,w": "嬸嬸", 
-    "f,es,h": "姑丈", "f,ys,h": "姑丈",
-
-    // 台灣人習慣：母系長輩
-    "m,eb": "大舅 (阿舅)", "m,yb": "小舅 (阿舅)", 
-    "m,es": "阿姨", "m,ys": "阿姨",
-    "m,eb,w": "舅媽", "m,yb,w": "舅媽", 
-    "m,es,h": "姨丈", "m,ys,h": "姨丈",
-
-    // 平輩
-    "eb": "哥哥", "yb": "弟弟", "es": "姊姊", "ys": "妹妹",
-    "eb,w": "大嫂", "yb,w": "弟媳", 
-    "es,h": "姊夫", "ys,h": "妹夫",
-    
-    // 堂表兄弟姊妹
-    "f,eb,s": "堂哥/堂弟", "f,eb,d": "堂姐/堂妹",
-    "f,yb,s": "堂哥/堂弟", "f,yb,d": "堂姐/堂妹",
-    "f,es,s": "表哥/表弟", "f,es,d": "表姐/表妹",
-    "m,eb,s": "表哥/表弟", "m,eb,d": "表姐/表妹",
-    "m,es,s": "表哥/表弟", "m,es,d": "表姐/表妹",
-
-    // 晚輩
-    "s": "兒子", "d": "女兒",
-    "s,w": "媳婦", "d,h": "女婿",
-    "s,s": "內孫", "s,d": "內孫女",
-    "d,s": "外孫", "d,d": "外孫女",
-    
-    // 姪子/外甥
-    "eb,s": "姪子", "eb,d": "姪女", "yb,s": "姪子", "yb,d": "姪女",
-    "es,s": "外甥", "es,d": "外甥女", "ys,s": "外甥", "ys,d": "外甥女",
-
-    // 夫家 (我是女生)
-    "h,f": "公公", "h,m": "婆婆",
-    "h,eb": "大伯", "h,yb": "小叔", 
-    "h,es": "大姑", "h,ys": "小姑",
-    "h,eb,w": "妯娌 (大嫂)", "h,yb,w": "妯娌 (弟妹)",
-
-    // 妻家 (我是男生)
-    "w,f": "岳父", "w,m": "岳母",
-    "w,eb": "大舅子", "w,yb": "小舅子",
-    "w,es": "大姨子", "w,ys": "小姨子",
-    "w,es,h": "連襟 (姊夫)", "w,ys,h": "連襟 (妹夫)"
-  };
-
-  function calcRel() {
-    if (relCodeStack.length === 0) return;
-    const key = relCodeStack.join(",");
-    
-    if (database[key]) {
-      relResult.innerText = database[key];
-      // 特效：放大後縮回 (已用CSS修正不會超出匡線)
-      relResult.style.transform = "scale(1.2)";
-      relResult.style.color = "#D32F2F";
-      setTimeout(()=> {
-        relResult.style.transform = "scale(1)";
-        relResult.style.color = "var(--primary)";
-      }, 200);
-    } else {
-      // 溫馨提示
-      relResult.innerText = "親戚關係太遠，微笑點頭就好";
-      relResult.style.fontSize = "16px";
-    }
-  }
-
-  /* 5. 隱晦離職倒數 */
-  function updatePeiEnCountdown() {
-    const target = new Date("2026-02-28T00:00:00");
-    const now = new Date();
-    const diff = target - now;
-    if (diff > 0) {
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      document.getElementById('systemMsg').innerHTML = 
-        `距離沛恩登出剩餘 <strong>${days}</strong> 天 🤫`;
-    } else {
-      document.getElementById('systemMsg').innerHTML = "System Expired. 沛恩已登出。";
-    }
-  }
-  updatePeiEnCountdown();
-
 </script>
 </body>
 </html>
-
