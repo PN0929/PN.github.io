@@ -2,18 +2,19 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8" />
-  <title>HURC 2026 春櫻限定</title>
+  <title>HURC 2026 盛夏限定</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <style>
     :root {
-      --primary: #FFB7C5;   /* 櫻花粉 */
-      --secondary: #A8E6CF; /* 嫩芽綠 */
-      --accent: #FFD3E0;    /* 淺粉 */
-      --bg-gradient: linear-gradient(135deg, #fff5f7 0%, #e0f2f1 100%); 
+      --primary: #4FD1C5;   /* 薄荷綠 */
+      --secondary: #63B3ED; /* 海洋藍 */
+      --accent: #FEFCBF;    /* 檸檬淺黃 */
+      --bg-gradient: linear-gradient(135deg, #EBF8FF 0%, #E6FFFA 100%); 
       --card-bg: rgba(255, 255, 255, 0.9);
-      --text-main: #4A5568;
+      --text-main: #2D3748;
       --text-muted: #718096;
-      --deep-pink: #D53F8C;
+      --deep-blue: #2B6CB0; /* 深海藍 */
+      --sun-orange: #ED8936; /* 陽光橘 */
     }
 
     * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
@@ -34,20 +35,20 @@
 
     .card {
       background: var(--card-bg); border-radius: 24px; padding: 28px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); border: 1px solid rgba(255, 255, 255, 0.6);
       display: flex; flex-direction: column; backdrop-filter: blur(15px); transition: transform 0.2s;
     }
     .card:hover { transform: translateY(-3px); border-color: var(--primary); }
 
-    h1 { font-size: 20px; color: var(--deep-pink); margin: 0 0 5px 0; text-align: center; font-weight: 800; }
+    h1 { font-size: 20px; color: var(--deep-blue); margin: 0 0 5px 0; text-align: center; font-weight: 800; }
     h2 { font-size: 12px; color: var(--text-muted); margin: 0 0 15px 0; text-align: center; letter-spacing: 1.5px; border-bottom: 1px solid #edf2f7; padding-bottom: 12px; }
 
     /* 番茄鐘樣式 */
     .pomodoro-display {
       text-align: center; margin: 10px 0 20px;
     }
-    .pomo-time { font-size: 56px; font-weight: 800; color: var(--deep-pink); font-family: monospace; line-height: 1; margin-bottom: 10px; }
-    .pomo-label { font-size: 14px; font-weight: bold; color: #38a169; background: #e6fffa; padding: 4px 12px; border-radius: 20px; }
+    .pomo-time { font-size: 56px; font-weight: 800; color: var(--deep-blue); font-family: monospace; line-height: 1; margin-bottom: 10px; }
+    .pomo-label { font-size: 14px; font-weight: bold; color: #2c7a7b; background: #e6fffa; padding: 4px 12px; border-radius: 20px; }
     
     .input-group { margin-bottom: 20px; }
     label { display: block; font-size: 14px; font-weight: 700; color: #4a5568; margin-bottom: 8px; }
@@ -60,22 +61,24 @@
       width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
     }
-    .btn-primary { background: linear-gradient(135deg, #FFB7C5 0%, #f687b3 100%); color: #fff; box-shadow: 0 4px 15px rgba(255, 183, 197, 0.4); }
-    .btn-green { background: linear-gradient(135deg, #A8E6CF 0%, #81e6d9 100%); color: #2d3748; box-shadow: 0 4px 15px rgba(168, 230, 207, 0.4); }
-    .btn-outline { background: #fff; border: 2px solid var(--primary); color: var(--deep-pink); margin-top: 10px; }
+    .btn-primary { background: linear-gradient(135deg, #4FD1C5 0%, #319795 100%); color: #fff; box-shadow: 0 4px 15px rgba(79, 209, 197, 0.4); }
+    .btn-blue { background: linear-gradient(135deg, #63B3ED 0%, #3182ce 100%); color: #fff; box-shadow: 0 4px 15px rgba(99, 179, 237, 0.4); }
+    .btn-outline { background: #fff; border: 2px solid var(--primary); color: var(--deep-blue); margin-top: 10px; }
+    .btn-yellow { background: linear-gradient(135deg, #ECC94B 0%, #D69E2E 100%); color: #fff; box-shadow: 0 4px 15px rgba(236, 201, 75, 0.4); }
 
     #result { margin-top: 20px; text-align: center; font-size: 15px; line-height: 1.6; }
     .countdown-box {
-      margin-top: 15px; background: #fff; border: 2px solid #fff5f7; border-radius: 16px; padding: 20px; text-align: center;
+      margin-top: 15px; background: #fff; border: 2px solid #e6fffa; border-radius: 16px; padding: 20px; text-align: center;
       display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .countdown-flex { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
-    .time-unit { background: #fffafb; padding: 10px; border-radius: 10px; min-width: 65px; border: 1px solid #ffeef2; }
-    .time-num { display: block; font-size: 28px; font-weight: 800; color: var(--deep-pink); font-family: monospace; }
+    .time-unit { background: #ebf8ff; padding: 10px; border-radius: 10px; min-width: 65px; border: 1px solid #bee3f8; }
+    .time-num { display: block; font-size: 28px; font-weight: 800; color: var(--deep-blue); font-family: monospace; }
 
+    /* 夏日轉盤樣式 */
     .food-display {
-      background: #fff; border: 2px solid var(--secondary); border-radius: 12px; padding: 30px 15px;
-      margin-bottom: 15px; text-align: center; font-size: 24px; font-weight: bold; color: #38a169; min-height: 100px; display: flex; align-items: center; justify-content: center;
+      background: #fff; border: 2px solid var(--primary); border-radius: 12px; padding: 30px 15px;
+      margin-bottom: 15px; text-align: center; font-size: 24px; font-weight: bold; color: #2c7a7b; min-height: 100px; display: flex; align-items: center; justify-content: center;
     }
 
     .footer-credit { margin-top: 30px; text-align: center; z-index: 10; }
@@ -93,11 +96,11 @@
   
   <div class="card">
     <h1>🍅 專注番茄鐘</h1>
-    <h2>POMODORO TIMER</h2>
+    <h2>SUMMER POMODORO</h2>
     <div class="pomodoro-display">
       <div class="pomo-label" id="pomoStatus">專注時間</div>
       <div class="pomo-time" id="pomoTime">25:00</div>
-      <button class="btn-green" id="pomoBtn" onclick="togglePomo()">
+      <button class="btn-blue" id="pomoBtn" onclick="togglePomo()">
         <span>▶ 開始專注</span>
       </button>
       <button class="btn-outline" onclick="resetPomo()">
@@ -106,7 +109,7 @@
     </div>
     <div style="font-size:12px; color:#a0aec0; text-align:center;">
       25 分鐘專注 + 5 分鐘休息<br>
-      讓春季的工作節奏更輕盈 🌸
+      讓夏日的工作效率不融化 ☀️
     </div>
   </div>
 
@@ -120,10 +123,10 @@
     <button class="btn-primary" onclick="calc()">
       <span>✨ 計算今日登出時間</span>
     </button>
-    <div id="loading" style="display:none; text-align:center; margin:15px 0;"><span style="font-size:24px; animation:spin 1s infinite linear; display:inline-block;">🌸</span></div>
+    <div id="loading" style="display:none; text-align:center; margin:15px 0;"><span style="font-size:24px; animation:spin 1s infinite linear; display:inline-block;">🍦</span></div>
     <div id="result"></div>
     <div id="countdown" class="countdown-box">
-      <div style="font-size:14px; font-weight:bold; color:#f687b3; margin-bottom:5px;">距離自由還有</div>
+      <div style="font-size:14px; font-weight:bold; color:#3182ce; margin-bottom:5px;">距離自由還有</div>
       <div class="countdown-flex">
         <div class="time-unit"><span class="time-num" id="h">00</span><span style="font-size:10px">時</span></div>
         <div class="time-unit"><span class="time-num" id="m">00</span><span style="font-size:10px">分</span></div>
@@ -133,14 +136,14 @@
   </div>
 
   <div class="card">
-    <h1>🍱 午餐救星轉盤</h1>
-    <h2>LUNCH DECIDER</h2>
-    <div class="food-display" id="foodResult">今天想吃什麼？</div>
+    <h1>🍦 夏日開胃消暑轉盤</h1>
+    <h2>SUMMER LUNCH DECIDER</h2>
+    <div class="food-display" id="foodResult">天氣好熱，想吃什麼？</div>
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-      <button class="btn-green" onclick="spinFood()">🎲 隨機</button>
-      <button class="btn-primary" style="background:#fff; color:#f687b3; border:1px solid #f687b3;" onclick="getTeaTime()">☕ 喝茶</button>
+      <button class="btn-blue" onclick="spinFood()">🥢 抽主食</button>
+      <button class="btn-yellow" onclick="getIceTime()">🍧 抽消暑點心</button>
     </div>
-    <div id="teaResult" style="margin-top:10px; text-align:center; font-size:14px; color:#D53F8C; font-weight:bold;"></div>
+    <div id="iceResult" style="margin-top:15px; text-align:center; font-size:14px; color:#2B6CB0; font-weight:bold;"></div>
   </div>
 
 </div>
@@ -152,26 +155,35 @@
 </div>
 
 <script>
-  /* 櫻花雨動畫 */
+  /* 消暑氣泡上升動畫 */
   const canvas = document.getElementById('canvas-bg');
   const ctx = canvas.getContext('2d');
-  let width, height, petals = [];
+  let width, height, bubbles = [];
   function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
   window.addEventListener('resize', resize); resize();
-  class Petal {
-    constructor() { this.init(); }
-    init() { this.x = Math.random() * width; this.y = -20; this.size = Math.random() * 8 + 5; this.speed = Math.random() * 1 + 0.5; this.rotation = Math.random() * 360; }
-    update() { this.y += this.speed; if (this.y > height) this.init(); }
+  
+  class Bubble {
+    constructor() { this.init(); this.y = Math.random() * height; } // 初始隨機分散在高度
+    init() { 
+      this.x = Math.random() * width; 
+      this.y = height + 20; 
+      this.size = Math.random() * 4 + 2; 
+      this.speed = Math.random() * 1 + 0.5; 
+      this.opacity = Math.random() * 0.4 + 0.1;
+    }
+    update() { 
+      this.y -= this.speed; 
+      if (this.y < -20) this.init(); 
+    }
     draw() {
-      ctx.beginPath(); ctx.fillStyle = "#FFB7C5"; ctx.save(); ctx.translate(this.x, this.y);
-      ctx.rotate(this.rotation * Math.PI / 180); ctx.moveTo(0, 0);
-      ctx.bezierCurveTo(-this.size, -this.size, -this.size*1.5, this.size/2, 0, this.size);
-      ctx.bezierCurveTo(this.size*1.5, this.size/2, this.size, -this.size, 0, 0);
-      ctx.fill(); ctx.restore();
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
-  for(let i=0; i<30; i++) petals.push(new Petal());
-  function animate() { ctx.clearRect(0, 0, width, height); petals.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+  for(let i=0; i<40; i++) bubbles.push(new Bubble());
+  function animate() { ctx.clearRect(0, 0, width, height); bubbles.forEach(b => { b.update(); b.draw(); }); requestAnimationFrame(animate); }
   animate();
 
   /* 番茄鐘邏輯 */
@@ -200,9 +212,9 @@
       pomoTimer = null;
       isWorkMode = !isWorkMode;
       pomoTime = (isWorkMode ? 25 : 5) * 60;
-      document.getElementById('pomoStatus').innerText = isWorkMode ? "專注時間" : "休息一下";
-      document.getElementById('pomoStatus').style.background = isWorkMode ? "#e6fffa" : "#fff5f7";
-      alert(isWorkMode ? "開始專注工作囉！" : "辛苦了，休息五分鐘吧！");
+      document.getElementById('pomoStatus').innerText = isWorkMode ? "專注時間" : "冷氣房休息";
+      document.getElementById('pomoStatus').style.background = isWorkMode ? "#e6fffa" : "#ebf8ff";
+      alert(isWorkMode ? "開始專注工作囉！" : "辛苦了，吃根冰棒休息五分鐘吧！");
       renderPomo();
       document.getElementById('pomoBtn').innerHTML = "<span>▶ 開始</span>";
     }
@@ -227,15 +239,14 @@
   /* 下班計算 */
   let timer, offTime;
   const funnyExcuses = [
-    "陽光太溫暖，差點在公車站睡著 ☀️",
-    "春天到了，靈魂還留在被窩裡冬眠 😴",
-    "天氣好到只想去公園野餐 🧺",
-    "為了吸收維生素 D，走路速度自動降為 0.5 倍 🏃‍♂️",
-    "陽光太耀眼找不到來公司的路 😎",
-    "俗話說春睏不是病，睏起來真的要人命 💤"
+    "外面太陽太大，走太快會當場融化 🫠",
+    "為了躲避紫外線，沿著騎樓陰影蛇行導致大遲到 ☀️",
+    "冷氣房太舒服，被窩引力在夏天依舊強烈 🛌",
+    "路上看到冰淇淋車，不自覺排隊買了一支消暑 🍦",
+    "天氣熱到靈魂蒸發，在路上走著走著就失神了 🌀",
+    "出門一秒汗流浹背，回家洗個澡再出門就遲到了 🚿"
   ];
 
-  // Enter 鍵監聽
   document.getElementById("start").addEventListener("keypress", function(e) {
     if (e.key === 'Enter') calc();
   });
@@ -246,7 +257,7 @@
     if (diff <= 0) {
       clearInterval(timer);
       document.getElementById('countdown').style.display = 'none';
-      document.getElementById('result').innerHTML += "<br><strong style='color:#D53F8C;'> 時間到了，快逃！</strong>";
+      document.getElementById('result').innerHTML += "<br><strong style='color:#2B6CB0;'> 冷氣關機，快逃向自由！ 🏃‍♂️</strong>";
       return;
     }
     document.getElementById('h').textContent = String(Math.floor(diff / 3600000)).padStart(2, '0');
@@ -273,9 +284,9 @@
       const m = parseInt(input.substring(2, 4), 10);
       const timeVal = h * 100 + m; 
 
-      if (timeVal >= 2300 || timeVal < 400) { result.innerHTML = "🌙 <strong>這時間還在？</strong><br>早點睡，春天不適合熬夜。"; return; }
-      if (timeVal >= 400 && timeVal < 730) { result.innerHTML = "🥱 <strong>太早了吧！</strong><br>你是先來幫辦公室植物澆水的嗎？"; return; }
-      if (timeVal >= 1200 && timeVal < 2300) { result.innerHTML = "🛑 <strong>別算了，直接回家。</strong><br>現在回去剛好趕上日落。"; return; }
+      if (timeVal >= 2300 || timeVal < 400) { result.innerHTML = "🌙 <strong>這時間還在？</strong><br>快去睡，夏天熬夜更容易中暑。"; return; }
+      if (timeVal >= 400 && timeVal < 730) { result.innerHTML = "❄️ <strong>太早了吧！</strong><br>你是提早來吹公司冷氣省電費的嗎？"; return; }
+      if (timeVal >= 1200 && timeVal < 2300) { result.innerHTML = "🛑 <strong>別算了，直接回家。</strong><br>現在回去正好趕上黃昏的夕陽與海風。"; return; }
 
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
@@ -294,17 +305,17 @@
         const lS = effectiveStart.getHours().toString().padStart(2,'0') + ':' + effectiveStart.getMinutes().toString().padStart(2,'0');
         const lE = h.toString().padStart(2,'0') + ':' + m.toString().padStart(2,'0');
 
-        htmlContent += `<div style="background:#fff0f0; border-left:4px solid #f687b3; padding:10px; text-align:left; margin-bottom:10px; border-radius:4px; font-size:13px;">
-          <strong style="color:#D53F8C;">⚠️ 遲到警報 (超過 09:00)</strong><br>
+        htmlContent += `<div style="background:#fffaf0; border-left:4px solid #ED8936; padding:10px; text-align:left; margin-bottom:10px; border-radius:4px; font-size:13px;">
+          <strong style="color:#ED8936;">⚠️ 遲到警報 (超過 09:00)</strong><br>
           建議請假：<strong>${lS} - ${lE}</strong> (${leaveDurationMins} 分鐘)<br>
           💡 理由：${funnyExcuses[Math.floor(Math.random()*funnyExcuses.length)]}
         </div>`;
       } else {
-        htmlContent += "<div style='color:#38a169; font-weight:bold; margin-bottom:10px;'>✨ 準時好寶寶，今天工作也加油！</div>";
+        htmlContent += "<div style='color:#2c7a7b; font-weight:bold; margin-bottom:10px;'>✨ 準時好寶寶，今天冷氣房工作也加油！</div>";
       }
 
       offTime = new Date(effectiveStart.getTime() + workHours);
-      htmlContent += `預計逃跑時間：<span style="font-size:26px; font-weight:bold; color:#D53F8C; display:block;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
+      htmlContent += `預計逃跑時間：<span style="font-size:26px; font-weight:bold; color:#2B6CB0; display:block;">${offTime.getHours().toString().padStart(2,'0')}:${offTime.getMinutes().toString().padStart(2,'0')}</span>`;
       
       result.innerHTML = htmlContent;
       countdownBox.style.display = 'block';
@@ -314,14 +325,15 @@
     }, 400); 
   }
 
-  /* 下午茶與午餐 */
-  function getTeaTime() {
-    const t = ["五十嵐", "星巴克", "上宇林", "可不可", "麻古", "一沐日"];
-    document.getElementById('teaResult').innerText = "建議點： " + t[Math.floor(Math.random()*t.length)];
-  }
+  /* 夏日開胃消暑轉盤邏輯 */
   function spinFood() {
-    const f = ["便當", "乾麵", "7-11", "全家", "麥當勞", "健康餐", "拉麵", "壽司"];
+    const f = ["麻醬涼麵 🥢", "泰式酸辣粉 🌶️", "日式蕎麥冷麵 🍣", "超商冷氣房沙拉 🥗", "越式生春捲 🌯", "韓式水冷麵 🍜", "海南雞飯 🐔"];
     document.getElementById('foodResult').innerText = f[Math.floor(Math.random()*f.length)];
+  }
+
+  function getIceTime() {
+    const t = ["五十嵐（波霸珍奶去冰）", "大苑子（芒果冰沙）", "古早味綠豆沙牛奶", "黑糖剉冰（加粉圓芋圓）", "超商霜淇淋 🍦", "綜合仙草凍 🍮", "一沐日（粉粿冬瓜檸檬）"];
+    document.getElementById('iceResult').innerText = "消暑極品推薦：\n" + t[Math.floor(Math.random()*t.length)];
   }
 </script>
 </body>
